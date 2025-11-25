@@ -41,8 +41,8 @@ export function MainHeader() {
           </div>
         </div>
 
-        {/* Icons */}
-        <div className="flex items-center gap-6 text-sm font-medium text-foreground">
+        {/* Icons - apenas em telas md+ */}
+        <div className="hidden md:flex items-center gap-6 text-sm font-medium text-foreground">
           <a
             href="/"
             className="flex flex-col items-center gap-1 hover:text-primary transition-colors group"
