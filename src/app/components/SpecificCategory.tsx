@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ProductCard } from "./ProductCard";
 
 interface SpecificCategoryProps {
@@ -25,11 +26,11 @@ export function SpecificCategory({ title, products }: SpecificCategoryProps) {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Sidebar Banner */}
           <div className="hidden lg:block lg:col-span-1 relative rounded-xl overflow-hidden group">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=500"
               alt="Gamer"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              fill
+              className="object-cover transition-transform duration-700 group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-black/50 group-hover:bg-black/40 transition-colors"></div>
             <div className="absolute bottom-0 left-0 p-6 text-white">

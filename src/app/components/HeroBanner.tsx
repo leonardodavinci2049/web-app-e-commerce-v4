@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 
 const slides = [
@@ -67,12 +68,14 @@ export function HeroBanner() {
               </div>
               <div className="hidden md:block relative h-[400px]">
                 {/* Image placeholder or actual image */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={slide.image}
-                  alt={slide.title}
-                  className="object-contain w-full h-full drop-shadow-2xl animate-in zoom-in duration-700"
-                />
+                <div className="relative w-full h-full">
+                  <Image
+                    src={slide.image}
+                    alt={slide.title}
+                    fill
+                    className="object-contain drop-shadow-2xl animate-in zoom-in duration-700"
+                  />
+                </div>
               </div>
             </div>
           </div>

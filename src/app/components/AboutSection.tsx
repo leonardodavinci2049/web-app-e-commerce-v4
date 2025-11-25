@@ -1,4 +1,5 @@
 import { CheckCircle2 } from "lucide-react";
+import Image from "next/image";
 
 export function AboutSection() {
   return (
@@ -42,11 +43,12 @@ export function AboutSection() {
           </div>
 
           <div className="relative">
-            <div className="aspect-video rounded-xl overflow-hidden shadow-2xl">
-              <img
+            <div className="aspect-video rounded-xl overflow-hidden shadow-2xl relative">
+              <Image
                 src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1000"
                 alt="Nossa Loja"
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
               />
             </div>
             <div className="absolute -bottom-6 -right-6 bg-card p-6 rounded-xl shadow-xl border border-border hidden md:block">

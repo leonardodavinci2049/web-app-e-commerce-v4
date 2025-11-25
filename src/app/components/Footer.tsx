@@ -6,6 +6,7 @@ import {
   ShieldCheck,
   Twitter,
 } from "lucide-react";
+import Image from "next/image";
 
 export function Footer() {
   return (
@@ -15,9 +16,23 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Column 1: Institutional */}
           <div>
-            <h3 className="text-xl font-bold text-primary mb-4">
-              MUNDIAL MEGASTORE
-            </h3>
+            <div className="mb-4">
+              <a
+                href="/"
+                className="inline-flex items-center"
+                aria-label="Mundial Megastore - Página inicial"
+              >
+                <div className="relative w-40 h-8 sm:w-44 sm:h-9 lg:w-52 lg:h-11">
+                  <Image
+                    src="/images/logo/logo-horizontal-footer.png"
+                    alt="Mundial Megastore"
+                    fill
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+              </a>
+            </div>
             <p className="text-muted-foreground mb-6 text-sm">
               Sua parceira em ferramentas e equipamentos. Qualidade e confiança
               que você já conhece.
