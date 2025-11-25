@@ -5,6 +5,7 @@ import { Footer } from "./components/Footer";
 import { HeroBanner } from "./components/HeroBanner";
 import { LocationMap } from "./components/LocationMap";
 import { MainHeader } from "./components/MainHeader";
+import { MobileBottomMenu } from "./components/MobileBottomMenu";
 import { NavigationMenu } from "./components/NavigationMenu";
 import { Newsletter } from "./components/Newsletter";
 import { ProductGrid } from "./components/ProductGrid";
@@ -47,6 +48,7 @@ export default function Home() {
       </main>
 
       <Footer />
+      <MobileBottomMenu />
     </div>
   );
 }

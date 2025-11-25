@@ -16,8 +16,7 @@ export const PRODUCTS = [
     id: "1",
     name: "Smartphone Galaxy S24 Ultra 512GB",
     price: 6999.0,
-    image:
-      "https://images.unsplash.com/photo-1610945265078-3858a082d22a?auto=format&fit=crop&q=80&w=500",
+    image: "/images/product/no-image.jpeg",
     isNew: true,
     category: "Smartphones",
   },
@@ -25,8 +24,7 @@ export const PRODUCTS = [
     id: "2",
     name: "Notebook Dell XPS 15 i9 32GB",
     price: 12500.0,
-    image:
-      "https://images.unsplash.com/photo-1593642632823-8f78536788c6?auto=format&fit=crop&q=80&w=500",
+    image: "/images/product/no-image.jpeg",
     category: "Informática",
   },
   {
@@ -42,8 +40,7 @@ export const PRODUCTS = [
     id: "4",
     name: "Teclado Mecânico Keychron K2",
     price: 750.0,
-    image:
-      "https://images.unsplash.com/photo-1587829741301-dc798b91a603?auto=format&fit=crop&q=80&w=500",
+    image: "/images/product/no-image.jpeg",
     category: "Periféricos",
   },
   {
