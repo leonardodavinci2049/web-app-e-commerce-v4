@@ -66,7 +66,7 @@ export function MobileMainHeader() {
           >
             <div className="relative w-40 h-8 xs:w-44 xs:h-9">
               <Image
-                src="/images/logo/logo-horizontal-header.png"
+                src="/images/logo/logo-header-mobile.png"
                 alt="Mundial Megastore"
                 fill
                 className="object-contain"
