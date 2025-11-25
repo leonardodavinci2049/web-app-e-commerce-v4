@@ -2,7 +2,15 @@ import { ProductCard } from "./ProductCard";
 
 interface SpecificCategoryProps {
   title: string;
-  products: Array<any>;
+  products: Array<{
+    id: string;
+    name: string;
+    price: number;
+    image: string;
+    isNew?: boolean;
+    discount?: number;
+    category: string;
+  }>;
 }
 
 export function SpecificCategory({ title, products }: SpecificCategoryProps) {
@@ -11,12 +19,13 @@ export function SpecificCategory({ title, products }: SpecificCategoryProps) {
       <div className="container mx-auto px-4">
         <div className="flex items-center gap-4 mb-8">
           <h2 className="text-2xl font-bold text-foreground">{title}</h2>
-          <div className="h-px bg-border flex-grow"></div>
+          <div className="h-px bg-border grow"></div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Sidebar Banner */}
           <div className="hidden lg:block lg:col-span-1 relative rounded-xl overflow-hidden group">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=500"
               alt="Gamer"
@@ -28,7 +37,10 @@ export function SpecificCategory({ title, products }: SpecificCategoryProps) {
               <p className="mb-4 text-gray-200">
                 Setup completo para sua vitória
               </p>
-              <button className="text-accent font-bold hover:underline">
+              <button
+                type="button"
+                className="text-accent font-bold hover:underline"
+              >
                 Ver tudo &rarr;
               </button>
             </div>

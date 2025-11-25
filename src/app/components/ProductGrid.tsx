@@ -22,7 +22,7 @@ export function ProductGrid({ title, products }: ProductGridProps) {
             {title}
           </h2>
           <a
-            href="#"
+            href="/"
             className="text-primary hover:underline font-medium text-sm"
           >
             Ver todos

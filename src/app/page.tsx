@@ -1,18 +1,18 @@
-import { TopBar } from "./components/TopBar";
+import { AboutSection } from "./components/AboutSection";
+import { Advantages } from "./components/Advantages";
+import { DepartmentNavigation } from "./components/DepartmentNavigation";
+import { Footer } from "./components/Footer";
+import { HeroBanner } from "./components/HeroBanner";
+import { LocationMap } from "./components/LocationMap";
 import { MainHeader } from "./components/MainHeader";
 import { NavigationMenu } from "./components/NavigationMenu";
-import { HeroBanner } from "./components/HeroBanner";
-import { DepartmentNavigation } from "./components/DepartmentNavigation";
+import { Newsletter } from "./components/Newsletter";
 import { ProductGrid } from "./components/ProductGrid";
 import { PromoBanner } from "./components/PromoBanner";
-import { SpecificCategory } from "./components/SpecificCategory";
 import { PromoBannersGrid } from "./components/PromoBannersGrid";
+import { SpecificCategory } from "./components/SpecificCategory";
 import { Testimonials } from "./components/Testimonials";
-import { Advantages } from "./components/Advantages";
-import { AboutSection } from "./components/AboutSection";
-import { LocationMap } from "./components/LocationMap";
-import { Newsletter } from "./components/Newsletter";
-import { Footer } from "./components/Footer";
+import { TopBar } from "./components/TopBar";
 import { PRODUCTS } from "./data/mock-data";
 
 export default function Home() {
@@ -31,7 +31,7 @@ export default function Home() {
       <MainHeader />
       <NavigationMenu />
 
-      <main className="flex-grow">
+      <main className="grow">
         <HeroBanner />
         <DepartmentNavigation />
         <ProductGrid title="Lançamentos" products={newProducts} />

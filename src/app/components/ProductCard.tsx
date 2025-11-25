@@ -1,4 +1,4 @@
-import { ShoppingCart, Heart } from "lucide-react";
+import { Heart, ShoppingCart } from "lucide-react";
 
 interface ProductCardProps {
   product: {
@@ -30,12 +30,16 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Wishlist Button */}
-      <button className="absolute top-2 right-2 z-10 p-2 bg-white/80 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white hover:text-red-500">
+      <button
+        type="button"
+        className="absolute top-2 right-2 z-10 p-2 bg-white/80 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white hover:text-red-500"
+      >
         <Heart className="w-5 h-5" />
       </button>
 
       {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-white p-4">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={product.image}
           alt={product.name}
@@ -44,10 +48,10 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Content */}
-      <div className="p-4 flex flex-col flex-grow">
+      <div className="p-4 flex flex-col grow">
         <p className="text-xs text-muted-foreground mb-1">{product.category}</p>
         <h3
-          className="font-medium text-foreground line-clamp-2 mb-2 flex-grow"
+          className="font-medium text-foreground line-clamp-2 mb-2 grow"
           title={product.name}
         >
           {product.name}
@@ -71,7 +75,10 @@ export function ProductCard({ product }: ProductCardProps) {
             )}
           </div>
 
-          <button className="w-full bg-primary text-primary-foreground py-2 rounded-md font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+          <button
+            type="button"
+            className="w-full bg-primary text-primary-foreground py-2 rounded-md font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+          >
             <ShoppingCart className="w-4 h-4" />
             Comprar
           </button>

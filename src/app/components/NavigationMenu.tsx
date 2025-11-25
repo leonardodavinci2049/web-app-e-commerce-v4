@@ -1,4 +1,4 @@
-import { Menu, ChevronDown } from "lucide-react";
+import { ChevronDown, Menu } from "lucide-react";
 
 export function NavigationMenu() {
   return (
@@ -7,7 +7,10 @@ export function NavigationMenu() {
         <div className="flex items-center">
           {/* All Categories Dropdown Trigger */}
           <div className="relative group">
-            <button className="flex items-center gap-2 bg-primary-foreground/10 px-6 py-3 font-bold hover:bg-primary-foreground/20 transition-colors cursor-pointer">
+            <button
+              type="button"
+              className="flex items-center gap-2 bg-primary-foreground/10 px-6 py-3 font-bold hover:bg-primary-foreground/20 transition-colors cursor-pointer"
+            >
               <Menu className="w-5 h-5" />
               <span>Todas as Categorias</span>
               <ChevronDown className="w-4 h-4 ml-2" />
@@ -26,7 +29,7 @@ export function NavigationMenu() {
                 ].map((item) => (
                   <li key={item}>
                     <a
-                      href="#"
+                      href="/"
                       className="block px-4 py-2 hover:bg-muted transition-colors text-sm"
                     >
                       {item}
@@ -49,7 +52,7 @@ export function NavigationMenu() {
             ].map((link) => (
               <li key={link}>
                 <a
-                  href="#"
+                  href="/"
                   className="px-4 py-3 text-sm font-medium hover:bg-primary-foreground/10 transition-colors block whitespace-nowrap"
                 >
                   {link}

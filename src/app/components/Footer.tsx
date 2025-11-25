@@ -1,10 +1,10 @@
 import {
+  CreditCard,
   Facebook,
   Instagram,
   Linkedin,
-  Twitter,
-  CreditCard,
   ShieldCheck,
+  Twitter,
 } from "lucide-react";
 
 export function Footer() {
@@ -24,25 +24,25 @@ export function Footer() {
             </p>
             <div className="flex gap-4">
               <a
-                href="#"
+                href="/"
                 className="text-muted-foreground hover:text-primary transition-colors"
               >
                 <Facebook className="w-5 h-5" />
               </a>
               <a
-                href="#"
+                href="/"
                 className="text-muted-foreground hover:text-primary transition-colors"
               >
                 <Instagram className="w-5 h-5" />
               </a>
               <a
-                href="#"
+                href="/"
                 className="text-muted-foreground hover:text-primary transition-colors"
               >
                 <Linkedin className="w-5 h-5" />
               </a>
               <a
-                href="#"
+                href="/"
                 className="text-muted-foreground hover:text-primary transition-colors"
               >
                 <Twitter className="w-5 h-5" />
@@ -55,27 +55,27 @@ export function Footer() {
             <h4 className="font-bold text-foreground mb-4">Links Rápidos</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="/" className="hover:text-primary transition-colors">
                   Quem Somos
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="/" className="hover:text-primary transition-colors">
                   Nossas Lojas
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="/" className="hover:text-primary transition-colors">
                   Trabalhe Conosco
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="/" className="hover:text-primary transition-colors">
                   Política de Privacidade
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="/" className="hover:text-primary transition-colors">
                   Termos de Uso
                 </a>
               </li>
@@ -87,27 +87,27 @@ export function Footer() {
             <h4 className="font-bold text-foreground mb-4">Minha Conta</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="/" className="hover:text-primary transition-colors">
                   Login / Cadastro
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="/" className="hover:text-primary transition-colors">
                   Meus Pedidos
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="/" className="hover:text-primary transition-colors">
                   Lista de Desejos
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="/" className="hover:text-primary transition-colors">
                   Rastreamento
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-primary transition-colors">
+                <a href="/" className="hover:text-primary transition-colors">
                   Central de Ajuda
                 </a>
               </li>

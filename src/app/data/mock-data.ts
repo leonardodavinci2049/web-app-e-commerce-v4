@@ -1,14 +1,14 @@
 import {
-  Smartphone,
   Cpu,
-  Mouse,
   Gamepad2,
-  Home,
   Headphones,
-  Truck,
-  Tag,
   Headset,
+  Home,
+  Mouse,
+  Smartphone,
   Star,
+  Tag,
+  Truck,
 } from "lucide-react";
 
 export const PRODUCTS = [

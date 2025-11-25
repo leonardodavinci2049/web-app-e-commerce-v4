@@ -5,7 +5,7 @@ export function TopBar() {
     <div className="bg-muted text-muted-foreground py-2 text-xs sm:text-sm">
       <div className="container mx-auto px-4 flex justify-between items-center">
         <div className="flex items-center gap-4">
-          <a href="#" className="hover:text-primary transition-colors">
+          <a href="/" className="hover:text-primary transition-colors">
             Atendimento ao Cliente
           </a>
         </div>

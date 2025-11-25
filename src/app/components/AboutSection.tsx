@@ -33,7 +33,10 @@ export function AboutSection() {
               ))}
             </ul>
 
-            <button className="text-primary font-bold hover:underline">
+            <button
+              type="button"
+              className="text-primary font-bold hover:underline"
+            >
               Conheça nossa história &rarr;
             </button>
           </div>

@@ -17,7 +17,7 @@ export function Newsletter() {
               <input
                 type="email"
                 placeholder="Seu melhor e-mail"
-                className="flex-grow px-4 py-3 rounded-lg text-foreground border-none focus:ring-2 focus:ring-accent outline-none"
+                className="grow px-4 py-3 rounded-lg text-foreground border-none focus:ring-2 focus:ring-accent outline-none"
                 required
               />
               <button

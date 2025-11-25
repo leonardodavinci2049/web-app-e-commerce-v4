@@ -1,5 +1,5 @@
+import { Building2, Factory, Users } from "lucide-react";
 import { TESTIMONIALS } from "../data/mock-data";
-import { Users, Building2, Factory } from "lucide-react";
 
 export function Testimonials() {
   const icons = {
@@ -30,7 +30,10 @@ export function Testimonials() {
                   {item.title}
                 </h3>
                 <p className="text-muted-foreground mb-6">{item.description}</p>
-                <button className="mt-auto px-6 py-2 bg-primary text-primary-foreground rounded-full text-sm font-medium hover:bg-primary/90 transition-colors">
+                <button
+                  type="button"
+                  className="mt-auto px-6 py-2 bg-primary text-primary-foreground rounded-full text-sm font-medium hover:bg-primary/90 transition-colors"
+                >
                   Saiba Mais
                 </button>
               </div>
