@@ -1,4 +1,5 @@
 import { Heart, ShoppingCart } from "lucide-react";
+import Image from "next/image";
 
 interface ProductCardProps {
   product: {
@@ -39,12 +40,14 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-white p-4">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={product.image}
-          alt={product.name}
-          className="object-contain w-full h-full group-hover:scale-110 transition-transform duration-500"
-        />
+        <div className="relative w-full h-full">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className="object-contain group-hover:scale-110 transition-transform duration-500"
+          />
+        </div>
       </div>
 
       {/* Content */}

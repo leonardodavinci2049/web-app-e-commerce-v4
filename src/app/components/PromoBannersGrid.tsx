@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export function PromoBannersGrid() {
   const banners = [
     {
@@ -35,11 +37,11 @@ export function PromoBannersGrid() {
               key={banner.id}
               className={`relative h-48 rounded-xl overflow-hidden group cursor-pointer ${banner.bg}`}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={banner.image}
                 alt={banner.title}
-                className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:scale-110 transition-transform duration-500"
+                fill
+                className="object-cover opacity-50 group-hover:scale-110 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent"></div>
               <div className="absolute bottom-0 left-0 p-6 text-white">

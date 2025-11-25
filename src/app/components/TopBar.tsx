@@ -1,4 +1,7 @@
+"use client";
+
 import { Phone } from "lucide-react";
+import ModeToggle from "@/components/theme/mode-toggle";
 
 export function TopBar() {
   return (
@@ -14,8 +17,7 @@ export function TopBar() {
           <span>Televendas: (11) 9999-9999</span>
         </div>
         <div className="flex items-center gap-4">
-          {/* Theme Toggle placeholder - assuming next-themes or similar will be wired up later or just static for now */}
-          <span className="cursor-pointer hover:text-primary">Dark Mode</span>
+          <ModeToggle />
         </div>
       </div>
     </div>
