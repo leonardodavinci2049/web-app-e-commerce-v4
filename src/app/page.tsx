@@ -6,6 +6,7 @@ import { HeroBanner } from "./components/HeroBanner";
 import { LocationMap } from "./components/LocationMap";
 import { MainHeader } from "./components/MainHeader";
 import { MobileBottomMenu } from "./components/MobileBottomMenu";
+import { MobileMainHeader } from "./components/MobileMainHeader";
 import { NavigationMenu } from "./components/NavigationMenu";
 import { Newsletter } from "./components/Newsletter";
 import { ProductGrid } from "./components/ProductGrid";
@@ -29,6 +30,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
       <TopBar />
+      <MobileMainHeader />
       <MainHeader />
       <NavigationMenu />
 
