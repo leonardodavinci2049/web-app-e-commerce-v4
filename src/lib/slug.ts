@@ -48,3 +48,19 @@ export function findProductBySlug(slug: string[]) {
 export function getProductPath(name: string, id: string): string {
   return `/product/${generateSlug(name, id)}`;
 }
+
+/**
+ * Converte uma string em um slug SEO-friendly
+ * @param text Texto para converter
+ * @returns Slug formatado
+ */
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .trim();
+}

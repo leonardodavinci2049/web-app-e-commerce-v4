@@ -1,4 +1,6 @@
 import { ChevronDown, Menu } from "lucide-react";
+import Link from "next/link";
+import { CATEGORIES } from "@/data/mock-data";
 
 export function NavigationMenu() {
   return (
@@ -19,21 +21,14 @@ export function NavigationMenu() {
             {/* Dropdown Content (Mock) */}
             <div className="absolute top-full left-0 w-64 bg-card text-card-foreground shadow-xl rounded-b-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 border border-border">
               <ul className="py-2">
-                {[
-                  "Eletrônicos",
-                  "Informática",
-                  "Gamer",
-                  "Casa Inteligente",
-                  "Ferramentas",
-                  "Automotivo",
-                ].map((item) => (
-                  <li key={item}>
-                    <a
-                      href="/"
+                {CATEGORIES.map((category) => (
+                  <li key={category.id}>
+                    <Link
+                      href={category.href}
                       className="block px-4 py-2 hover:bg-muted transition-colors text-sm"
                     >
-                      {item}
-                    </a>
+                      {category.name}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -43,20 +38,33 @@ export function NavigationMenu() {
           {/* Horizontal Links */}
           <ul className="flex items-center gap-1 ml-4">
             {[
-              "Home",
-              "Lançamentos",
-              "Ofertas do Dia",
-              "Celulares & Smartphones",
-              "Hardware",
-              "Perfumes",
-            ].map((link) => (
-              <li key={link}>
-                <a
-                  href="/"
+              { label: "Home", href: "/" },
+              { label: "Lançamentos", href: "/" },
+              { label: "Ofertas do Dia", href: "/" },
+              {
+                label: "Eletrônicos",
+                href:
+                  CATEGORIES.find((c) => c.slug === "eletronicos")?.href || "#",
+              },
+              {
+                label: "Informática",
+                href:
+                  CATEGORIES.find((c) => c.slug === "informatica")?.href || "#",
+              },
+              {
+                label: "Perfumes",
+                href:
+                  CATEGORIES.find((c) => c.slug === "perfumes-importados")
+                    ?.href || "#",
+              },
+            ].map((item) => (
+              <li key={item.label}>
+                <Link
+                  href={item.href}
                   className="px-4 py-3 text-sm font-medium hover:bg-primary-foreground/10 transition-colors block whitespace-nowrap"
                 >
-                  {link}
-                </a>
+                  {item.label}
+                </Link>
               </li>
             ))}
           </ul>

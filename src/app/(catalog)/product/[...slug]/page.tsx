@@ -1,7 +1,7 @@
 "use client";
 
 import { notFound, useParams } from "next/navigation";
-import { PRODUCTS } from "@/data/mock-data";
+import { CATEGORIES, PRODUCTS } from "@/data/mock-data";
 import { findProductBySlug } from "@/lib/slug";
 import { ProductImageGallery } from "../_components/ProductImageGallery";
 import { ProductInfo } from "../_components/ProductInfo";
@@ -18,16 +18,46 @@ export default function ProductDetailPage() {
     notFound();
   }
 
-  // Produtos relacionados (mesma categoria, excluindo o atual)
-  const relatedProducts = PRODUCTS.filter(
-    (p) => p.category === product.category && p.id !== product.id,
+  // resolve nomes de categoria / subcategoria a partir dos IDs
+  const getCategoryName = (categoryId?: string) =>
+    CATEGORIES.find((c) => c.id === categoryId)?.name || "—";
+
+  const getSubcategoryName = (categoryId?: string, subId?: string) => {
+    const cat = CATEGORIES.find((c) => c.id === categoryId);
+    if (!cat || !cat.subcategories) return "—";
+    // subId nos produtos é o sufixo (ex: "1"), sub.id em CATEGORIES é "2-1"
+    return (
+      cat.subcategories.find(
+        (s) =>
+          s.id === `${categoryId}-${subId}` ||
+          s.id.split("-")[1] === String(subId),
+      )?.name || "—"
+    );
+  };
+
+  // Produtos relacionados (mesma categoryId, excluindo o atual)
+  const relatedRaw = PRODUCTS.filter(
+    (p) => p.categoryId === product.categoryId && p.id !== product.id,
   );
+
+  // adiciona campos category/subcategory com nomes para compatibilidade dos componentes
+  const productWithNames = {
+    ...product,
+    category: getCategoryName(product.categoryId),
+    subcategory: getSubcategoryName(product.categoryId, product.subcategoryId),
+  };
+
+  const relatedWithNames = relatedRaw.map((p) => ({
+    ...p,
+    category: getCategoryName(p.categoryId),
+    subcategory: getSubcategoryName(p.categoryId, p.subcategoryId),
+  }));
 
   // Dados padrão para especificações e entrega se não existirem
   const defaultSpecifications = {
     Marca: product.brand || "Genérica",
-    Categoria: product.category,
-    Subcategoria: product.subcategory,
+    Categoria: getCategoryName(product.categoryId),
+    Subcategoria: getSubcategoryName(product.categoryId, product.subcategoryId),
     Condição: product.isNew ? "Novo" : "Usado",
   };
 
@@ -61,7 +91,7 @@ export default function ProductDetailPage() {
           />
 
           {/* Informações do Produto */}
-          <ProductInfo product={product} />
+          <ProductInfo product={productWithNames} />
         </div>
 
         {/* Tabs de Informações */}
@@ -74,7 +104,7 @@ export default function ProductDetailPage() {
         </div>
 
         {/* Produtos Relacionados */}
-        <RelatedProducts products={relatedProducts} />
+        <RelatedProducts products={relatedWithNames} />
       </div>
     </div>
   );
