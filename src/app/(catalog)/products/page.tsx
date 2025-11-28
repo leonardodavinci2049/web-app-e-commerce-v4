@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { PRODUCTS } from "@/data/mock-data";
+import { CATEGORIES, PRODUCTS } from "@/data/mock-data";
 import { Footer } from "../../(home)/_components/Footer";
 import { MobileBottomMenu } from "../../(home)/_components/MobileBottomMenu";
 import { LoadMoreButton } from "./_components/LoadMoreButton";
@@ -16,41 +16,83 @@ export default function ProductsPage() {
   const [displayCount, setDisplayCount] = useState(PRODUCTS_PER_PAGE);
   const [loading, setLoading] = useState(false);
 
-  // Extrair categorias únicas
+  // Extrair nomes únicos de categorias a partir dos IDs
   const categories = useMemo(() => {
-    const uniqueCategories = new Set(PRODUCTS.map((p) => p.category));
-    return Array.from(uniqueCategories).sort();
+    const uniqueCategoryIds = new Set(PRODUCTS.map((p) => p.categoryId));
+    const names = Array.from(uniqueCategoryIds)
+      .map((id) => CATEGORIES.find((c) => c.id === id)?.name || "—")
+      .filter((name) => name !== "—");
+    return names.sort();
   }, []);
 
-  // Extrair subcategorias da categoria selecionada
+  // Extrair nomes de subcategorias a partir do nome da categoria selecionada
   const subcategories = useMemo(() => {
     if (!selectedCategory) return [];
-    const uniqueSubcategories = new Set(
-      PRODUCTS.filter((p) => p.category === selectedCategory).map(
-        (p) => p.subcategory,
+    // Encontrar o id da categoria pelo nome
+    const categoryObj = CATEGORIES.find((c) => c.name === selectedCategory);
+    if (!categoryObj) return [];
+    const uniqueSubcategoryIds = new Set(
+      PRODUCTS.filter((p) => p.categoryId === categoryObj.id).map(
+        (p) => p.subcategoryId,
       ),
     );
-    return Array.from(uniqueSubcategories).sort();
+    const names = Array.from(uniqueSubcategoryIds)
+      .map(
+        (subId) =>
+          categoryObj.subcategories?.find((s) => s.id.endsWith(`-${subId}`))
+            ?.name || "—",
+      )
+      .filter((name) => name !== "—");
+    return names.sort();
   }, [selectedCategory]);
 
-  // Filtrar produtos
+  // Filtrar produtos por nome da categoria e subcategoria
   const filteredProducts = useMemo(() => {
     let filtered = PRODUCTS;
 
     if (selectedCategory) {
-      filtered = filtered.filter((p) => p.category === selectedCategory);
+      const categoryObj = CATEGORIES.find((c) => c.name === selectedCategory);
+      if (categoryObj) {
+        filtered = filtered.filter((p) => p.categoryId === categoryObj.id);
+      }
     }
 
-    if (selectedSubcategory) {
-      filtered = filtered.filter((p) => p.subcategory === selectedSubcategory);
+    if (selectedSubcategory && selectedCategory) {
+      const categoryObj = CATEGORIES.find((c) => c.name === selectedCategory);
+      if (categoryObj) {
+        // Procurar subcategoria pelo nome
+        const subObj = categoryObj.subcategories?.find(
+          (s) => s.name === selectedSubcategory,
+        );
+        if (subObj) {
+          const subId = subObj.id.split("-")[1];
+          filtered = filtered.filter((p) => p.subcategoryId === subId);
+        }
+      }
     }
 
     return filtered;
   }, [selectedCategory, selectedSubcategory]);
 
-  // Produtos a exibir (com paginação)
+  // Produtos a exibir (com paginação), adaptando para garantir category/subcategory como nome
   const displayedProducts = useMemo(() => {
-    return filteredProducts.slice(0, displayCount);
+    return filteredProducts.slice(0, displayCount).map((p) => {
+      // Buscar nomes
+      const categoryObj = CATEGORIES.find((c) => c.id === p.categoryId);
+      const categoryName = categoryObj?.name || "";
+      let subcategoryName = "";
+      if (categoryObj?.subcategories) {
+        const subObj = categoryObj.subcategories.find((s) =>
+          s.id.endsWith(`-${p.subcategoryId}`),
+        );
+        subcategoryName = subObj?.name || "";
+      }
+      return {
+        ...p,
+        category: categoryName,
+        subcategory: subcategoryName,
+      };
+    });
   }, [filteredProducts, displayCount]);
 
   // Verificar se há mais produtos
