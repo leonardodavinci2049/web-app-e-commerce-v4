@@ -1,4 +1,4 @@
-import { ADVANTAGES } from "../data/mock-data";
+import { ADVANTAGES } from "@/data/mock-data";
 
 export function Advantages() {
   return (

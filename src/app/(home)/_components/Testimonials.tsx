@@ -1,5 +1,5 @@
 import { Building2, Factory, Users } from "lucide-react";
-import { TESTIMONIALS } from "../data/mock-data";
+import { TESTIMONIALS } from "@/data/mock-data";
 
 export function Testimonials() {
   const icons = {
