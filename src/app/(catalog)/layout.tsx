@@ -1,6 +1,9 @@
-import { Suspense } from "react";
-import MainHeader from "@/components/header/main-header";
-import MobileHeader from "@/components/header/mobile-header";
+import { Footer } from "../(home)/_components/Footer";
+import { MainHeader } from "../(home)/_components/MainHeader";
+import { MobileBottomMenu } from "../(home)/_components/MobileBottomMenu";
+import { MobileMainHeader } from "../(home)/_components/MobileMainHeader";
+import { NavigationMenu } from "../(home)/_components/NavigationMenu";
+import { TopBar } from "../(home)/_components/TopBar";
 
 const CatalogLayout = ({
   children,
@@ -9,11 +12,13 @@ const CatalogLayout = ({
 }>) => {
   return (
     <>
-      <MobileHeader />
-      <Suspense fallback={<div className="h-16" />}>
-        <MainHeader />
-      </Suspense>
+      <TopBar />
+      <MobileMainHeader />
+      <MainHeader />
+      <NavigationMenu />
       {children}
+      <Footer />
+      <MobileBottomMenu />
     </>
   );
 };
