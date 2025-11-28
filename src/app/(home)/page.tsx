@@ -15,7 +15,7 @@ import { PromoBannersGrid } from "./components/PromoBannersGrid";
 import { SpecificCategory } from "./components/SpecificCategory";
 import { Testimonials } from "./components/Testimonials";
 import { TopBar } from "./components/TopBar";
-import { PRODUCTS } from "./data/mock-data";
+import { PRODUCTS } from "../../data/mock-data";
 
 export default function Home() {
   // Filter products for different sections
