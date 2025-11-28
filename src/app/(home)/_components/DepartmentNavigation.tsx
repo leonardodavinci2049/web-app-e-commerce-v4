@@ -1,4 +1,4 @@
-import { CATEGORIES } from "../data/mock-data";
+import { CATEGORIES } from "@/data/mock-data";
 
 export function DepartmentNavigation() {
   return (
