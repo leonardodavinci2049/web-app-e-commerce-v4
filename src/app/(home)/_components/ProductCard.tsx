@@ -1,5 +1,7 @@
 import { Heart, ShoppingCart } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { getProductPath } from "@/lib/slug";
 
 interface ProductCardProps {
   product: {
@@ -14,6 +16,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const productUrl = getProductPath(product.name, product.id);
+
   return (
     <div className="group relative bg-card border border-border rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full">
       {/* Badges */}
@@ -39,7 +43,10 @@ export function ProductCard({ product }: ProductCardProps) {
       </button>
 
       {/* Image */}
-      <div className="relative aspect-square overflow-hidden bg-white p-4">
+      <Link
+        href={productUrl}
+        className="relative aspect-square overflow-hidden bg-white p-4 block"
+      >
         <div className="relative w-full h-full">
           <Image
             src={product.image}
@@ -48,17 +55,18 @@ export function ProductCard({ product }: ProductCardProps) {
             className="object-contain group-hover:scale-110 transition-transform duration-500"
           />
         </div>
-      </div>
+      </Link>
 
       {/* Content */}
       <div className="p-4 flex flex-col grow">
         <p className="text-xs text-muted-foreground mb-1">{product.category}</p>
-        <h3
-          className="font-medium text-foreground line-clamp-2 mb-2 grow"
+        <Link
+          href={productUrl}
+          className="font-medium text-foreground line-clamp-2 mb-2 grow hover:text-primary transition-colors"
           title={product.name}
         >
           {product.name}
-        </h3>
+        </Link>
 
         <div className="mt-auto">
           <div className="flex items-baseline gap-2 mb-4">
