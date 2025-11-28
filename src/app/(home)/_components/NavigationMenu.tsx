@@ -57,7 +57,6 @@ export function NavigationMenu() {
                   CATEGORIES.find((c) => c.slug === "perfumes-importados")
                     ?.href || "#",
               },
-       
             ].map((item) => (
               <li key={item.label}>
                 <Link

@@ -1,4 +1,4 @@
-import { PRODUCTS, CATEGORIES } from "../../data/mock-data";
+import { CATEGORIES, PRODUCTS } from "../../data/mock-data";
 import { AboutSection } from "./_components/AboutSection";
 import { Advantages } from "./_components/Advantages";
 import { DepartmentNavigation } from "./_components/DepartmentNavigation";

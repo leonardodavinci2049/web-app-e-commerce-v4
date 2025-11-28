@@ -1,7 +1,7 @@
 "use client";
 
 import { notFound, useParams } from "next/navigation";
-import { PRODUCTS, CATEGORIES } from "@/data/mock-data";
+import { CATEGORIES, PRODUCTS } from "@/data/mock-data";
 import { findProductBySlug } from "@/lib/slug";
 import { ProductImageGallery } from "../_components/ProductImageGallery";
 import { ProductInfo } from "../_components/ProductInfo";

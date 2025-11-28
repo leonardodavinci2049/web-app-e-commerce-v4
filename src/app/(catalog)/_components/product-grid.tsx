@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import type { Product } from "@/types/product";
 import { ProductCard } from "@/app/(home)/_components/ProductCard";
 import { Button } from "@/components/ui/button";
+import type { Product } from "@/types/product";
 
 interface ProductGridProps {
   products: Product[];

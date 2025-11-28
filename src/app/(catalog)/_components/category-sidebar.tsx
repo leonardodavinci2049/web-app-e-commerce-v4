@@ -1,10 +1,10 @@
 "use client";
 
+import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CATEGORIES } from "@/data/mock-data";
 import { cn } from "@/lib/utils";
-import { ChevronRight } from "lucide-react";
 
 export function CategorySidebar() {
   const pathname = usePathname();

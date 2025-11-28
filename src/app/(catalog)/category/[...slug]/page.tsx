@@ -1,10 +1,10 @@
-import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { CATEGORIES, PRODUCTS } from "@/data/mock-data";
+import { Breadcrumbs } from "../../_components/breadcrumbs";
 import { CategorySidebar } from "../../_components/category-sidebar";
 import { MobileCategoryNav } from "../../_components/mobile-category-nav";
 import { ProductGrid } from "../../_components/product-grid";
-import { Breadcrumbs } from "../../_components/breadcrumbs";
 
 interface CategoryPageProps {
   params: Promise<{

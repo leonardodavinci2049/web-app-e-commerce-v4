@@ -1,11 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { ChevronDown, ChevronRight, Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CATEGORIES } from "@/data/mock-data";
-import { cn } from "@/lib/utils";
-import { Menu, ChevronRight, ChevronDown } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -14,6 +12,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { CATEGORIES } from "@/data/mock-data";
+import { cn } from "@/lib/utils";
 
 export function MobileCategoryNav() {
   const pathname = usePathname();

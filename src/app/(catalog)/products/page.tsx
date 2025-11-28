@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { PRODUCTS, CATEGORIES } from "@/data/mock-data";
+import { CATEGORIES, PRODUCTS } from "@/data/mock-data";
 import { Footer } from "../../(home)/_components/Footer";
 import { MobileBottomMenu } from "../../(home)/_components/MobileBottomMenu";
 import { LoadMoreButton } from "./_components/LoadMoreButton";
@@ -39,7 +39,7 @@ export default function ProductsPage() {
     const names = Array.from(uniqueSubcategoryIds)
       .map(
         (subId) =>
-          categoryObj.subcategories?.find((s) => s.id.endsWith("-" + subId))
+          categoryObj.subcategories?.find((s) => s.id.endsWith(`-${subId}`))
             ?.name || "—",
       )
       .filter((name) => name !== "—");
@@ -81,9 +81,9 @@ export default function ProductsPage() {
       const categoryObj = CATEGORIES.find((c) => c.id === p.categoryId);
       const categoryName = categoryObj?.name || "";
       let subcategoryName = "";
-      if (categoryObj && categoryObj.subcategories) {
+      if (categoryObj?.subcategories) {
         const subObj = categoryObj.subcategories.find((s) =>
-          s.id.endsWith("-" + p.subcategoryId),
+          s.id.endsWith(`-${p.subcategoryId}`),
         );
         subcategoryName = subObj?.name || "";
       }
