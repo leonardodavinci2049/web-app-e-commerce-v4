@@ -1,4 +1,4 @@
-import { PRODUCTS } from "../../data/mock-data";
+import { PRODUCTS, CATEGORIES } from "../../data/mock-data";
 import { AboutSection } from "./_components/AboutSection";
 import { Advantages } from "./_components/Advantages";
 import { DepartmentNavigation } from "./_components/DepartmentNavigation";
@@ -18,14 +18,21 @@ import { Testimonials } from "./_components/Testimonials";
 import { TopBar } from "./_components/TopBar";
 
 export default function Home() {
+  // Helper para adicionar o nome da categoria
+  const withCategoryName = (p: (typeof PRODUCTS)[number]) => ({
+    ...p,
+    category: CATEGORIES.find((c) => c.id === p.categoryId)?.name || "",
+  });
+
   // Filter products for different sections
   const newProducts = PRODUCTS.filter(
     (p) => p.isNew || p.id === "1" || p.id === "5",
-  );
-  const featuredProducts = PRODUCTS.slice(0, 8); // Just take first 8 for now
-  const gamerProducts = PRODUCTS.filter(
-    (p) => p.category === "Gamer" || p.category === "Periféricos",
-  );
+  ).map(withCategoryName);
+  const featuredProducts = PRODUCTS.slice(0, 8).map(withCategoryName); // Just take first 8 for now
+  const gamerProducts = PRODUCTS.filter((p) => {
+    const categoryName = CATEGORIES.find((c) => c.id === p.categoryId)?.name;
+    return categoryName === "Gamer" || categoryName === "Periféricos";
+  }).map(withCategoryName);
 
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
