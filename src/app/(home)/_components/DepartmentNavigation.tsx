@@ -1,6 +1,5 @@
 import { CATEGORIES } from "@/data/mock-data";
 
-
 export function DepartmentNavigation() {
   return (
     <section className="py-12 bg-background">
