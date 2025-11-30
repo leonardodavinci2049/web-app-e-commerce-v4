@@ -1,6 +1,5 @@
 import { Suspense } from "react";
-import { Footer } from "../../(home)/_components/Footer";
-import { MobileBottomMenu } from "../../(home)/_components/MobileBottomMenu";
+
 import { ProductListingContainer } from "./_components/ProductListingContainer";
 
 export default function ProductsPage() {
@@ -26,9 +25,6 @@ export default function ProductsPage() {
           <ProductListingContainer />
         </Suspense>
       </main>
-
-      <Footer />
-      <MobileBottomMenu />
     </div>
   );
 }
