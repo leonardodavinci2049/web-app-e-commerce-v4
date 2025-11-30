@@ -6,6 +6,7 @@ import {
   fetchCategoryBySlugAction,
   fetchProductsByCategoryAction,
 } from "@/app/actions/product";
+import { ProductGridSkeleton } from "@/components/skeletons";
 import { Breadcrumbs } from "../_components/breadcrumbs";
 import { CategorySidebar } from "../_components/category-sidebar";
 import { MobileCategoryNav } from "../_components/mobile-category-nav";
@@ -15,6 +16,31 @@ interface CategoryPageProps {
   params: Promise<{
     slug: string[];
   }>;
+}
+
+/**
+ * Generate static params for top category pages
+ * Pre-renders category pages at build time for cache warming
+ */
+export async function generateStaticParams() {
+  const categories = await fetchCategoriesAction();
+
+  // Generate params for main categories and their subcategories
+  const params: { slug: string[] }[] = [];
+
+  for (const category of categories) {
+    // Main category page
+    params.push({ slug: [category.slug] });
+
+    // Subcategory pages
+    if (category.subcategories) {
+      for (const subcategory of category.subcategories) {
+        params.push({ slug: [category.slug, subcategory.slug] });
+      }
+    }
+  }
+
+  return params;
 }
 
 export async function generateMetadata({
@@ -112,7 +138,11 @@ async function CategoryContent({
           </div>
 
           {/* Product Grid */}
-          <ProductGrid products={filteredProducts} />
+          <ProductGrid
+            products={filteredProducts}
+            categoryId={category.id}
+            subcategoryId={subcategory?.id}
+          />
         </div>
       </div>
     </div>
@@ -125,9 +155,9 @@ function CategoryPageSkeleton() {
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Sidebar Skeleton */}
-        <div className="w-full lg:w-64 space-y-4">
-          <div className="h-8 bg-muted rounded animate-pulse" />
-          <div className="h-64 bg-muted rounded animate-pulse" />
+        <div className="w-full lg:w-64 space-y-4 animate-pulse">
+          <div className="h-8 bg-muted rounded" />
+          <div className="h-64 bg-muted rounded" />
         </div>
 
         <div className="flex-1 space-y-8">
@@ -135,22 +165,13 @@ function CategoryPageSkeleton() {
           <div className="h-6 w-48 bg-muted rounded animate-pulse" />
 
           {/* Header Skeleton */}
-          <div className="space-y-2">
-            <div className="h-10 w-64 bg-muted rounded animate-pulse" />
-            <div className="h-6 w-32 bg-muted rounded animate-pulse" />
+          <div className="space-y-2 animate-pulse">
+            <div className="h-10 w-64 bg-muted rounded" />
+            <div className="h-6 w-32 bg-muted rounded" />
           </div>
 
-          {/* Grid Skeleton */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: Skeleton estático que nunca muda de ordem
-              <div key={`skeleton-${i}`} className="space-y-4">
-                <div className="aspect-square bg-muted rounded-lg animate-pulse" />
-                <div className="h-6 bg-muted rounded animate-pulse" />
-                <div className="h-6 w-24 bg-muted rounded animate-pulse" />
-              </div>
-            ))}
-          </div>
+          {/* Grid Skeleton - using standardized component */}
+          <ProductGridSkeleton count={6} />
         </div>
       </div>
     </div>

@@ -1,25 +1,37 @@
-"use client";
-
-import { useState } from "react";
 import { ProductCard } from "@/app/(home)/_components/ProductCard";
-import { Button } from "@/components/ui/button";
-import type { Product } from "@/types/product";
+import { LoadMoreProducts } from "@/components/product/LoadMoreProducts";
 
 interface ProductGridProps {
-  products: Product[];
+  products: Array<{
+    id: string;
+    name: string;
+    price: number;
+    image: string;
+    isNew?: boolean;
+    discount?: number;
+    category: string;
+    categoryId?: string;
+    subcategoryId?: string;
+  }>;
+  categoryId: string;
+  subcategoryId?: string;
+  initialCount?: number;
 }
 
 const ITEMS_PER_PAGE = 20;
 
-export function ProductGrid({ products }: ProductGridProps) {
-  const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE);
-
-  const displayedProducts = products.slice(0, displayCount);
-  const hasMore = displayCount < products.length;
-
-  const handleLoadMore = () => {
-    setDisplayCount((prev) => prev + ITEMS_PER_PAGE);
-  };
+/**
+ * Server Component for category product grid
+ * Uses LoadMoreProducts client island for pagination
+ */
+export function ProductGrid({
+  products,
+  categoryId,
+  subcategoryId,
+  initialCount = ITEMS_PER_PAGE,
+}: ProductGridProps) {
+  const displayedProducts = products.slice(0, initialCount);
+  const totalCount = products.length;
 
   if (products.length === 0) {
     return (
@@ -41,16 +53,17 @@ export function ProductGrid({ products }: ProductGridProps) {
         ))}
       </div>
 
-      {hasMore && (
-        <div className="flex justify-center pt-4">
-          <Button onClick={handleLoadMore} variant="outline" size="lg">
-            Carregar Mais Produtos
-          </Button>
-        </div>
-      )}
+      {/* Client Island for pagination */}
+      <LoadMoreProducts
+        categoryId={categoryId}
+        subcategoryId={subcategoryId}
+        initialCount={initialCount}
+        totalCount={totalCount}
+        pageSize={ITEMS_PER_PAGE}
+      />
 
       <div className="text-center text-sm text-muted-foreground">
-        Mostrando {displayedProducts.length} de {products.length} produtos
+        Mostrando {displayedProducts.length} de {totalCount} produtos
       </div>
     </div>
   );

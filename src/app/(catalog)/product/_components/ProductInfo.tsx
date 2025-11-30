@@ -1,7 +1,7 @@
-"use client";
-
-import { Check, Heart, Minus, Plus, ShoppingCart } from "lucide-react";
-import { useState } from "react";
+import { Check } from "lucide-react";
+import { AddToCartButton } from "@/components/product/actions/AddToCartButton";
+import { QuantitySelector } from "@/components/product/actions/QuantitySelector";
+import { WishlistButton } from "@/components/product/actions/WishlistButton";
 
 interface ProductInfoProps {
   product: {
@@ -17,14 +17,12 @@ interface ProductInfoProps {
   };
 }
 
+/**
+ * Server Component - renders static product information
+ * Client Components (AddToCartButton, WishlistButton, QuantitySelector)
+ * are imported as islands for interactive functionality
+ */
 export function ProductInfo({ product }: ProductInfoProps) {
-  const [quantity, setQuantity] = useState(1);
-
-  const handleIncrement = () => setQuantity((prev) => prev + 1);
-  const handleDecrement = () => setQuantity((prev) => Math.max(1, prev - 1));
-
-  const totalPrice = product.price * quantity;
-
   return (
     <div className="space-y-6">
       {/* Categoria e Marca */}
@@ -115,68 +113,17 @@ export function ProductInfo({ product }: ProductInfoProps) {
         </div>
       </div>
 
-      {/* Seletor de Quantidade */}
-      <div className="space-y-2">
-        <label
-          htmlFor="quantity-input"
-          className="text-sm font-medium text-foreground"
-        >
-          Quantidade:
-        </label>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center border border-border rounded-lg">
-            <button
-              type="button"
-              onClick={handleDecrement}
-              className="p-3 hover:bg-muted transition-colors"
-              disabled={quantity <= 1}
-              aria-label="Diminuir quantidade"
-            >
-              <Minus className="w-4 h-4" />
-            </button>
-            <input
-              id="quantity-input"
-              type="number"
-              value={quantity}
-              onChange={(e) =>
-                setQuantity(
-                  Math.max(1, Number.parseInt(e.target.value, 10) || 1),
-                )
-              }
-              className="w-16 text-center border-x border-border bg-transparent focus:outline-none"
-              min="1"
-            />
-            <button
-              type="button"
-              onClick={handleIncrement}
-              className="p-3 hover:bg-muted transition-colors"
-              aria-label="Aumentar quantidade"
-            >
-              <Plus className="w-4 h-4" />
-            </button>
-          </div>
-          {quantity > 1 && (
-            <span className="text-sm text-muted-foreground">
-              Total:{" "}
-              {new Intl.NumberFormat("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              }).format(totalPrice)}
-            </span>
-          )}
-        </div>
-      </div>
+      {/* Seletor de Quantidade - Client Island */}
+      <QuantitySelector price={product.price} />
 
       {/* Botões de Ação */}
       <div className="space-y-3">
-        <button
-          type="button"
-          disabled={!product.inStock}
-          className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <ShoppingCart className="w-5 h-5" />
-          Adicionar ao Carrinho
-        </button>
+        {/* Add to Cart - Client Island */}
+        <AddToCartButton
+          productId={product.id}
+          productName={product.name}
+          price={product.price}
+        />
 
         <button
           type="button"
@@ -186,13 +133,11 @@ export function ProductInfo({ product }: ProductInfoProps) {
           Comprar pelo WhatsApp
         </button>
 
-        <button
-          type="button"
-          className="w-full border border-border py-3 rounded-lg font-medium hover:bg-muted transition-colors flex items-center justify-center gap-2"
-        >
-          <Heart className="w-5 h-5" />
-          Adicionar aos Favoritos
-        </button>
+        {/* Wishlist - Client Island */}
+        <div className="w-full border border-border py-3 rounded-lg font-medium hover:bg-muted transition-colors flex items-center justify-center gap-2">
+          <WishlistButton productId={product.id} />
+          <span>Adicionar aos Favoritos</span>
+        </div>
       </div>
     </div>
   );

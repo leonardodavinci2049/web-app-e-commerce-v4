@@ -1,9 +1,11 @@
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import {
   fetchCategoriesAction,
   fetchProductBySlugAction,
   fetchRelatedProductsAction,
 } from "@/app/actions/product";
+import { ProductGridSkeleton } from "@/components/skeletons";
 import { ProductImageGallery } from "./ProductImageGallery";
 import { ProductInfo } from "./ProductInfo";
 import { ProductTabs } from "./ProductTabs";
@@ -13,6 +15,34 @@ interface ProductDetailContainerProps {
   params: Promise<{
     slug: string[];
   }>;
+}
+
+// Skeleton for gallery section
+function GallerySkeleton() {
+  return (
+    <div className="space-y-4 animate-pulse">
+      <div className="aspect-square bg-muted rounded-lg" />
+      <div className="flex gap-2">
+        {Array.from({ length: 4 }).map((_, i) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton that never reorders
+          <div key={`thumb-${i}`} className="w-20 h-20 bg-muted rounded" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Skeleton for product info section
+function InfoSkeleton() {
+  return (
+    <div className="space-y-6 animate-pulse">
+      <div className="h-4 bg-muted rounded w-24" />
+      <div className="h-8 bg-muted rounded w-3/4" />
+      <div className="h-10 bg-muted rounded w-32" />
+      <div className="h-12 bg-muted rounded w-full" />
+      <div className="h-12 bg-muted rounded w-full" />
+    </div>
+  );
 }
 
 export async function ProductDetailContainer({
@@ -36,7 +66,6 @@ export async function ProductDetailContainer({
   const getSubcategoryName = (categoryId?: string, subId?: string) => {
     const cat = categories.find((c) => c.id === categoryId);
     if (!cat || !cat.subcategories) return "—";
-    // subId nos produtos é o sufixo (ex: "1"), sub.id em CATEGORIES é "2-1"
     return (
       cat.subcategories.find(
         (s) =>
@@ -52,7 +81,7 @@ export async function ProductDetailContainer({
     product.categoryId,
   );
 
-  // adiciona campos category/subcategory com nomes para compatibilidade dos componentes
+  // adiciona campos category/subcategory com nomes para compatibilidade
   const productWithNames = {
     ...product,
     category: getCategoryName(product.categoryId),
@@ -65,7 +94,7 @@ export async function ProductDetailContainer({
     subcategory: getSubcategoryName(p.categoryId, p.subcategoryId),
   }));
 
-  // Dados padrão para especificações e entrega se não existirem
+  // Dados padrão para especificações e entrega
   const defaultSpecifications = {
     Marca: product.brand || "Genérica",
     Categoria: getCategoryName(product.categoryId),
@@ -95,14 +124,18 @@ export async function ProductDetailContainer({
       </nav>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16">
-        {/* Galeria de Imagens */}
-        <ProductImageGallery
-          images={product.image ? [product.image] : []}
-          productName={product.name}
-        />
+        {/* Galeria de Imagens with Suspense */}
+        <Suspense fallback={<GallerySkeleton />}>
+          <ProductImageGallery
+            images={product.image ? [product.image] : []}
+            productName={product.name}
+          />
+        </Suspense>
 
-        {/* Informações do Produto */}
-        <ProductInfo product={productWithNames} />
+        {/* Informações do Produto with Suspense */}
+        <Suspense fallback={<InfoSkeleton />}>
+          <ProductInfo product={productWithNames} />
+        </Suspense>
       </div>
 
       {/* Tabs de Informações */}
@@ -114,8 +147,10 @@ export async function ProductDetailContainer({
         />
       </div>
 
-      {/* Produtos Relacionados */}
-      <RelatedProducts products={relatedWithNames} />
+      {/* Produtos Relacionados with Suspense */}
+      <Suspense fallback={<ProductGridSkeleton count={4} />}>
+        <RelatedProducts products={relatedWithNames} />
+      </Suspense>
     </div>
   );
 }
