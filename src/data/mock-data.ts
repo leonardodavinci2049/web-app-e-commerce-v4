@@ -1,14 +1,4 @@
-import {
-  Camera,
-  Headset,
-  Home,
-  Monitor,
-  Smartphone,
-  Star,
-  Sun,
-  Tag,
-  Truck,
-} from "lucide-react";
+import { Headset, Star, Tag, Truck } from "lucide-react";
 
 export const PRODUCTS = [
   // Informática
@@ -182,7 +172,7 @@ export const CATEGORIES = [
     id: "1",
     name: "Eletrônicos",
     slug: "eletronicos",
-    icon: Camera,
+    iconName: "Camera",
     href: "/category/eletronicos",
     subcategories: [
       {
@@ -221,7 +211,7 @@ export const CATEGORIES = [
     id: "2",
     name: "Informática",
     slug: "informatica",
-    icon: Monitor,
+    iconName: "Monitor",
     href: "/category/informatica",
     subcategories: [
       {
@@ -260,7 +250,7 @@ export const CATEGORIES = [
     id: "3",
     name: "Smartphone",
     slug: "smartphone",
-    icon: Smartphone,
+    iconName: "Smartphone",
     href: "/category/smartphone",
     subcategories: [
       {
@@ -299,7 +289,7 @@ export const CATEGORIES = [
     id: "4",
     name: "Perfumes Importados",
     slug: "perfumes-importados",
-    icon: Star,
+    iconName: "Star",
     href: "/category/perfumes-importados",
     subcategories: [
       {
@@ -338,7 +328,7 @@ export const CATEGORIES = [
     id: "5",
     name: "Casa Inteligente",
     slug: "casa-inteligente",
-    icon: Home,
+    iconName: "Home",
     href: "/category/casa-inteligente",
     subcategories: [
       {
@@ -377,7 +367,7 @@ export const CATEGORIES = [
     id: "6",
     name: "Energia Solar",
     slug: "energia-solar",
-    icon: Sun,
+    iconName: "Sun",
     href: "/category/energia-solar",
     subcategories: [
       {

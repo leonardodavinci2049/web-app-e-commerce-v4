@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CATEGORIES, PRODUCTS } from "@/data/mock-data";
+import {
+  fetchCategoriesAction,
+  fetchCategoryBySlugAction,
+  fetchProductsByCategoryAction,
+} from "@/app/actions/product";
 import { Breadcrumbs } from "../_components/breadcrumbs";
 import { CategorySidebar } from "../_components/category-sidebar";
 import { MobileCategoryNav } from "../_components/mobile-category-nav";
@@ -12,30 +16,13 @@ interface CategoryPageProps {
   }>;
 }
 
-// Função auxiliar para encontrar categoria e subcategoria
-function getCategoryData(slug: string[]) {
-  const [categorySlug, subcategorySlug] = slug;
-
-  const category = CATEGORIES.find((c) => c.slug === categorySlug);
-
-  if (!category) return null;
-
-  let subcategory = null;
-  if (subcategorySlug) {
-    subcategory = category.subcategories?.find(
-      (s) => s.slug === subcategorySlug,
-    );
-    if (!subcategory) return null; // Subcategoria inválida
-  }
-
-  return { category, subcategory };
-}
-
 export async function generateMetadata({
   params,
 }: CategoryPageProps): Promise<Metadata> {
   const resolvedParams = await params;
-  const data = getCategoryData(resolvedParams.slug);
+  const [categorySlug, subcategorySlug] = resolvedParams.slug;
+
+  const data = await fetchCategoryBySlugAction(categorySlug, subcategorySlug);
 
   if (!data) {
     return {
@@ -56,7 +43,9 @@ export async function generateMetadata({
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const resolvedParams = await params;
-  const data = getCategoryData(resolvedParams.slug);
+  const [categorySlug, subcategorySlug] = resolvedParams.slug;
+
+  const data = await fetchCategoryBySlugAction(categorySlug, subcategorySlug);
 
   if (!data) {
     notFound();
@@ -64,17 +53,16 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   const { category, subcategory } = data;
 
-  // Filtragem e mapeamento de produtos
-  const filteredProducts = PRODUCTS.filter((product) => {
-    const matchCategory = product.categoryId === category.id;
-    const matchSubcategory = subcategory
-      ? product.subcategoryId === subcategory.id
-      : true;
+  // Buscar produtos e categorias
+  const [products, categories] = await Promise.all([
+    fetchProductsByCategoryAction(category.id, subcategory?.id),
+    fetchCategoriesAction(),
+  ]);
 
-    return matchCategory && matchSubcategory;
-  }).map((product) => {
+  // Mapear produtos com nomes de categoria/subcategoria
+  const filteredProducts = products.map((product) => {
     // Encontrar nomes de categoria e subcategoria para o produto
-    const prodCategory = CATEGORIES.find((c) => c.id === product.categoryId);
+    const prodCategory = categories.find((c) => c.id === product.categoryId);
     const prodSubcategory = prodCategory?.subcategories?.find(
       (s) => s.id === product.subcategoryId,
     );
@@ -97,11 +85,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Sidebar (Desktop) */}
-        <CategorySidebar />
+        <CategorySidebar categories={categories} />
 
         <div className="flex-1">
           {/* Mobile Navigation */}
-          <MobileCategoryNav />
+          <MobileCategoryNav categories={categories} />
 
           {/* Breadcrumbs */}
           <Breadcrumbs items={breadcrumbs} />
