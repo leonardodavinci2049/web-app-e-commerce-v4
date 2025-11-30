@@ -1,19 +1,53 @@
+import {
+  fetchCategoriesAction,
+  fetchProductsAction,
+} from "@/app/actions/product";
 import { ProductCard } from "./ProductCard";
 
 interface ProductGridProps {
   title: string;
-  products: Array<{
-    id: string;
-    name: string;
-    price: number;
-    image: string;
-    isNew?: boolean;
-    discount?: number;
-    category: string;
-  }>;
+  categoryId?: string;
+  limit?: number;
 }
 
-export function ProductGrid({ title, products }: ProductGridProps) {
+/**
+ * Async Server Component - fetches products via Server Action
+ * Cacheable with granular invalidation via cache tags
+ */
+export async function ProductGrid({
+  title,
+  categoryId,
+  limit = 8,
+}: ProductGridProps) {
+  // Fetch products and categories via Server Actions
+  const [allProducts, categories] = await Promise.all([
+    fetchProductsAction(),
+    fetchCategoriesAction(),
+  ]);
+
+  // Filter by category if specified
+  let products = categoryId
+    ? allProducts.filter((p) => p.categoryId === categoryId)
+    : allProducts;
+
+  // Apply limit
+  products = products.slice(0, limit);
+
+  // Map category names
+  const getCategoryName = (catId?: string) =>
+    categories.find((c) => c.id === catId)?.name || "—";
+
+  // Transform products to include category name
+  const productsWithCategory = products.map((product) => ({
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    image: product.image,
+    isNew: product.isNew,
+    discount: product.discount,
+    category: getCategoryName(product.categoryId),
+  }));
+
   return (
     <section className="py-12 bg-background">
       <div className="container mx-auto px-4">
@@ -22,7 +56,7 @@ export function ProductGrid({ title, products }: ProductGridProps) {
             {title}
           </h2>
           <a
-            href="/"
+            href="/products"
             className="text-primary hover:underline font-medium text-sm"
           >
             Ver todos
@@ -30,7 +64,7 @@ export function ProductGrid({ title, products }: ProductGridProps) {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map((product) => (
+          {productsWithCategory.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

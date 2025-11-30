@@ -1,4 +1,9 @@
-import { CATEGORIES, PRODUCTS } from "../../data/mock-data";
+import { Suspense } from "react";
+import {
+  HeroBannerSkeleton,
+  NavigationSkeleton,
+  ProductGridSkeleton,
+} from "@/components/skeletons";
 import { AboutSection } from "./_components/AboutSection";
 import { Advantages } from "./_components/Advantages";
 import { DepartmentNavigation } from "./_components/DepartmentNavigation";
@@ -17,37 +22,46 @@ import { SpecificCategory } from "./_components/SpecificCategory";
 import { Testimonials } from "./_components/Testimonials";
 import { TopBar } from "./_components/TopBar";
 
+/**
+ * Home page with Suspense boundaries for async Server Components
+ * Static page shell is cached, async components stream in
+ */
 export default function Home() {
-  // Helper para adicionar o nome da categoria
-  const withCategoryName = (p: (typeof PRODUCTS)[number]) => ({
-    ...p,
-    category: CATEGORIES.find((c) => c.id === p.categoryId)?.name || "",
-  });
-
-  // Filter products for different sections
-  const newProducts = PRODUCTS.filter(
-    (p) => p.isNew || p.id === "1" || p.id === "5",
-  ).map(withCategoryName);
-  const featuredProducts = PRODUCTS.slice(0, 8).map(withCategoryName); // Just take first 8 for now
-  const gamerProducts = PRODUCTS.filter((p) => {
-    const categoryName = CATEGORIES.find((c) => c.id === p.categoryId)?.name;
-    return categoryName === "Gamer" || categoryName === "Periféricos";
-  }).map(withCategoryName);
-
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
+      {/* Static header components */}
       <TopBar />
       <MobileMainHeader />
       <MainHeader />
       <NavigationMenu />
 
       <main className="grow">
-        <HeroBanner />
-        <DepartmentNavigation />
-        <ProductGrid title="Lançamentos" products={newProducts} />
+        {/* Hero Banner with Suspense */}
+        <Suspense fallback={<HeroBannerSkeleton />}>
+          <HeroBanner />
+        </Suspense>
+
+        {/* Department Navigation with Suspense */}
+        <Suspense fallback={<NavigationSkeleton />}>
+          <DepartmentNavigation />
+        </Suspense>
+
+        {/* Product Grids with Suspense */}
+        <Suspense fallback={<ProductGridSkeleton count={8} />}>
+          <ProductGrid title="Lançamentos" limit={8} />
+        </Suspense>
+
         <PromoBanner />
-        <ProductGrid title="Destaques da Semana" products={featuredProducts} />
-        <SpecificCategory title="Mundo Gamer" products={gamerProducts} />
+
+        <Suspense fallback={<ProductGridSkeleton count={8} />}>
+          <ProductGrid title="Destaques da Semana" limit={8} />
+        </Suspense>
+
+        {/* SpecificCategory needs products passed - keeping static for now */}
+        <Suspense fallback={<ProductGridSkeleton count={4} />}>
+          <SpecificCategoryWrapper />
+        </Suspense>
+
         <PromoBannersGrid />
         <Testimonials />
         <Advantages />
@@ -60,4 +74,37 @@ export default function Home() {
       <MobileBottomMenu />
     </div>
   );
+}
+
+// Wrapper component for SpecificCategory to fetch data
+async function SpecificCategoryWrapper() {
+  const { fetchProductsAction, fetchCategoriesAction } = await import(
+    "@/app/actions/product"
+  );
+
+  const [products, categories] = await Promise.all([
+    fetchProductsAction(),
+    fetchCategoriesAction(),
+  ]);
+
+  const withCategoryName = (p: (typeof products)[number]) => ({
+    ...p,
+    category: categories.find((c) => c.id === p.categoryId)?.name || "",
+  });
+
+  // Filter for gamer products
+  const gamerProducts = products
+    .filter((p) => {
+      const categoryName = categories.find((c) => c.id === p.categoryId)?.name;
+      return categoryName === "Gamer" || categoryName === "Periféricos";
+    })
+    .map(withCategoryName);
+
+  // If no gamer products, show some featured ones
+  const displayProducts =
+    gamerProducts.length > 0
+      ? gamerProducts
+      : products.slice(0, 4).map(withCategoryName);
+
+  return <SpecificCategory title="Mundo Gamer" products={displayProducts} />;
 }

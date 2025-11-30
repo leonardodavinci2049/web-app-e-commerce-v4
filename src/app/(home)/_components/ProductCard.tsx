@@ -1,6 +1,7 @@
-import { Heart, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { AddToCartButton } from "@/components/product/actions/AddToCartButton";
+import { WishlistButton } from "@/components/product/actions/WishlistButton";
 import { getProductPath } from "@/lib/slug";
 
 interface ProductCardProps {
@@ -15,6 +16,11 @@ interface ProductCardProps {
   };
 }
 
+/**
+ * Server Component - renders all static content
+ * Client Components (AddToCartButton, WishlistButton) are imported as islands
+ * for interactive functionality while keeping the card cacheable
+ */
 export function ProductCard({ product }: ProductCardProps) {
   const productUrl = getProductPath(product.name, product.id);
 
@@ -34,13 +40,10 @@ export function ProductCard({ product }: ProductCardProps) {
         )}
       </div>
 
-      {/* Wishlist Button */}
-      <button
-        type="button"
-        className="absolute top-2 right-2 z-10 p-2 bg-white/80 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white hover:text-red-500"
-      >
-        <Heart className="w-5 h-5" />
-      </button>
+      {/* Wishlist Button - Client Island */}
+      <div className="absolute top-2 right-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+        <WishlistButton productId={product.id} />
+      </div>
 
       {/* Image */}
       <Link
@@ -86,13 +89,12 @@ export function ProductCard({ product }: ProductCardProps) {
             )}
           </div>
 
-          <button
-            type="button"
-            className="w-full bg-primary text-primary-foreground py-2 rounded-md font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
-          >
-            <ShoppingCart className="w-4 h-4" />
-            Comprar
-          </button>
+          {/* Add to Cart Button - Client Island */}
+          <AddToCartButton
+            productId={product.id}
+            productName={product.name}
+            price={product.price}
+          />
         </div>
       </div>
     </div>

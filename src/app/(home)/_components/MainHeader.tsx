@@ -1,6 +1,11 @@
-import { MessageCircle, Search, ShoppingCart, User } from "lucide-react";
+import { Search } from "lucide-react";
 import Image from "next/image";
+import { UserActions } from "@/components/header/UserActions";
 
+/**
+ * Server Component - renders static header structure
+ * UserActions is imported as Client Island for user-specific content
+ */
 export function MainHeader() {
   return (
     <header className="bg-card border-b border-border shadow-sm sticky top-0 z-40 hidden md:block">
@@ -41,34 +46,9 @@ export function MainHeader() {
           </div>
         </div>
 
-        {/* Icons - apenas em telas md+ */}
-        <div className="hidden md:flex items-center gap-6 text-sm font-medium text-foreground">
-          <a
-            href="/"
-            className="flex flex-col items-center gap-1 hover:text-primary transition-colors group"
-          >
-            <MessageCircle className="w-6 h-6 group-hover:scale-110 transition-transform" />
-            <span className="hidden lg:inline">Fale Conosco</span>
-          </a>
-          <a
-            href="/"
-            className="flex flex-col items-center gap-1 hover:text-primary transition-colors group"
-          >
-            <User className="w-6 h-6 group-hover:scale-110 transition-transform" />
-            <span className="hidden lg:inline">Entre / Cadastre-se</span>
-          </a>
-          <a
-            href="/"
-            className="flex flex-col items-center gap-1 hover:text-primary transition-colors group relative"
-          >
-            <div className="relative">
-              <ShoppingCart className="w-6 h-6 group-hover:scale-110 transition-transform" />
-              <span className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
-                3
-              </span>
-            </div>
-            <span className="hidden lg:inline">Carrinho</span>
-          </a>
+        {/* User Actions - Client Island */}
+        <div className="hidden md:flex">
+          <UserActions />
         </div>
       </div>
     </header>

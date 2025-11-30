@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Camera,
   Home,
@@ -10,9 +8,9 @@ import {
   Sun,
 } from "lucide-react";
 import Link from "next/link";
-import { CATEGORIES } from "@/data/mock-data";
+import { fetchCategoriesAction } from "@/app/actions/product";
 
-// Mapeamento de nomes de ícones para componentes
+// Icon mapping for category icons
 const iconMap: Record<string, LucideIcon> = {
   Camera,
   Monitor,
@@ -22,7 +20,13 @@ const iconMap: Record<string, LucideIcon> = {
   Sun,
 };
 
-export function DepartmentNavigation() {
+/**
+ * Async Server Component - fetches categories via Server Action
+ * Cached for 1 hour via navigation cache tag
+ */
+export async function DepartmentNavigation() {
+  const categories = await fetchCategoriesAction();
+
   return (
     <section className="py-12">
       <div className="container mx-auto px-4">
@@ -30,8 +34,8 @@ export function DepartmentNavigation() {
           Navegue por Departamentos
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
-          {CATEGORIES.map((category) => {
-            const Icon = iconMap[category.iconName]; // ← Busca o ícone pelo nome
+          {categories.map((category) => {
+            const Icon = iconMap[category.iconName];
 
             if (!Icon) {
               console.warn(`Icon "${category.iconName}" not found in iconMap`);
