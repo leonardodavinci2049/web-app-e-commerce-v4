@@ -2,14 +2,14 @@
 
 import {
   Camera,
+  ChevronRight,
   Home,
+  type LucideIcon,
   Monitor,
   Smartphone,
   Star,
   Sun,
-  type LucideIcon,
 } from "lucide-react";
-import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";

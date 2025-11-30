@@ -3,11 +3,11 @@
 import {
   Camera,
   Home,
+  type LucideIcon,
   Monitor,
   Smartphone,
   Star,
   Sun,
-  type LucideIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { CATEGORIES } from "@/data/mock-data";

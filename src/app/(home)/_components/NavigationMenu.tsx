@@ -59,7 +59,7 @@ export function NavigationMenu() {
               },
               {
                 label: "Catálogo",
-               href: "/products" 
+                href: "/products",
               },
             ].map((item) => (
               <li key={item.label}>

@@ -1,9 +1,9 @@
+import { notFound } from "next/navigation";
 import {
   fetchCategoriesAction,
   fetchProductBySlugAction,
   fetchRelatedProductsAction,
 } from "@/app/actions/product";
-import { notFound } from "next/navigation";
 import { ProductImageGallery } from "./ProductImageGallery";
 import { ProductInfo } from "./ProductInfo";
 import { ProductTabs } from "./ProductTabs";

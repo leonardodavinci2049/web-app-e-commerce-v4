@@ -10,17 +10,5 @@ export async function ProductListingContainer() {
     fetchCategoriesAction(),
   ]);
 
-  // Remove icon component to avoid serialization error
-  const serializedCategories = categories.map((c) => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { icon, ...rest } = c;
-    return rest;
-  });
-
-  return (
-    <ProductListing
-      initialProducts={products}
-      categories={serializedCategories}
-    />
-  );
+  return <ProductListing initialProducts={products} categories={categories} />;
 }
