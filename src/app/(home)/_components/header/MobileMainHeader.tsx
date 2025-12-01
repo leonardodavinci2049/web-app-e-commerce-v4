@@ -1,7 +1,8 @@
-import { Search } from "lucide-react";
+import {  Search } from "lucide-react";
 import Image from "next/image";
 import ModeToggle from "@/components/theme/mode-toggle";
 import { MobileCategoryMenu } from "./components/MobileCategoryMenu";
+import Link from "next/link";
 
 export function MobileMainHeader() {
   return (
@@ -15,7 +16,7 @@ export function MobileMainHeader() {
           </div>
 
           {/* Logo centralizada */}
-          <a
+          <Link
             href="/"
             className="inline-flex items-center"
             aria-label="Mundial Megastore - Página inicial"
@@ -29,7 +30,7 @@ export function MobileMainHeader() {
                 priority
               />
             </div>
-          </a>
+          </Link>
 
           {/* Toggle de tema - direita */}
           <div className="absolute right-0 flex items-center">
