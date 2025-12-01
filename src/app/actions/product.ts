@@ -1,20 +1,20 @@
 "use server";
 
 import {
-  getCachedCategories,
-  getCachedCategoryBySlug,
-  getCachedProductBySlug,
-  getCachedProducts,
-  getCachedProductsByCategory,
-  getCachedRelatedProducts,
+  getCategories,
+  getCategoryBySlug,
+  getProductBySlug,
+  getProducts,
+  getProductsByCategory,
+  getRelatedProducts,
 } from "@/services/product";
 
 /**
- * Fetch all products with caching
+ * Fetch all products (cached via 'use cache' in service)
  */
 export async function fetchProductsAction() {
   try {
-    return await getCachedProducts();
+    return await getProducts();
   } catch (error) {
     console.error("Failed to fetch products:", error);
     return [];
@@ -22,11 +22,11 @@ export async function fetchProductsAction() {
 }
 
 /**
- * Fetch all categories with caching
+ * Fetch all categories (cached via 'use cache' in service)
  */
 export async function fetchCategoriesAction() {
   try {
-    return await getCachedCategories();
+    return await getCategories();
   } catch (error) {
     console.error("Failed to fetch categories:", error);
     return [];
@@ -34,11 +34,11 @@ export async function fetchCategoriesAction() {
 }
 
 /**
- * Fetch a product by its slug with caching
+ * Fetch a product by its slug (cached via 'use cache' in service)
  */
 export async function fetchProductBySlugAction(slug: string[]) {
   try {
-    return await getCachedProductBySlug(slug);
+    return await getProductBySlug(slug);
   } catch (error) {
     console.error("Failed to fetch product by slug:", error);
     return undefined;
@@ -46,14 +46,14 @@ export async function fetchProductBySlugAction(slug: string[]) {
 }
 
 /**
- * Fetch related products with caching
+ * Fetch related products (cached via 'use cache' in service)
  */
 export async function fetchRelatedProductsAction(
   productId: string,
   categoryId: string,
 ) {
   try {
-    return await getCachedRelatedProducts(productId, categoryId);
+    return await getRelatedProducts(productId, categoryId);
   } catch (error) {
     console.error("Failed to fetch related products:", error);
     return [];
@@ -61,14 +61,14 @@ export async function fetchRelatedProductsAction(
 }
 
 /**
- * Fetch category by slug with caching
+ * Fetch category by slug (cached via 'use cache' in service)
  */
 export async function fetchCategoryBySlugAction(
   categorySlug: string,
   subcategorySlug?: string,
 ) {
   try {
-    return await getCachedCategoryBySlug(categorySlug, subcategorySlug);
+    return await getCategoryBySlug(categorySlug, subcategorySlug);
   } catch (error) {
     console.error("Failed to fetch category by slug:", error);
     return null;
@@ -76,14 +76,14 @@ export async function fetchCategoryBySlugAction(
 }
 
 /**
- * Fetch products by category with caching
+ * Fetch products by category (cached via 'use cache' in service)
  */
 export async function fetchProductsByCategoryAction(
   categoryId: string,
   subcategoryId?: string,
 ) {
   try {
-    return await getCachedProductsByCategory(categoryId, subcategoryId);
+    return await getProductsByCategory(categoryId, subcategoryId);
   } catch (error) {
     console.error("Failed to fetch products by category:", error);
     return [];
