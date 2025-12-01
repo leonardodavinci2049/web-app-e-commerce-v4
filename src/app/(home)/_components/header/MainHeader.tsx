@@ -1,6 +1,6 @@
 import { Search } from "lucide-react";
 import Image from "next/image";
-import { UserActions } from "@/components/header/UserActions";
+import { UserActions } from "@/app/(home)/_components/header/components/UserActions";
 
 /**
  * Server Component - renders static header structure

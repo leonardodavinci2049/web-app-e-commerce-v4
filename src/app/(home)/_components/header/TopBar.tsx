@@ -1,5 +1,3 @@
-"use client";
-
 import { Phone } from "lucide-react";
 import ModeToggle from "@/components/theme/mode-toggle";
 

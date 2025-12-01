@@ -7,7 +7,7 @@ import { LoadMoreButton } from "./LoadMoreButton";
 import { ProductFilters } from "./ProductFilters";
 import { ProductGrid } from "./ProductGrid";
 
-// Define RawProduct to match the structure from mock-data/service
+// xxxDefine RawProduct to match the structure from mock-data/service
 interface RawProduct {
   id: string;
   name: string;
