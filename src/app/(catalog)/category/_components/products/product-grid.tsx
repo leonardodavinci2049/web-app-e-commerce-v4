@@ -1,5 +1,5 @@
-import { ProductCard } from "@/app/(home)/_components/product/ProductCard";
-import { LoadMoreProducts } from "@/components/product/LoadMoreProducts";
+import { LoadMoreProducts } from "@/app/(catalog)/category/_components/products/_components/LoadMoreProducts";
+import { ProductCard } from "@/app/(catalog)/category/_components/products/_components/ProductCard";
 
 interface ProductGridProps {
   products: Array<{

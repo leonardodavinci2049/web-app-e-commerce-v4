@@ -1,6 +1,7 @@
 import { Search } from "lucide-react";
 import Image from "next/image";
-import { UserActions } from "@/components/header/UserActions";
+import Link from "next/link";
+import { UserActions } from "@/app/(home)/_components/header/components/UserActions";
 
 /**
  * Server Component - renders static header structure
@@ -12,7 +13,7 @@ export function MainHeader() {
       <div className="container mx-auto px-4 py-4 flex flex-row items-center gap-4 justify-between">
         {/* Logo */}
         <div className="shrink-0 flex items-center justify-start">
-          <a
+          <Link
             href="/"
             className="inline-flex items-center"
             aria-label="Mundial Megastore - Página inicial"
@@ -26,7 +27,7 @@ export function MainHeader() {
                 priority
               />
             </div>
-          </a>
+          </Link>
         </div>
 
         {/* Search Bar */}

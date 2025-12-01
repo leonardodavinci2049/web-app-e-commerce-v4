@@ -2,7 +2,7 @@ import {
   fetchCategoriesAction,
   fetchProductsAction,
 } from "@/app/actions/product";
-import { ProductCard } from "./ProductCard";
+import { ProductCard } from "../../../(catalog)/category/_components/products/_components/ProductCard";
 
 interface ProductGridProps {
   title: string;

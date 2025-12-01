@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ProductCard } from "../product/ProductCard";
+import { ProductCard } from "../../../(catalog)/category/_components/products/_components/ProductCard";
 
 interface SpecificCategoryProps {
   title: string;

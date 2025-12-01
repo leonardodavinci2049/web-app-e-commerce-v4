@@ -1,172 +1,127 @@
-import { unstable_cache } from "next/cache";
-import { cache } from "react";
+import { cacheLife, cacheTag } from "next/cache";
 import { CATEGORIES, PRODUCTS } from "@/data/mock-data";
-import { CACHE_DURATIONS, CACHE_TAGS } from "@/lib/cache-config";
+import { CACHE_TAGS } from "@/lib/cache-config";
 
 // Types for mock data
 type MockProduct = (typeof PRODUCTS)[number];
 type MockCategory = (typeof CATEGORIES)[number];
 
-// Base functions with React cache() for request deduplication
-const getProducts = cache(async (): Promise<MockProduct[]> => {
+/**
+ * Fetch all products with 1 hour cache
+ */
+export async function getProducts(): Promise<MockProduct[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.products);
+
   // Simulate network delay
   await new Promise((resolve) => setTimeout(resolve, 100));
   return PRODUCTS;
-});
+}
 
-const getCategories = cache(async (): Promise<MockCategory[]> => {
+/**
+ * Fetch all categories with 1 hour cache
+ */
+export async function getCategories(): Promise<MockCategory[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.categories, CACHE_TAGS.navigation);
+
   // Simulate network delay
   await new Promise((resolve) => setTimeout(resolve, 100));
   return CATEGORIES;
-});
+}
 
-const getProductById = cache(
-  async (id: string): Promise<MockProduct | undefined> => {
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    return PRODUCTS.find((p) => p.id === id);
-  },
-);
+/**
+ * Fetch a product by ID with 1 hour cache
+ */
+export async function getProductById(
+  id: string,
+): Promise<MockProduct | undefined> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.product(id), CACHE_TAGS.products);
 
-const getProductBySlug = cache(
-  async (slug: string[]): Promise<MockProduct | undefined> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    const fullSlug = slug.join("/");
-    const parts = fullSlug.split("-");
-    const id = parts[parts.length - 1];
-    return PRODUCTS.find((p) => p.id === id);
-  },
-);
+  await new Promise((resolve) => setTimeout(resolve, 50));
+  return PRODUCTS.find((p) => p.id === id);
+}
 
-const getRelatedProducts = cache(
-  async (productId: string, categoryId: string): Promise<MockProduct[]> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    return PRODUCTS.filter(
-      (p) => p.categoryId === categoryId && p.id !== productId,
-    );
-  },
-);
+/**
+ * Fetch a product by slug with 1 hour cache
+ */
+export async function getProductBySlug(
+  slug: string[],
+): Promise<MockProduct | undefined> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.products);
 
-const getCategoryBySlug = cache(
-  async (categorySlug: string, subcategorySlug?: string) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    const category = CATEGORIES.find((c) => c.slug === categorySlug);
-    if (!category) return null;
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  const fullSlug = slug.join("/");
+  const parts = fullSlug.split("-");
+  const id = parts[parts.length - 1];
+  return PRODUCTS.find((p) => p.id === id);
+}
 
-    let subcategory = null;
-    if (subcategorySlug) {
-      subcategory = category.subcategories?.find(
-        (s) => s.slug === subcategorySlug,
-      );
-      if (!subcategory) return null;
-    }
-    return { category, subcategory };
-  },
-);
-
-const getProductsByCategory = cache(
-  async (
-    categoryId: string,
-    subcategoryId?: string,
-  ): Promise<MockProduct[]> => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    return PRODUCTS.filter((product) => {
-      const matchCategory = product.categoryId === categoryId;
-      const matchSubcategory = subcategoryId
-        ? product.subcategoryId === subcategoryId
-        : true;
-      return matchCategory && matchSubcategory;
-    });
-  },
-);
-
-// Cached versions with unstable_cache for persistent cache with tags
-export const getCachedProducts = unstable_cache(
-  async () => getProducts(),
-  ["products"],
-  {
-    tags: [CACHE_TAGS.products],
-    revalidate: CACHE_DURATIONS.products,
-  },
-);
-
-export const getCachedCategories = unstable_cache(
-  async () => getCategories(),
-  ["categories"],
-  {
-    tags: [CACHE_TAGS.categories, CACHE_TAGS.navigation],
-    revalidate: CACHE_DURATIONS.navigation,
-  },
-);
-
-export const getCachedProductById = (id: string) =>
-  unstable_cache(async () => getProductById(id), ["product", id], {
-    tags: [CACHE_TAGS.product(id), CACHE_TAGS.products],
-    revalidate: CACHE_DURATIONS.products,
-  })();
-
-export const getCachedProductBySlug = (slug: string[]) =>
-  unstable_cache(
-    async () => getProductBySlug(slug),
-    ["product-slug", ...slug],
-    {
-      tags: [CACHE_TAGS.products],
-      revalidate: CACHE_DURATIONS.products,
-    },
-  )();
-
-export const getCachedRelatedProducts = (
+/**
+ * Fetch related products with 1 hour cache
+ */
+export async function getRelatedProducts(
   productId: string,
   categoryId: string,
-) =>
-  unstable_cache(
-    async () => getRelatedProducts(productId, categoryId),
-    ["related-products", productId, categoryId],
-    {
-      tags: [CACHE_TAGS.products, CACHE_TAGS.category(categoryId)],
-      revalidate: CACHE_DURATIONS.products,
-    },
-  )();
+): Promise<MockProduct[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.products, CACHE_TAGS.category(categoryId));
 
-export const getCachedCategoryBySlug = (
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  return PRODUCTS.filter(
+    (p) => p.categoryId === categoryId && p.id !== productId,
+  );
+}
+
+/**
+ * Fetch category by slug with 1 hour cache
+ */
+export async function getCategoryBySlug(
   categorySlug: string,
   subcategorySlug?: string,
-) =>
-  unstable_cache(
-    async () => getCategoryBySlug(categorySlug, subcategorySlug),
-    ["category-slug", categorySlug, subcategorySlug || ""],
-    {
-      tags: [CACHE_TAGS.categories],
-      revalidate: CACHE_DURATIONS.navigation,
-    },
-  )();
+) {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.categories);
 
-export const getCachedProductsByCategory = (
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  const category = CATEGORIES.find((c) => c.slug === categorySlug);
+  if (!category) return null;
+
+  let subcategory = null;
+  if (subcategorySlug) {
+    subcategory = category.subcategories?.find(
+      (s) => s.slug === subcategorySlug,
+    );
+    if (!subcategory) return null;
+  }
+  return { category, subcategory };
+}
+
+/**
+ * Fetch products by category with 1 hour cache
+ */
+export async function getProductsByCategory(
   categoryId: string,
   subcategoryId?: string,
-) =>
-  unstable_cache(
-    async () => getProductsByCategory(categoryId, subcategoryId),
-    ["products-by-category", categoryId, subcategoryId || ""],
-    {
-      tags: [CACHE_TAGS.products, CACHE_TAGS.category(categoryId)],
-      revalidate: CACHE_DURATIONS.products,
-    },
-  )();
+): Promise<MockProduct[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.products, CACHE_TAGS.category(categoryId));
 
-// Legacy service object for backward compatibility
-export const productService = {
-  getProducts,
-  getCategories,
-  getProductBySlug,
-  getRelatedProducts,
-  getCategoryBySlug,
-  getProductsByCategory,
-  // Cached versions
-  getCachedProducts,
-  getCachedCategories,
-  getCachedProductById,
-  getCachedProductBySlug,
-  getCachedRelatedProducts,
-  getCachedCategoryBySlug,
-  getCachedProductsByCategory,
-};
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  return PRODUCTS.filter((product) => {
+    const matchCategory = product.categoryId === categoryId;
+    const matchSubcategory = subcategoryId
+      ? product.subcategoryId === subcategoryId
+      : true;
+    return matchCategory && matchSubcategory;
+  });
+}

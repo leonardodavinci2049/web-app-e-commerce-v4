@@ -1,6 +1,5 @@
-"use client";
-
 import { Phone } from "lucide-react";
+import Link from "next/link";
 import ModeToggle from "@/components/theme/mode-toggle";
 
 export function TopBar() {
@@ -8,9 +7,9 @@ export function TopBar() {
     <div className="bg-muted text-muted-foreground py-2 text-xs sm:text-sm hidden md:block">
       <div className="container mx-auto px-4 flex justify-between items-center">
         <div className="flex items-center gap-4">
-          <a href="/" className="hover:text-primary transition-colors">
+          <Link href="/" className="hover:text-primary transition-colors">
             Atendimento ao Cliente
-          </a>
+          </Link>
         </div>
         <div className="hidden sm:flex items-center gap-2">
           <Phone className="w-4 h-4" />

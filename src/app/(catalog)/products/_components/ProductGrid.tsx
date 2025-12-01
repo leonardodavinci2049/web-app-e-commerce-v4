@@ -1,8 +1,8 @@
-import type { Product } from "@/types/product";
-import { ProductCard } from "../../../(home)/_components/product/ProductCard";
+import type { TransformedProduct } from "@/types/product";
+import { ProductCard } from "../../category/_components/products/_components/ProductCard";
 
 interface ProductGridProps {
-  products: Product[];
+  products: TransformedProduct[];
 }
 
 export function ProductGrid({ products }: ProductGridProps) {

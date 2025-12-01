@@ -2,22 +2,23 @@
 
 import { X } from "lucide-react";
 
-import { useProductStore } from "@/store/useProductStore";
+interface ProductFiltersProps {
+  categories: string[];
+  subcategories: string[];
+  selectedCategory: string;
+  selectedSubcategory: string;
+  onCategoryChange: (category: string) => void;
+  onSubcategoryChange: (subcategory: string) => void;
+}
 
 export function ProductFilters({
   categories,
   subcategories,
-}: {
-  categories: string[];
-  subcategories: string[];
-}) {
-  const {
-    selectedCategory,
-    selectedSubcategory,
-    setSelectedCategory,
-    setSelectedSubcategory,
-  } = useProductStore();
-
+  selectedCategory,
+  selectedSubcategory,
+  onCategoryChange,
+  onSubcategoryChange,
+}: ProductFiltersProps) {
   return (
     <div className="bg-card border-y border-border py-4">
       <div className="container mx-auto px-4">
@@ -29,7 +30,7 @@ export function ProductFilters({
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              onClick={() => setSelectedCategory("")}
+              onClick={() => onCategoryChange("")}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                 selectedCategory === ""
                   ? "bg-primary text-primary-foreground"
@@ -42,7 +43,7 @@ export function ProductFilters({
               <button
                 key={category}
                 type="button"
-                onClick={() => setSelectedCategory(category)}
+                onClick={() => onCategoryChange(category)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-2 ${
                   selectedCategory === category
                     ? "bg-primary text-primary-foreground"
@@ -55,7 +56,7 @@ export function ProductFilters({
                     className="w-3 h-3"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setSelectedCategory("");
+                      onCategoryChange("");
                     }}
                   />
                 )}
@@ -73,7 +74,7 @@ export function ProductFilters({
             <div className="flex flex-wrap gap-2">
               <button
                 type="button"
-                onClick={() => setSelectedSubcategory("")}
+                onClick={() => onSubcategoryChange("")}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                   selectedSubcategory === ""
                     ? "bg-primary text-primary-foreground"
@@ -86,7 +87,7 @@ export function ProductFilters({
                 <button
                   key={subcategory}
                   type="button"
-                  onClick={() => setSelectedSubcategory(subcategory)}
+                  onClick={() => onSubcategoryChange(subcategory)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors flex items-center gap-2 ${
                     selectedSubcategory === subcategory
                       ? "bg-primary text-primary-foreground"
@@ -99,7 +100,7 @@ export function ProductFilters({
                       className="w-3 h-3"
                       onClick={(e) => {
                         e.stopPropagation();
-                        setSelectedSubcategory("");
+                        onSubcategoryChange("");
                       }}
                     />
                   )}
