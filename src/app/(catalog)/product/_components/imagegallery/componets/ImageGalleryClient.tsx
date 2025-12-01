@@ -3,27 +3,23 @@
 import Image from "next/image";
 import { useState } from "react";
 
-interface ProductImageGalleryProps {
+interface ImageGalleryClientProps {
   images: string[];
   productName: string;
 }
 
-export function ProductImageGallery({
+export function ImageGalleryClient({
   images,
   productName,
-}: ProductImageGalleryProps) {
+}: ImageGalleryClientProps) {
   const [selectedImage, setSelectedImage] = useState(0);
-
-  // Se não houver imagens, usar placeholder
-  const displayImages =
-    images.length > 0 ? images : ["/images/product/no-image.jpeg"];
 
   return (
     <div className="space-y-4">
       {/* Imagem Principal */}
       <div className="relative aspect-square bg-white rounded-lg border border-border overflow-hidden">
         <Image
-          src={displayImages[selectedImage]}
+          src={images[selectedImage]}
           alt={productName}
           fill
           className="object-contain p-8"
@@ -32,9 +28,9 @@ export function ProductImageGallery({
       </div>
 
       {/* Miniaturas */}
-      {displayImages.length > 1 && (
+      {images.length > 1 && (
         <div className="grid grid-cols-4 gap-2">
-          {displayImages.map((image, index) => (
+          {images.map((image, index) => (
             <button
               key={image}
               type="button"

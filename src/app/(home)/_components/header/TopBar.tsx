@@ -1,6 +1,6 @@
 import { Phone } from "lucide-react";
-import ModeToggle from "@/components/theme/mode-toggle";
 import Link from "next/link";
+import ModeToggle from "@/components/theme/mode-toggle";
 
 export function TopBar() {
   return (

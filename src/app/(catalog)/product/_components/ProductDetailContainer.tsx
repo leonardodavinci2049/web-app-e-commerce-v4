@@ -6,7 +6,7 @@ import {
   fetchRelatedProductsAction,
 } from "@/app/actions/product";
 import { ProductGridSkeleton } from "@/components/skeletons";
-import { ProductImageGallery } from "./ProductImageGallery";
+import { ProductImageGallery } from "./imagegallery/ProductImageGallery";
 import { ProductInfo } from "./ProductInfo";
 import { ProductTabs } from "./ProductTabs";
 import { RelatedProducts } from "./RelatedProducts";

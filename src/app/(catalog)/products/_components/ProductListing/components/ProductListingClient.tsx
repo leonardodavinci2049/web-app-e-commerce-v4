@@ -1,10 +1,12 @@
 "use client";
 
-import { useProductStore } from "@/store/useProductStore";
+import { useState } from "react";
 import type { CategoryMap, TransformedProduct } from "@/types/product";
-import { LoadMoreButton } from "../LoadMoreButton";
-import { ProductFilters } from "../ProductFilters";
-import { ProductGrid } from "../ProductGrid";
+import { LoadMoreButton } from "../../LoadMoreButton";
+import { ProductGrid } from "../../ProductGrid";
+import { ProductFilters } from "./ProductFilters";
+
+const PRODUCTS_PER_PAGE = 20;
 
 interface ProductListingClientProps {
   products: TransformedProduct[];
@@ -17,13 +19,29 @@ export function ProductListingClient({
   categories,
   categoryMap,
 }: ProductListingClientProps) {
-  const {
-    selectedCategory,
-    selectedSubcategory,
-    displayCount,
-    loading,
-    loadMore,
-  } = useProductStore();
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSubcategory, setSelectedSubcategory] = useState("");
+  const [displayCount, setDisplayCount] = useState(PRODUCTS_PER_PAGE);
+  const [loading, setLoading] = useState(false);
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    setSelectedSubcategory("");
+    setDisplayCount(PRODUCTS_PER_PAGE);
+  };
+
+  const handleSubcategoryChange = (subcategory: string) => {
+    setSelectedSubcategory(subcategory);
+    setDisplayCount(PRODUCTS_PER_PAGE);
+  };
+
+  const loadMore = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setDisplayCount((prev) => prev + PRODUCTS_PER_PAGE);
+      setLoading(false);
+    }, 500);
+  };
 
   // Subcategorias baseadas na categoria selecionada
   const subcategories = selectedCategory
@@ -54,7 +72,14 @@ export function ProductListingClient({
   return (
     <>
       {/* Filtros */}
-      <ProductFilters categories={categories} subcategories={subcategories} />
+      <ProductFilters
+        categories={categories}
+        subcategories={subcategories}
+        selectedCategory={selectedCategory}
+        selectedSubcategory={selectedSubcategory}
+        onCategoryChange={handleCategoryChange}
+        onSubcategoryChange={handleSubcategoryChange}
+      />
 
       {/* Contador de Produtos */}
       <section className="bg-background py-4 border-b border-border">

@@ -1,8 +1,8 @@
-import {  Search } from "lucide-react";
+import { Search } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import ModeToggle from "@/components/theme/mode-toggle";
 import { MobileCategoryMenu } from "./components/MobileCategoryMenu";
-import Link from "next/link";
 
 export function MobileMainHeader() {
   return (

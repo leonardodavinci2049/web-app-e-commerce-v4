@@ -9,8 +9,8 @@ import {
 import { ProductGridSkeleton } from "@/components/skeletons";
 import { Breadcrumbs } from "../_components/breadcrumbs";
 import { CategorySidebar } from "../_components/category-sidebar";
-import { MobileCategoryNav } from "../_components/mobile-category-nav";
-import { ProductGrid } from "../_components/product-grid";
+import { MobileCategoryNav } from "../_components/mobile-category/mobile-category-nav";
+import { ProductGrid } from "../_components/products/product-grid";
 
 interface CategoryPageProps {
   params: Promise<{
