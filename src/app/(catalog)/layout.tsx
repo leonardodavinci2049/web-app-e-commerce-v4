@@ -1,9 +1,9 @@
-import { Footer } from "../(home)/_components/Footer";
-import { MainHeader } from "../(home)/_components/MainHeader";
-import { MobileBottomMenu } from "../(home)/_components/MobileBottomMenu";
-import { MobileMainHeader } from "../(home)/_components/MobileMainHeader";
-import { NavigationMenu } from "../(home)/_components/NavigationMenu";
-import { TopBar } from "../(home)/_components/TopBar";
+import { Footer } from "../(home)/_components/footer/Footer";
+import { MainHeader } from "../(home)/_components/header/MainHeader";
+import { MobileBottomMenu } from "../(home)/_components/footer/MobileBottomMenu";
+import { MobileMainHeader } from "../(home)/_components/header/MobileMainHeader";
+import { NavigationMenu } from "../(home)/_components/navegation/NavigationMenu";
+import { TopBar } from "../(home)/_components/header/TopBar";
 
 const CatalogLayout = ({
   children,

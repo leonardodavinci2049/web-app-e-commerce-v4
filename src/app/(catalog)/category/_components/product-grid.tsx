@@ -1,4 +1,4 @@
-import { ProductCard } from "@/app/(home)/_components/ProductCard";
+import { ProductCard } from "@/app/(home)/_components/product/ProductCard";
 import { LoadMoreProducts } from "@/components/product/LoadMoreProducts";
 
 interface ProductGridProps {

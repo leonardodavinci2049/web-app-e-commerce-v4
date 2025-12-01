@@ -4,23 +4,23 @@ import {
   NavigationSkeleton,
   ProductGridSkeleton,
 } from "@/components/skeletons";
-import { AboutSection } from "./_components/AboutSection";
-import { Advantages } from "./_components/Advantages";
-import { DepartmentNavigation } from "./_components/DepartmentNavigation";
-import { Footer } from "./_components/Footer";
-import { HeroBanner } from "./_components/HeroBanner";
-import { LocationMap } from "./_components/LocationMap";
-import { MainHeader } from "./_components/MainHeader";
-import { MobileBottomMenu } from "./_components/MobileBottomMenu";
-import { MobileMainHeader } from "./_components/MobileMainHeader";
-import { NavigationMenu } from "./_components/NavigationMenu";
-import { Newsletter } from "./_components/Newsletter";
-import { ProductGrid } from "./_components/ProductGrid";
-import { PromoBanner } from "./_components/PromoBanner";
-import { PromoBannersGrid } from "./_components/PromoBannersGrid";
-import { SpecificCategory } from "./_components/SpecificCategory";
-import { Testimonials } from "./_components/Testimonials";
-import { TopBar } from "./_components/TopBar";
+import { AboutSection } from "./_components/sections/AboutSection";
+import { Advantages } from "./_components/sections/Advantages";
+import { DepartmentNavigation } from "./_components/navegation/DepartmentNavigation";
+import { Footer } from "./_components/footer/Footer";
+import { HeroBanner } from "./_components/hero/HeroBanner";
+import { LocationMap } from "./_components/sections/LocationMap";
+import { MainHeader } from "./_components/header/MainHeader";
+import { MobileBottomMenu } from "./_components/footer/MobileBottomMenu";
+import { MobileMainHeader } from "./_components/header/MobileMainHeader";
+import { NavigationMenu } from "./_components/navegation/NavigationMenu";
+import { Newsletter } from "./_components/sections/Newsletter";
+import { ProductGrid } from "./_components/product/ProductGrid";
+import { PromoBanner } from "./_components/banner/PromoBanner";
+import { PromoBannersGrid } from "./_components/banner/PromoBannersGrid";
+import { SpecificCategory } from "./_components/banner/SpecificCategory";
+import { Testimonials } from "./_components/sections/Testimonials";
+import { TopBar } from "./_components/header/TopBar";
 
 /**
  * Home page with Suspense boundaries for async Server Components

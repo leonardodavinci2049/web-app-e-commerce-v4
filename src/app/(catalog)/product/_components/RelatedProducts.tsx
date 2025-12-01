@@ -1,4 +1,4 @@
-import { ProductCard } from "../../../(home)/_components/ProductCard";
+import { ProductCard } from "../../../(home)/_components/product/ProductCard";
 
 interface RelatedProductsProps {
   products: Array<{
