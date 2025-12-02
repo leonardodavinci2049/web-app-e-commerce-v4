@@ -48,7 +48,7 @@ export function MainHeader() {
         </div>
 
         {/* User Actions - Client Island */}
-        
+
         <div className="hidden md:flex">
           <UserActions />
         </div>
