@@ -12,6 +12,7 @@ const createCartStore = () =>
     persist(
       (set, get) => ({
         items: [],
+        uniqueItems: 0,
         totalItems: 0,
         totalPrice: 0,
         paymentMethod: "PIX",
@@ -39,6 +40,7 @@ const createCartStore = () =>
 
           const updatedItems = get().items;
           set({
+            uniqueItems: updatedItems.length,
             totalItems: updatedItems.reduce((sum, i) => sum + i.quantity, 0),
             totalPrice: updatedItems.reduce(
               (sum, i) => sum + i.price * i.quantity,
@@ -52,6 +54,7 @@ const createCartStore = () =>
           const updatedItems = items.filter((i) => i.productId !== productId);
           set({
             items: updatedItems,
+            uniqueItems: updatedItems.length,
             totalItems: updatedItems.reduce((sum, i) => sum + i.quantity, 0),
             totalPrice: updatedItems.reduce(
               (sum, i) => sum + i.price * i.quantity,
@@ -68,6 +71,7 @@ const createCartStore = () =>
           );
           set({
             items: updatedItems,
+            uniqueItems: updatedItems.length,
             totalItems: updatedItems.reduce((sum, i) => sum + i.quantity, 0),
             totalPrice: updatedItems.reduce(
               (sum, i) => sum + i.price * i.quantity,
@@ -83,6 +87,7 @@ const createCartStore = () =>
         clearCart: () => {
           set({
             items: [],
+            uniqueItems: 0,
             totalItems: 0,
             totalPrice: 0,
             paymentMethod: "PIX",
@@ -96,6 +101,7 @@ const createCartStore = () =>
         name: CART_STORAGE_KEY,
         partialize: (state) => ({
           items: state.items,
+          uniqueItems: state.uniqueItems,
           totalItems: state.totalItems,
           totalPrice: state.totalPrice,
           paymentMethod: state.paymentMethod,

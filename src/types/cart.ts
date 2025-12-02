@@ -18,6 +18,7 @@ export type PaymentMethod = "PIX" | "Cartão" | "Dinheiro";
 
 export interface CartState {
   items: CartItem[];
+  uniqueItems: number;
   totalItems: number;
   totalPrice: number;
   paymentMethod: PaymentMethod;

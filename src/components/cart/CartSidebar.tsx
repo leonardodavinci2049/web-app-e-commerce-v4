@@ -17,6 +17,7 @@ import { WhatsAppCheckoutButton } from "./WhatsAppCheckoutButton";
 export function CartSidebar() {
   const {
     items,
+    uniqueItems,
     totalItems,
     isOpen,
     closeCart,
@@ -34,13 +35,13 @@ export function CartSidebar() {
         role="dialog"
         aria-label="Carrinho de compras"
       >
-        <SheetHeader className="border-b border-border pb-4 -mx-4 px-4">
+        <SheetHeader className="border-b border-border pb-4 -mx-4 px-4 pr-12">
           <SheetTitle className="flex items-center gap-2 text-lg">
             <ShoppingCart className="w-5 h-5" />
             Meu Carrinho
             {totalItems > 0 && (
-              <span className="ml-auto bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded-full">
-                {totalItems}
+              <span className="ml-auto bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-full">
+                {uniqueItems}/{totalItems}
               </span>
             )}
           </SheetTitle>
