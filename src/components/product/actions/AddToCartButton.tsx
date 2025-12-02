@@ -40,7 +40,7 @@ export function AddToCartButton({
       className="w-full bg-primary text-primary-foreground py-2 rounded-md font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
     >
       <ShoppingCart className="w-4 h-4" />
-      {isAdding ? "Adicionando..." : "Comprar"}
+      {isAdding ? "Adicionando..." : "Adicionar"}
     </button>
   );
 }
