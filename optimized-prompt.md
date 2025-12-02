@@ -65,6 +65,7 @@ src/
 │       ├── CartSidebar.tsx                # Painel lateral do carrinho (Client Component)
 │       ├── CartItem.tsx                   # Item individual do carrinho
 │       ├── CartSummary.tsx                # Resumo do pedido
+│       ├── PaymentMethodSelector.tsx      # Seletor de forma de pagamento (PIX, Cartão, Dinheiro)
 │       └── WhatsAppCheckoutButton.tsx     # Botão de finalização via WhatsApp
 │
 ├── lib/
