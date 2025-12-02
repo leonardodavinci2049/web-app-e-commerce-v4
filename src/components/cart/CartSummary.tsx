@@ -12,7 +12,7 @@ function formatCurrency(value: number): string {
 }
 
 export function CartSummary() {
-  const { totalPrice, totalItems } = useCart();
+  const { totalPrice, uniqueItems } = useCart();
 
   const total = totalPrice + SHIPPING_COST;
 
@@ -20,7 +20,7 @@ export function CartSummary() {
     <div className="space-y-3 pt-4 border-t border-border">
       <div className="flex justify-between text-sm">
         <span className="text-muted-foreground">
-          Subtotal ({totalItems} {totalItems === 1 ? "item" : "itens"})
+          Subtotal ({uniqueItems} {uniqueItems === 1 ? "item" : "itens"})
         </span>
         <span className="font-medium">{formatCurrency(totalPrice)}</span>
       </div>

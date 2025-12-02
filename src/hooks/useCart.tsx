@@ -4,6 +4,7 @@ import { useCartStore } from "@/contexts/CartContext";
 
 export function useCart() {
   const items = useCartStore((state) => state.items);
+  const uniqueItems = useCartStore((state) => state.uniqueItems);
   const totalItems = useCartStore((state) => state.totalItems);
   const totalPrice = useCartStore((state) => state.totalPrice);
   const paymentMethod = useCartStore((state) => state.paymentMethod);
@@ -18,6 +19,7 @@ export function useCart() {
 
   return {
     items,
+    uniqueItems,
     totalItems,
     totalPrice,
     paymentMethod,

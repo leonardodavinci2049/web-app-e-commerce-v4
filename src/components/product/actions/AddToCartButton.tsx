@@ -39,7 +39,9 @@ export function AddToCartButton({
       category,
     });
 
-    toast.success(`${productName} adicionado ao carrinho!`);
+    toast.success(`${productName} adicionado ao carrinho!`, {
+      duration: 1000,
+    });
 
     setIsAdding(false);
   };

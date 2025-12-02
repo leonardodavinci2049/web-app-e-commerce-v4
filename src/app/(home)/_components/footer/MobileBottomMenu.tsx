@@ -11,7 +11,7 @@ import Link from "next/link";
 import { useCart } from "@/hooks/useCart";
 
 export function MobileBottomMenu() {
-  const { totalItems, openCart } = useCart();
+  const { uniqueItems, openCart } = useCart();
 
   const menuItems = [
     { id: "menu", label: "Menu", icon: MenuIcon, href: "#menu" },
@@ -52,9 +52,9 @@ export function MobileBottomMenu() {
         >
           <div className="relative flex items-center justify-center">
             <ShoppingCart className="h-5 w-5" />
-            {totalItems > 0 && (
+            {uniqueItems > 0 && (
               <span className="absolute -right-2 -top-2 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-destructive px-1 text-[10px] font-semibold text-destructive-foreground">
-                {totalItems > 99 ? "99+" : totalItems}
+                {uniqueItems > 99 ? "99+" : uniqueItems}
               </span>
             )}
           </div>
