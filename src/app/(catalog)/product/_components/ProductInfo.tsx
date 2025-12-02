@@ -123,6 +123,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
           productId={product.id}
           productName={product.name}
           price={product.price}
+          category={product.category}
         />
 
         <button
