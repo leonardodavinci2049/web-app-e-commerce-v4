@@ -94,6 +94,8 @@ export function ProductCard({ product }: ProductCardProps) {
             productId={product.id}
             productName={product.name}
             price={product.price}
+            image={product.image}
+            category={product.category}
           />
         </div>
       </div>
