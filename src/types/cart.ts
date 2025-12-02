@@ -7,33 +7,31 @@ export interface CartItem {
   id: string;
   productId: string;
   name: string;
-  sku: string;
-  image: string;
   price: number;
   quantity: number;
-  stock: number;
-  maxQuantity?: number;
+  image: string;
+  category: string;
+  discount?: number;
 }
 
-export interface CartSummary {
-  subtotal: number;
-  shipping: number;
-  discount: number;
-  total: number;
-  itemCount: number;
-  installments?: {
-    count: number;
-    value: number;
-  };
+export type PaymentMethod = "PIX" | "Cartão" | "Dinheiro";
+
+export interface CartState {
+  items: CartItem[];
+  totalItems: number;
+  totalPrice: number;
+  paymentMethod: PaymentMethod;
+  isOpen: boolean;
 }
 
-export interface CouponInfo {
-  code: string;
-  discount: number;
-  type: "percentage" | "fixed";
+export interface CartActions {
+  addItem: (item: Omit<CartItem, "quantity">) => void;
+  removeItem: (productId: string) => void;
+  updateQuantity: (productId: string, quantity: number) => void;
+  setPaymentMethod: (method: PaymentMethod) => void;
+  clearCart: () => void;
+  openCart: () => void;
+  closeCart: () => void;
 }
 
-export interface DeliveryInfo {
-  estimate: string;
-  guaranteed: boolean;
-}
+export type CartStore = CartState & CartActions;
