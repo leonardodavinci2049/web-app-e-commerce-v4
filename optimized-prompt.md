@@ -339,26 +339,35 @@ NEXT_PUBLIC_WHATSAPP_NUMBER=5511999999999
 
 **Formatação da Mensagem (`src/lib/whatsapp.ts`):**
 ```typescript
-export function formatWhatsAppMessage(items: CartItem[], total: number): string {
+export function formatWhatsAppMessage(
+  items: CartItem[], 
+  total: number, 
+  paymentMethod: PaymentMethod
+): string {
   const itemsList = items.map((item, index) => 
-    `${index + 1}. ${item.name}\n` +
-    `   Quantidade: ${item.quantity}\n` +
-    `   Preço: ${formatCurrency(item.price)}\n` +
-    `   Subtotal: ${formatCurrency(item.price * item.quantity)}`
-  ).join('\n\n');
+    `${index + 1}. ${item.name} - ${item.quantity}x ${formatCurrency(item.price)} = ${formatCurrency(item.price * item.quantity)}`
+  ).join('\n');
 
   return encodeURIComponent(
-    `🛒 *Novo Pedido*\n\n` +
+    `Olá! Gostaria de realizar um pedido. Itens:\n` +
     `${itemsList}\n\n` +
-    `━━━━━━━━━━━━\n` +
-    `*Total: ${formatCurrency(total)}*\n\n` +
-    `Gostaria de finalizar este pedido.`
+    `Subtotal: ${formatCurrency(total)}\n` +
+    `Frete: R$ 15,00\n` +
+    `Total: ${formatCurrency(total + 15)}\n\n` +
+    `Forma de pagamento: ${paymentMethod}`
   );
 }
 
 export function getWhatsAppLink(message: string): string {
-  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+  const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '5516997275438';
   return `https://wa.me/${phone}?text=${message}`;
+}
+
+function formatCurrency(value: number): string {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  }).format(value);
 }
 ```
 
