@@ -8,7 +8,7 @@ import {
 } from "@/app/actions/product";
 import { ProductGridSkeleton } from "@/components/skeletons";
 import { Breadcrumbs } from "../_components/breadcrumbs";
-import { CategorySidebar } from "../_components/category-sidebar";
+import { CategorySidebar } from "../_components/category-sidebar/category-sidebar";
 import { MobileCategoryNav } from "../_components/mobile-category/mobile-category-nav";
 import { ProductGrid } from "../_components/products/product-grid";
 

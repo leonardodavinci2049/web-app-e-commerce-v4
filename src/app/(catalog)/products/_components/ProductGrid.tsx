@@ -1,5 +1,5 @@
 import type { TransformedProduct } from "@/types/product";
-import { ProductCard } from "../../category/_components/products/_components/ProductCard";
+import { ProductCard } from "../../category/_components/products/components/ProductCard";
 
 interface ProductGridProps {
   products: TransformedProduct[];
