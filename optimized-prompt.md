@@ -584,6 +584,7 @@ export default function RootLayout({ children }) {
 - [ ] Criar componente `CartSidebar` com shadcn/ui Sheet
 - [ ] Criar componente `CartItem` com controles de quantidade
 - [ ] Criar componente `CartSummary` com cálculos de totais
+- [ ] Criar componente `PaymentMethodSelector` com shadcn/ui Select
 - [ ] Implementar estado vazio do carrinho
 
 ### Fase 3: Integração com Produtos
@@ -609,6 +610,8 @@ export default function RootLayout({ children }) {
 - [ ] Testar responsividade em mobile e desktop
 - [ ] Validar formatação de preços (R$)
 - [ ] Validar formatação da mensagem do WhatsApp
+- [ ] Validar inclusão da forma de pagamento na mensagem do WhatsApp
+- [ ] Testar mudança de forma de pagamento e persistência
 - [ ] Testar remoção e atualização de quantidade
 - [ ] Verificar performance (evitar re-renders desnecessários)
 
@@ -733,6 +736,8 @@ Após a implementação, validar:
 - [ ] Painel lateral abre/fecha suavemente
 - [ ] Controles de quantidade funcionam corretamente
 - [ ] Remoção de itens funciona
+- [ ] Seletor de forma de pagamento funciona corretamente
+- [ ] Forma de pagamento é persistida e incluída na mensagem do WhatsApp
 - [ ] Link do WhatsApp é gerado corretamente
 - [ ] Mensagem do WhatsApp está formatada e legível
 - [ ] Responsividade em mobile e desktop
