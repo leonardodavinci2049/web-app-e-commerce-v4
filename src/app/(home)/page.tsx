@@ -7,7 +7,7 @@ import {
 import { PromoBanner } from "./_components/banner/PromoBanner";
 import { PromoBannersGrid } from "./_components/banner/PromoBannersGrid";
 import { SpecificCategory } from "./_components/banner/SpecificCategory";
-import { Footer } from "./_components/footer/Footer";
+import FooterHome from "./_components/footer/FooterHome";
 import { MobileBottomMenu } from "./_components/footer/MobileBottomMenu";
 import { MainHeader } from "./_components/header/MainHeader";
 import { MobileMainHeader } from "./_components/header/MobileMainHeader";
@@ -18,7 +18,7 @@ import { NavigationMenu } from "./_components/navegation/NavigationMenu";
 import { ProductGrid } from "./_components/product/ProductGrid";
 import { AboutSection } from "./_components/sections/AboutSection";
 import { Advantages } from "./_components/sections/Advantages";
-import { LocationMap } from "./_components/sections/LocationMap";
+import { LocationSectionV1 } from "./_components/sections/LocationSectionV1";
 import { Newsletter } from "./_components/sections/Newsletter";
 import { Testimonials } from "./_components/sections/Testimonials";
 
@@ -66,11 +66,12 @@ export default function Home() {
         <Testimonials />
         <Advantages />
         <AboutSection />
-        <LocationMap />
+        <LocationSectionV1 />
         <Newsletter />
       </main>
-
-      <Footer />
+      <Suspense fallback={<div>Loading...</div>}>
+        <FooterHome />
+      </Suspense>
       <MobileBottomMenu />
     </div>
   );

@@ -1,6 +1,7 @@
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { envs } from "@/core/config/envs";
 
-export function LocationMap() {
+export function LocationSectionV2() {
   return (
     <section className="py-12 bg-card border-t border-border">
       <div className="container mx-auto px-4">
@@ -15,9 +16,10 @@ export function LocationMap() {
               <div>
                 <h3 className="font-bold text-foreground">Endereço</h3>
                 <p className="text-muted-foreground">
-                  Rua das Ferramentas, 123
+                  {envs.NEXT_PUBLIC_COMPANY_ADDRESS}
+
                   <br />
-                  Centro - São Paulo, SP
+                  {envs.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION}
                 </p>
               </div>
             </div>
@@ -27,9 +29,9 @@ export function LocationMap() {
               <div>
                 <h3 className="font-bold text-foreground">Contato</h3>
                 <p className="text-muted-foreground">
-                  (11) 9999-9999
+                  {envs.NEXT_PUBLIC_COMPANY_PHONE}
                   <br />
-                  (11) 98888-8888 (WhatsApp)
+                  {envs.NEXT_PUBLIC_COMPANY_WHATSAPP} (WhatsApp)
                 </p>
               </div>
             </div>
@@ -41,9 +43,9 @@ export function LocationMap() {
                   Horário de Funcionamento
                 </h3>
                 <p className="text-muted-foreground">
-                  Segunda a Sexta: 8h às 18h
+                  Segunda a Sexta: {envs.NEXT_PUBLIC_COMPANY_OPENING_HOURS}
                   <br />
-                  Sábado: 8h às 12h
+                  Sábado: {envs.NEXT_PUBLIC_COMPANY_OPENING_SATURDAY}
                 </p>
               </div>
             </div>
@@ -53,7 +55,7 @@ export function LocationMap() {
               <div>
                 <h3 className="font-bold text-foreground">E-mail</h3>
                 <p className="text-muted-foreground">
-                  vendas@mundialmegastore.com.br
+                  {envs.NEXT_PUBLIC_COMPANY_EMAIL}
                 </p>
               </div>
             </div>

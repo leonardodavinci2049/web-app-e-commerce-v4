@@ -52,8 +52,8 @@ const envsSchema = z.object({
   NEXT_PUBLIC_COMPANY_PHONE: z
     .string()
     .regex(
-      /^\(\d{2}\) \d{4}-\d{4}$/,
-      "NEXT_PUBLIC_COMPANY_PHONE must be in format (XX) XXXX-XXXX",
+      /^\(\d{2}\) \d{5} \d{4}$/,
+      "NEXT_PUBLIC_COMPANY_PHONE must be in format (XX) XXXXX XXXX",
     ),
   NEXT_PUBLIC_COMPANY_EMAIL: z
     .string()
@@ -61,8 +61,8 @@ const envsSchema = z.object({
   NEXT_PUBLIC_COMPANY_WHATSAPP: z
     .string()
     .regex(
-      /^55\d{11}$/,
-      "NEXT_PUBLIC_COMPANY_WHATSAPP must be in format 55XXXXXXXXXXX (country code + area code + number)",
+      /^\(\d{2}\) \d{5} \d{4}$/,
+      "NEXT_PUBLIC_COMPANY_WHATSAPP must be in format (XX) XXXXX XXXX",
     ),
   NEXT_PUBLIC_COMPANY_ADDRESS: z
     .string()
@@ -76,6 +76,12 @@ const envsSchema = z.object({
   NEXT_PUBLIC_COMPANY_OPENING_SATURDAY: z
     .string()
     .min(1, "NEXT_PUBLIC_COMPANY_OPENING_SATURDAY is required"),
+  NEXT_PUBLIC_COMPANY_ABOUT: z
+    .string()
+    .min(1, "NEXT_PUBLIC_COMPANY_ABOUT is required"),
+  NEXT_PUBLIC_COMPANY_CNPJ: z
+    .string()
+    .min(1, "NEXT_PUBLIC_COMPANY_CNPJ is required"),
 
   // INFO DEVELOPER
   NEXT_PUBLIC_DEVELOPER_NAME: z
@@ -149,8 +155,8 @@ const publicEnvSchema = z.object({
   NEXT_PUBLIC_COMPANY_PHONE: z
     .string()
     .regex(
-      /^\(\d{2}\) \d{4}-\d{4}$/,
-      "NEXT_PUBLIC_COMPANY_PHONE must be in format (XX) XXXX-XXXX",
+      /^\(\d{2}\) \d{5} \d{4}$/,
+      "NEXT_PUBLIC_COMPANY_PHONE must be in format (XX) XXXXX XXXX",
     ),
   NEXT_PUBLIC_COMPANY_EMAIL: z
     .string()
@@ -158,8 +164,8 @@ const publicEnvSchema = z.object({
   NEXT_PUBLIC_COMPANY_WHATSAPP: z
     .string()
     .regex(
-      /^55\d{11}$/,
-      "NEXT_PUBLIC_COMPANY_WHATSAPP must be in format 55XXXXXXXXXXX (country code + area code + number)",
+      /^\(\d{2}\) \d{5} \d{4}$/,
+      "NEXT_PUBLIC_COMPANY_WHATSAPP must be in format (XX) XXXXX XXXX",
     ),
   NEXT_PUBLIC_COMPANY_ADDRESS: z
     .string()
@@ -173,6 +179,12 @@ const publicEnvSchema = z.object({
   NEXT_PUBLIC_COMPANY_OPENING_SATURDAY: z
     .string()
     .min(1, "NEXT_PUBLIC_COMPANY_OPENING_SATURDAY is required"),
+  NEXT_PUBLIC_COMPANY_ABOUT: z
+    .string()
+    .min(1, "NEXT_PUBLIC_COMPANY_ABOUT is required"),
+  NEXT_PUBLIC_COMPANY_CNPJ: z
+    .string()
+    .min(1, "NEXT_PUBLIC_COMPANY_CNPJ is required"),
   NEXT_PUBLIC_DEVELOPER_NAME: z
     .string()
     .min(1, "NEXT_PUBLIC_DEVELOPER_NAME is required"),
@@ -220,6 +232,8 @@ if (typeof window === "undefined") {
           process.env.NEXT_PUBLIC_COMPANY_OPENING_HOURS || "",
         NEXT_PUBLIC_COMPANY_OPENING_SATURDAY:
           process.env.NEXT_PUBLIC_COMPANY_OPENING_SATURDAY || "",
+        NEXT_PUBLIC_COMPANY_ABOUT: process.env.NEXT_PUBLIC_COMPANY_ABOUT || "",
+        NEXT_PUBLIC_COMPANY_CNPJ: process.env.NEXT_PUBLIC_COMPANY_CNPJ || "",
         NEXT_PUBLIC_DEVELOPER_NAME:
           process.env.NEXT_PUBLIC_DEVELOPER_NAME || "",
         NEXT_PUBLIC_DEVELOPER_URL: process.env.NEXT_PUBLIC_DEVELOPER_URL || "",
@@ -296,6 +310,8 @@ export const envs = {
   NEXT_PUBLIC_COMPANY_OPENING_HOURS: envVars.NEXT_PUBLIC_COMPANY_OPENING_HOURS,
   NEXT_PUBLIC_COMPANY_OPENING_SATURDAY:
     envVars.NEXT_PUBLIC_COMPANY_OPENING_SATURDAY,
+  NEXT_PUBLIC_COMPANY_ABOUT: envVars.NEXT_PUBLIC_COMPANY_ABOUT,
+  NEXT_PUBLIC_COMPANY_CNPJ: envVars.NEXT_PUBLIC_COMPANY_CNPJ,
 
   // INFO DEVELOPER
   NEXT_PUBLIC_DEVELOPER_NAME: envVars.NEXT_PUBLIC_DEVELOPER_NAME,
