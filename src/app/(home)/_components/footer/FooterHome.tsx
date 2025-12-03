@@ -1,23 +1,23 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
+  Clock,
+  CreditCard,
   Facebook,
   Instagram,
-  Twitter,
   Mail,
-  Phone,
   MapPin,
-  Clock,
+  Phone,
+  Send,
   Shield,
   Truck,
-  CreditCard,
-  Send,
+  Twitter,
 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function FooterHome() {
   const currentYear = new Date().getFullYear();
