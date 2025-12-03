@@ -1,4 +1,5 @@
-import { Footer } from "../(home)/_components/footer/Footer";
+import { Suspense } from "react";
+import FooterHome from "../(home)/_components/footer/FooterHome";
 import { MobileBottomMenu } from "../(home)/_components/footer/MobileBottomMenu";
 import { MainHeader } from "../(home)/_components/header/MainHeader";
 import { MobileMainHeader } from "../(home)/_components/header/MobileMainHeader";
@@ -17,7 +18,9 @@ const CatalogLayout = ({
       <MainHeader />
       <NavigationMenu />
       {children}
-      <Footer />
+      <Suspense fallback={<div>Loading...</div>}>
+        <FooterHome />
+      </Suspense>
       <MobileBottomMenu />
     </>
   );
