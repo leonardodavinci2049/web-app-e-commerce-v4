@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ProductCard } from "../../../(catalog)/category/_components/products/components/ProductCard";
+import { ProductCardHome } from "../product/components/ProductCardHome";
 
 interface SpecificCategoryProps {
   title: string;
@@ -50,7 +50,7 @@ export function SpecificCategory({ title, products }: SpecificCategoryProps) {
           {/* Products Grid */}
           <div className="col-span-1 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {products.slice(0, 3).map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCardHome key={product.id} product={product} />
             ))}
           </div>
         </div>

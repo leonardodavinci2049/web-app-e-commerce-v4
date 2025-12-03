@@ -2,7 +2,7 @@ import {
   fetchCategoriesAction,
   fetchProductsAction,
 } from "@/app/actions/product";
-import { ProductCard } from "../../../(catalog)/category/_components/products/components/ProductCard";
+import {  ProductCardHome } from "./components/ProductCardHome";
 
 interface ProductGridProps {
   title: string;
@@ -65,7 +65,7 @@ export async function ProductGrid({
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {productsWithCategory.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCardHome key={product.id} product={product} />
           ))}
         </div>
       </div>
