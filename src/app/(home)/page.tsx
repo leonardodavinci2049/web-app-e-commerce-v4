@@ -11,7 +11,7 @@ import { Footer } from "./_components/footer/Footer";
 import { MobileBottomMenu } from "./_components/footer/MobileBottomMenu";
 import { MainHeader } from "./_components/header/MainHeader";
 import { MobileMainHeader } from "./_components/header/MobileMainHeader";
-import { TopBar } from "./_components/header/TopBar";
+
 import { HeroBanner } from "./_components/hero/HeroBanner";
 import { DepartmentNavigation } from "./_components/navegation/DepartmentNavigation";
 import { NavigationMenu } from "./_components/navegation/NavigationMenu";
@@ -30,7 +30,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
       {/* Static header components */}
-      <TopBar />
+      {/* <TopBar /> */}
       <MobileMainHeader />
       <MainHeader />
       <NavigationMenu />
