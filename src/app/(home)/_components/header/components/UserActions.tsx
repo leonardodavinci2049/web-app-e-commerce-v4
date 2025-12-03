@@ -1,17 +1,23 @@
 "use client";
 
-import { MessageCircle, ShoppingCart, User } from "lucide-react";
-import { useState } from "react";
-import { useCart } from "@/hooks/useCart";
+import { MessageCircle, Moon, ShoppingCart, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
+import { useCart } from "@/hooks/useCart";
 /**
  * Minimal client component for user-specific header actions
  * Handles cart count, user menu, and authentication state
  * Isolated from server-rendered header for cache optimization
  */
 export function UserActions() {
+  const { theme, setTheme } = useTheme();
   const { uniqueItems, openCart } = useCart();
-  const [isAuthenticated] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div className="flex items-center gap-6 text-sm font-medium text-foreground">
@@ -23,15 +29,19 @@ export function UserActions() {
         <span className="hidden lg:inline">Fale Conosco</span>
       </a>
 
-      <a
-        href={isAuthenticated ? "/account" : "/login"}
+      {/* Theme Toggle */}
+      <button
+        type="button"
         className="flex flex-col items-center gap-1 hover:text-primary transition-colors group"
+        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       >
-        <User className="w-6 h-6 group-hover:scale-110 transition-transform" />
-        <span className="hidden lg:inline">
-          {isAuthenticated ? "Minha Conta" : "Entre / Cadastre-se"}
-        </span>
-      </a>
+        {mounted && theme === "dark" ? (
+          <Sun className="w-6 h-6 group-hover:scale-110 transition-transform" />
+        ) : (
+          <Moon className="w-6 h-6 group-hover:scale-110 transition-transform" />
+        )}
+        <span className="hidden lg:inline">Tema</span>
+      </button>
 
       <button
         type="button"

@@ -1,4 +1,4 @@
-import { CategoryItem } from "./category-item";
+import { CategoryItem } from "./components/category-item";
 
 interface Subcategory {
   id: string;

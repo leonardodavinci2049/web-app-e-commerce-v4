@@ -7,7 +7,7 @@ import {
   Star,
   Sun,
 } from "lucide-react";
-import { CategoryLink } from "./category-link/category-link";
+import { CategoryLink } from "../../category-link/category-link";
 
 // Mapeamento de nomes de ícones para componentes
 const iconMap: Record<string, LucideIcon> = {
