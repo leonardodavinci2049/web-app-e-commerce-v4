@@ -17,8 +17,9 @@ import { DepartmentNavigation } from "./_components/navegation/DepartmentNavigat
 import { NavigationMenu } from "./_components/navegation/NavigationMenu";
 import { ProductGrid } from "./_components/product/ProductGrid";
 import { AboutSection } from "./_components/sections/AboutSection";
-import { Advantages } from "./_components/sections/Advantages";
+import Advantages from "./_components/sections/advantages";
 import { LocationSectionV1 } from "./_components/sections/LocationSectionV1";
+import { MethodsSection } from "./_components/sections/MethodsSection";
 import { Newsletter } from "./_components/sections/Newsletter";
 import { Testimonials } from "./_components/sections/Testimonials";
 
@@ -67,7 +68,7 @@ export default function Home() {
         <Advantages />
         <AboutSection />
         <LocationSectionV1 />
-        <Newsletter />
+        <MethodsSection />
       </main>
       <Suspense fallback={<div>Loading...</div>}>
         <FooterHome />

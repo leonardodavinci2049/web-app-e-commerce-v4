@@ -1,4 +1,7 @@
 import { Headset, Star, Tag, Truck } from "lucide-react";
+import type {
+  Advantage
+} from "@/types/home";
 
 export const PRODUCTS = [
   // Informática
@@ -428,6 +431,33 @@ export const ADVANTAGES = [
     title: "Qualidade",
     icon: Star,
     description: "Produtos originais",
+  },
+];
+// Company advantages
+export const advantages: Advantage[] = [
+  {
+    id: "adv-001",
+    title: "Entrega Rápida",
+    description: "Receba seus produtos em até 48h",
+    icon: "truck",
+  },
+  {
+    id: "adv-002",
+    title: "Melhor Preço",
+    description: "Preços competitivos no atacado",
+    icon: "tag",
+  },
+  {
+    id: "adv-003",
+    title: "Atendimento Especializado",
+    description: "Equipe técnica pronta para ajudar",
+    icon: "headphones",
+  },
+  {
+    id: "adv-004",
+    title: "Produtos de Qualidade",
+    description: "Marcas reconhecidas no mercado",
+    icon: "star",
   },
 ];
 
