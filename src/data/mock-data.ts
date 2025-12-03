@@ -442,7 +442,7 @@ export const advantages: Advantage[] = [
   {
     id: "adv-002",
     title: "Melhor Preço",
-    description: "Preços competitivos no atacado",
+    description: "Preços competitivos no atacado e no Varejo",
     icon: "tag",
   },
   {
