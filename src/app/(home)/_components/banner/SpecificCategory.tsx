@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 import { ProductCardHome } from "../product/components/ProductCardHome";
 
 interface SpecificCategoryProps {
@@ -12,11 +13,16 @@ interface SpecificCategoryProps {
     discount?: number;
     category: string;
   }>;
+  className?: string;
 }
 
-export function SpecificCategory({ title, products }: SpecificCategoryProps) {
+export function SpecificCategory({
+  title,
+  products,
+  className,
+}: SpecificCategoryProps) {
   return (
-    <section className="py-12 bg-muted/30">
+    <section className={cn("py-12 bg-muted/30", className)}>
       <div className="container mx-auto px-4">
         <div className="flex items-center gap-4 mb-8">
           <h2 className="text-2xl font-bold text-foreground">{title}</h2>

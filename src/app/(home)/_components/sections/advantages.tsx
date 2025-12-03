@@ -13,9 +13,15 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   star: Star,
 };
 
-export default function Advantages() {
+import { cn } from "@/lib/utils";
+
+interface AdvantagesProps {
+  className?: string;
+}
+
+export default function Advantages({ className }: AdvantagesProps) {
   return (
-    <section className="py-12 px-4 bg-background">
+    <section className={cn("py-12 px-4 bg-background", className)}>
       <div className="container mx-auto max-w-7xl">
         <div className="text-center mb-8">
           <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">

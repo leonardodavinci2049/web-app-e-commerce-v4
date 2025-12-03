@@ -1,7 +1,5 @@
 import { Headset, Star, Tag, Truck } from "lucide-react";
-import type {
-  Advantage
-} from "@/types/home";
+import type { Advantage } from "@/types/home";
 
 export const PRODUCTS = [
   // Informática

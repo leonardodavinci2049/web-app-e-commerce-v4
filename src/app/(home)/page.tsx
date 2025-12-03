@@ -20,7 +20,7 @@ import { AboutSection } from "./_components/sections/AboutSection";
 import Advantages from "./_components/sections/advantages";
 import { LocationSectionV1 } from "./_components/sections/LocationSectionV1";
 import { MethodsSection } from "./_components/sections/MethodsSection";
-import { Newsletter } from "./_components/sections/Newsletter";
+
 import { Testimonials } from "./_components/sections/Testimonials";
 
 /**
@@ -49,13 +49,17 @@ export default function Home() {
 
         {/* Product Grids with Suspense */}
         <Suspense fallback={<ProductGridSkeleton count={8} />}>
-          <ProductGrid title="Lançamentos" limit={8} />
+          <ProductGrid title="Lançamentos" limit={8} className="bg-muted/30" />
         </Suspense>
 
         <PromoBanner />
 
         <Suspense fallback={<ProductGridSkeleton count={8} />}>
-          <ProductGrid title="Destaques da Semana" limit={8} />
+          <ProductGrid
+            title="Destaques da Semana"
+            limit={8}
+            className="bg-muted/30"
+          />
         </Suspense>
 
         {/* SpecificCategory needs products passed - keeping static for now */}
@@ -63,11 +67,11 @@ export default function Home() {
           <SpecificCategoryWrapper />
         </Suspense>
 
-        <PromoBannersGrid />
-        <Testimonials />
-        <Advantages />
-        <AboutSection />
-        <LocationSectionV1 />
+        <PromoBannersGrid className="bg-muted/30" />
+        <Testimonials className="bg-background" />
+        <Advantages className="bg-muted/30" />
+        <AboutSection className="bg-background" />
+        <LocationSectionV1 className="bg-muted/50" />
         <MethodsSection />
       </main>
       <Suspense fallback={<div>Loading...</div>}>
@@ -108,5 +112,11 @@ async function SpecificCategoryWrapper() {
       ? gamerProducts
       : products.slice(0, 4).map(withCategoryName);
 
-  return <SpecificCategory title="Mundo Gamer" products={displayProducts} />;
+  return (
+    <SpecificCategory
+      title="Mundo Gamer"
+      products={displayProducts}
+      className="bg-background"
+    />
+  );
 }

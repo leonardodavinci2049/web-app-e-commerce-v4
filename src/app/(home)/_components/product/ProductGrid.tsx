@@ -2,12 +2,14 @@ import {
   fetchCategoriesAction,
   fetchProductsAction,
 } from "@/app/actions/product";
+import { cn } from "@/lib/utils";
 import { ProductCardHome } from "./components/ProductCardHome";
 
 interface ProductGridProps {
   title: string;
   categoryId?: string;
   limit?: number;
+  className?: string;
 }
 
 /**
@@ -18,6 +20,7 @@ export async function ProductGrid({
   title,
   categoryId,
   limit = 8,
+  className,
 }: ProductGridProps) {
   // Fetch products and categories via Server Actions
   const [allProducts, categories] = await Promise.all([
@@ -49,7 +52,7 @@ export async function ProductGrid({
   }));
 
   return (
-    <section className="py-12 bg-background">
+    <section className={cn("py-12 bg-background", className)}>
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-end mb-8">
           <h2 className="text-2xl font-bold text-foreground relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-1/2 after:h-1 after:bg-primary after:rounded-full">

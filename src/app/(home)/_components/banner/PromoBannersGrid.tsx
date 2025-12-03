@@ -1,6 +1,11 @@
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
-export function PromoBannersGrid() {
+interface PromoBannersGridProps {
+  className?: string;
+}
+
+export function PromoBannersGrid({ className }: PromoBannersGridProps) {
   const banners = [
     {
       id: 1,
@@ -29,7 +34,7 @@ export function PromoBannersGrid() {
   ];
 
   return (
-    <section className="py-12">
+    <section className={cn("py-12", className)}>
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {banners.map((banner) => (
