@@ -1,1 +1,0 @@
-trabalhe bem o .gitignore
