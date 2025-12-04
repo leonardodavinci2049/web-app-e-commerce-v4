@@ -121,7 +121,7 @@ export function CategoryMenuAccordion({
   );
 
   return (
-    <div className="border rounded-lg overflow-hidden bg-card shadow-sm">
+    <div className="rounded-lg overflow-hidden bg-card shadow-sm">
       <Accordion
         type="single"
         collapsible
