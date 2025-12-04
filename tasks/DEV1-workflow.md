@@ -66,7 +66,7 @@ git push origin main develop --follow-tags
 ```shell
 # crie uma nova 
 git branch
-git flow feature start featr-36
+git flow feature start featr-39
 
 ```
 ### Task 8 - excluir branchs
