@@ -47,10 +47,10 @@ git push origin develop
 
 ```shell
 
-git flow release start rls-36
+git flow release start rls-37
 # atualize os pacotes e faça o build novamente
-git flow release finish rls-36
-finish release rls-36
+git flow release finish rls-37
+finish release rls-37
 
 git branch
 
