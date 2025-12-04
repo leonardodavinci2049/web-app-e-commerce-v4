@@ -16,7 +16,7 @@ import type {
   TaxonomyWebMenuResponse,
   TblTaxonomyWebMenu,
 } from "./types/category-types";
-import { CategoryError, CategoryNotFoundError } from "./types/category-types";
+import { CategoryError } from "./types/category-types";
 import { TaxonomyWebMenuSchema } from "./validation/category-schemas";
 
 const logger = createLogger("CategoryServiceApi");
@@ -94,8 +94,22 @@ export class CategoryServiceApi extends BaseApiService {
           statusCode: API_STATUS_CODES.SUCCESS,
           data: [
             [],
-            [{ sp_return_id: 0, sp_message: "Nenhuma categoria encontrada", sp_error_id: 0 }],
-            { fieldCount: 0, affectedRows: 0, insertId: 0, info: "", serverStatus: 0, warningStatus: 0, changedRows: 0 },
+            [
+              {
+                sp_return_id: 0,
+                sp_message: "Nenhuma categoria encontrada",
+                sp_error_id: 0,
+              },
+            ],
+            {
+              fieldCount: 0,
+              affectedRows: 0,
+              insertId: 0,
+              info: "",
+              serverStatus: 0,
+              warningStatus: 0,
+              changedRows: 0,
+            },
           ],
         };
       }

@@ -59,7 +59,7 @@ export function ProductGrid({
       <LoadMoreProducts
         categoryId={categoryId}
         taxonomyId={taxonomyId}
-        subcategoryId={subcategoryId}
+        _subcategoryId={subcategoryId}
         initialCount={initialCount}
         totalCount={totalCount}
         pageSize={ITEMS_PER_PAGE}

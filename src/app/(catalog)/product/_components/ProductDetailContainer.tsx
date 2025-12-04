@@ -120,8 +120,10 @@ export async function ProductDetailContainer({
   // Converte shipping do produto para o formato esperado
   const productShipping = product.shipping
     ? {
-        freeShippingMinValue: Number(product.shipping.freeShippingMinValue) || 199.9,
-        estimatedDays: String(product.shipping.estimatedDays) || "3 a 7 dias úteis",
+        freeShippingMinValue:
+          Number(product.shipping.freeShippingMinValue) || 199.9,
+        estimatedDays:
+          String(product.shipping.estimatedDays) || "3 a 7 dias úteis",
         returnDays: Number(product.shipping.returnDays) || 7,
       }
     : defaultShipping;

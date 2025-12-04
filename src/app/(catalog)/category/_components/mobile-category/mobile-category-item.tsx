@@ -58,7 +58,9 @@ export function MobileCategoryItem({
   const pathname = usePathname();
   const [isExpanded, setIsExpanded] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
-  const isActive = pathname.startsWith(category.href) || pathname.includes(`/${category.slug}`);
+  const isActive =
+    pathname.startsWith(category.href) ||
+    pathname.includes(`/${category.slug}`);
   const Icon = category.iconName
     ? iconMap[category.iconName] || DefaultIcon
     : DefaultIcon;
@@ -112,7 +114,8 @@ export function MobileCategoryItem({
       {shouldExpand && category.subcategories && (
         <div className="ml-9 flex flex-col gap-1 border-l border-border pl-3">
           {category.subcategories.map((sub) => {
-            const isSubActive = pathname === sub.href || pathname.includes(`/${sub.slug}`);
+            const isSubActive =
+              pathname === sub.href || pathname.includes(`/${sub.slug}`);
             const hasChildren = sub.children && sub.children.length > 0;
             const isGroupExpanded = expandedGroups.has(sub.id) || isSubActive;
 
@@ -151,7 +154,9 @@ export function MobileCategoryItem({
                 {hasChildren && isGroupExpanded && (
                   <div className="ml-4 flex flex-col gap-0.5 border-l border-border/50 pl-2">
                     {sub.children?.map((child) => {
-                      const isChildActive = pathname === child.href || pathname.includes(`/${child.slug}`);
+                      const isChildActive =
+                        pathname === child.href ||
+                        pathname.includes(`/${child.slug}`);
                       return (
                         <Link
                           key={child.id}

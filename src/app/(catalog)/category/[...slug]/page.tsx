@@ -47,7 +47,11 @@ async function CategoryContent({
   const categories = await fetchCategoriesAction();
 
   // Tentar encontrar a categoria pelo slug para obter o ID, slug real e nome (busca em 3 níveis)
-  const findTaxonomyInfo = (): { id: number | undefined; slug: string | undefined; name: string | undefined } => {
+  const findTaxonomyInfo = (): {
+    id: number | undefined;
+    slug: string | undefined;
+    name: string | undefined;
+  } => {
     for (const cat of categories) {
       // Level 1 - Família
       if (cat.slug === taxonomySlug || cat.id === taxonomySlug) {
@@ -63,7 +67,11 @@ async function CategoryContent({
           if (sub.children) {
             for (const child of sub.children) {
               if (child.slug === taxonomySlug || child.id === taxonomySlug) {
-                return { id: Number(child.id), slug: child.slug, name: child.name };
+                return {
+                  id: Number(child.id),
+                  slug: child.slug,
+                  name: child.name,
+                };
               }
             }
           }
@@ -74,25 +82,32 @@ async function CategoryContent({
   };
 
   const taxonomyInfo = findTaxonomyInfo();
-  
+
   // Usar o slug real da categoria se encontrado, senão usar o da URL
   const effectiveSlug = taxonomyInfo.slug || taxonomySlug;
   const taxonomyId = taxonomyInfo.id;
 
   // Buscar produtos por slug ou ID
-  const products = await fetchProductsByTaxonomyAction(effectiveSlug, taxonomyId);
+  const products = await fetchProductsByTaxonomyAction(
+    effectiveSlug,
+    taxonomyId,
+  );
 
   // Construir breadcrumbs a partir dos slugs
   const breadcrumbs = slugParts.map((slug, index) => {
-    const label = slug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+    const label = slug
+      .replace(/-/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase());
     const href = `/category/${slugParts.slice(0, index + 1).join("/")}`;
     return { label, href };
   });
 
   // Título da página - usar nome da categoria se encontrado, senão formatar o slug
-  const pageTitle = taxonomyInfo.name || slugParts[slugParts.length - 1]
-    .replace(/-/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+  const pageTitle =
+    taxonomyInfo.name ||
+    slugParts[slugParts.length - 1]
+      .replace(/-/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase());
 
   // Mapear produtos para incluir category como string
   const mappedProducts = products.map((product) => ({

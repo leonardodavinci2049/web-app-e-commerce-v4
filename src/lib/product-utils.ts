@@ -1,10 +1,10 @@
+import type { UICategory, UIProduct } from "@/lib/transformers";
 import type {
   Category,
   CategoryMap,
   RawProduct,
   TransformedProduct,
 } from "@/types/product";
-import type { UICategory, UIProduct } from "@/lib/transformers";
 
 /**
  * Transforma produtos brutos (com IDs) em produtos com nomes resolvidos

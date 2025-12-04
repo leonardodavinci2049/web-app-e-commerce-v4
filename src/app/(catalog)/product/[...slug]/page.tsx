@@ -27,7 +27,7 @@ export async function generateStaticParams() {
     return products.map((product) => ({
       slug: [generateSlug(product.name, product.id)],
     }));
-  } catch (error) {
+  } catch (_error) {
     // Return placeholder on error to satisfy Next.js requirement
     return [{ slug: ["placeholder-0"] }];
   }

@@ -47,11 +47,13 @@ export interface RawProduct {
   discount?: number;
   isNew?: boolean;
   specifications?: Record<string, string | unknown>;
-  shipping?: {
-    freeShippingMinValue: number;
-    estimatedDays: string;
-    returnDays: number;
-  } | Record<string, unknown>;
+  shipping?:
+    | {
+        freeShippingMinValue: number;
+        estimatedDays: string;
+        returnDays: number;
+      }
+    | Record<string, unknown>;
 }
 
 export interface TransformedProduct {

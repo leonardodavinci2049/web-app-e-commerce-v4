@@ -7,7 +7,7 @@ import { fetchProductsByTaxonomyAction } from "@/app/actions/product";
 interface LoadMoreProductsProps {
   categoryId: string;
   taxonomyId?: number;
-  subcategoryId?: string;
+  _subcategoryId?: string;
   initialCount: number;
   totalCount: number;
   pageSize?: number;
@@ -20,7 +20,7 @@ interface LoadMoreProductsProps {
 export function LoadMoreProducts({
   categoryId,
   taxonomyId,
-  subcategoryId,
+  _subcategoryId,
   initialCount,
   totalCount,
   pageSize = 8,

@@ -29,7 +29,9 @@ export function CategoryLink({
   subcategories,
 }: CategoryLinkProps) {
   const pathname = usePathname();
-  const isActive = pathname.startsWith(href) || pathname.includes(`/category/${name.toLowerCase().replace(/\s+/g, "-")}`);
+  const isActive =
+    pathname.startsWith(href) ||
+    pathname.includes(`/category/${name.toLowerCase().replace(/\s+/g, "-")}`);
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
 
   const toggleGroup = (id: string) => {
@@ -48,7 +50,10 @@ export function CategoryLink({
   const isSubcategoryActive = (sub: Subcategory): boolean => {
     if (pathname === sub.href || pathname.includes(`/${sub.slug}`)) return true;
     if (sub.children) {
-      return sub.children.some((child) => pathname === child.href || pathname.includes(`/${child.slug}`));
+      return sub.children.some(
+        (child) =>
+          pathname === child.href || pathname.includes(`/${child.slug}`),
+      );
     }
     return false;
   };
@@ -112,7 +117,9 @@ export function CategoryLink({
                 {hasChildren && isExpanded && (
                   <div className="ml-4 flex flex-col gap-0.5 border-l border-border/50 pl-2">
                     {sub.children?.map((child) => {
-                      const isChildActive = pathname === child.href || pathname.includes(`/${child.slug}`);
+                      const isChildActive =
+                        pathname === child.href ||
+                        pathname.includes(`/${child.slug}`);
                       return (
                         <Link
                           key={child.id}
