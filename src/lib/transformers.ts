@@ -43,6 +43,7 @@ export interface UISubcategory {
   name: string;
   slug: string;
   href: string;
+  children?: UISubcategory[]; // Level 3 - subgrupos
 }
 
 export interface UICategory {
@@ -51,7 +52,7 @@ export interface UICategory {
   slug: string;
   href: string;
   iconName?: string;
-  subcategories?: UISubcategory[];
+  subcategories?: UISubcategory[]; // Level 2 - grupos
 }
 
 export interface CategoryLookupResult {
@@ -209,6 +210,29 @@ export function transformRelatedProducts(
 // ============================================================================
 
 /**
+ * Generates a URL-safe slug from taxonomy name or ID
+ */
+function generateSlug(item: TblTaxonomyWebMenu): string {
+  // Use existing SLUG if available
+  if (item.SLUG && item.SLUG.trim() !== "") {
+    return item.SLUG;
+  }
+
+  // Generate slug from name if available
+  if (item.TAXONOMIA && item.TAXONOMIA.trim() !== "") {
+    return item.TAXONOMIA
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "") // Remove accents
+      .replace(/[^a-z0-9]+/g, "-") // Replace non-alphanumeric with hyphens
+      .replace(/^-+|-+$/g, ""); // Trim hyphens from start/end
+  }
+
+  // Fallback to ID
+  return String(item.ID_TAXONOMY ?? 0);
+}
+
+/**
  * Generates href path for a category based on its position in hierarchy
  */
 function generateCategoryHref(slug: string, parentSlug?: string): string {
@@ -219,48 +243,42 @@ function generateCategoryHref(slug: string, parentSlug?: string): string {
 }
 
 /**
- * Transforms a single TblTaxonomyWebMenu to UISubcategory
- */
-function transformToSubcategory(
-  item: TblTaxonomyWebMenu,
-  parentSlug: string,
-): UISubcategory {
-  const slug = item.SLUG ?? String(item.ID_TAXONOMY);
-  return {
-    id: String(item.ID_TAXONOMY ?? 0),
-    name: item.TAXONOMIA ?? "",
-    slug,
-    href: generateCategoryHref(slug, parentSlug),
-  };
-}
-
-/**
  * Transforms a single TblTaxonomyWebMenu to UICategory
- * Recursively transforms children to subcategories
+ * Recursively transforms children to subcategories (groups and subgroups)
+ * Preserves 3-level hierarchy: Família > Grupo > Subgrupo
  */
-function transformToCategory(
-  item: TblTaxonomyWebMenu,
-  parentSlug?: string,
-): UICategory {
-  const slug = item.SLUG ?? String(item.ID_TAXONOMY);
-  const href = generateCategoryHref(slug, parentSlug);
+function transformToCategory(item: TblTaxonomyWebMenu): UICategory {
+  const slug = generateSlug(item);
+  const href = generateCategoryHref(slug);
 
-  // Transform children (level 2 and 3) to subcategories
+  // Transform children (level 2 - grupos) to subcategories with their children
   const subcategories: UISubcategory[] = [];
 
   if (item.children && item.children.length > 0) {
     for (const child of item.children) {
-      subcategories.push(transformToSubcategory(child, slug));
+      const childSlug = generateSlug(child);
 
-      // Also include level 3 children (subgrupo) as flat subcategories
+      // Transform level 3 children (subgrupos)
+      const grandchildren: UISubcategory[] = [];
       if (child.children && child.children.length > 0) {
         for (const grandchild of child.children) {
-          const childSlug = child.SLUG ?? String(child.ID_TAXONOMY);
-          subcategories.push(
-            transformToSubcategory(grandchild, `${slug}/${childSlug}`),
-          );
+          const grandchildSlug = generateSlug(grandchild);
+          grandchildren.push({
+            id: String(grandchild.ID_TAXONOMY ?? 0),
+            name: grandchild.TAXONOMIA ?? "",
+            slug: grandchildSlug,
+            href: `/category/${grandchildSlug}`,
+          });
         }
       }
+
+      subcategories.push({
+        id: String(child.ID_TAXONOMY ?? 0),
+        name: child.TAXONOMIA ?? "",
+        slug: childSlug,
+        href: `/category/${childSlug}`,
+        children: grandchildren.length > 0 ? grandchildren : undefined,
+      });
     }
   }
 
@@ -286,6 +304,7 @@ export function transformCategoryMenu(
 
 /**
  * Finds a category by slug in the hierarchical structure
+ * Supports up to 3 levels: família/grupo/subgrupo
  * Returns both the category and subcategory if applicable
  */
 export function findCategoryBySlug(
@@ -293,7 +312,7 @@ export function findCategoryBySlug(
   categorySlug: string,
   subcategorySlug?: string,
 ): CategoryLookupResult | null {
-  // Find the main category
+  // Find the main category (família)
   const category = categories.find((c) => c.slug === categorySlug);
 
   if (!category) {
@@ -305,10 +324,17 @@ export function findCategoryBySlug(
     return { category, subcategory: null };
   }
 
-  // Find the subcategory
-  const subcategory = category.subcategories?.find(
-    (s) => s.slug === subcategorySlug,
-  );
+  // Find the subcategory (grupo or subgrupo)
+  // subcategorySlug can be "grupo" or "grupo/subgrupo"
+  const subcategory = category.subcategories?.find((s) => {
+    // Direct match for grupo
+    if (s.slug === subcategorySlug) {
+      return true;
+    }
+    // Check if href ends with the full path for subgrupo
+    const fullPath = `/category/${categorySlug}/${subcategorySlug}`;
+    return s.href === fullPath;
+  });
 
   if (!subcategory) {
     return null;

@@ -38,7 +38,7 @@ sempre execute o lint e o build
 git add .
 git commit -m " task final adjustments and completion"
 
-git flow feature finish featr-32
+git flow feature finish featr-33
 git branch
 git push origin develop
 
@@ -50,7 +50,7 @@ git push origin develop
 ```shell
 # crie uma nova 
 git branch
-git flow feature start featr-30
+git flow feature start featr-33
 
 ```
 ### Task 8 - excluir branchs

@@ -65,10 +65,15 @@ export class CategoryServiceApi extends BaseApiService {
       Partial<Pick<TaxonomyWebMenuRequest, "pe_parent_id">>,
   ): Promise<TaxonomyWebMenuResponse> {
     try {
-      const payloadInput = {
+      // Build payload without undefined values
+      const payloadInput: Record<string, unknown> = {
         pe_id_tipo: params.pe_id_tipo,
-        pe_parent_id: params.pe_parent_id,
       };
+
+      // Only include pe_parent_id if it's defined
+      if (params.pe_parent_id !== undefined) {
+        payloadInput.pe_parent_id = params.pe_parent_id;
+      }
 
       const validatedParams = TaxonomyWebMenuSchema.parse(payloadInput);
 

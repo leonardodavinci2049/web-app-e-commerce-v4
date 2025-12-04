@@ -24,6 +24,7 @@ interface Subcategory {
   name: string;
   slug: string;
   href: string;
+  children?: Subcategory[];
 }
 
 interface Category {
