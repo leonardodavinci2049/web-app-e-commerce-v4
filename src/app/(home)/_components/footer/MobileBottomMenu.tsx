@@ -8,13 +8,31 @@ import {
   UserRound,
 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { CategoryMenuAccordion } from "@/components/category-menu/CategoryMenuAccordion";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { useCart } from "@/hooks/useCart";
+import type { UICategory } from "@/lib/transformers";
 
-export function MobileBottomMenu() {
+interface MobileBottomMenuProps {
+  categories: UICategory[];
+}
+
+export function MobileBottomMenu({ categories }: MobileBottomMenuProps) {
   const { uniqueItems, openCart } = useCart();
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const menuItems = [
-    { id: "menu", label: "Menu", icon: MenuIcon, href: "#menu" },
+  const handleNavigate = () => {
+    setMenuOpen(false);
+  };
+
+  const otherMenuItems = [
     {
       id: "catalogo",
       label: "Catalogo",
@@ -28,7 +46,35 @@ export function MobileBottomMenu() {
   return (
     <nav className="fixed bottom-0 inset-x-0 z-40 border-t bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80 md:hidden">
       <div className="mx-auto flex max-w-xl items-center justify-between px-4 py-2 text-xs text-muted-foreground">
-        {menuItems.map((item) => {
+        {/* Menu Hambúrguer - Isolado no lado esquerdo */}
+        <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+          <SheetTrigger asChild>
+            <button
+              type="button"
+              aria-label="Abrir menu de categorias"
+              className="relative flex flex-1 flex-col items-center justify-center gap-1 px-1 py-1.5 text-[11px] leading-tight"
+            >
+              <div className="relative flex items-center justify-center">
+                <MenuIcon className="h-5 w-5" />
+              </div>
+              <span>Menu</span>
+            </button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-[300px] sm:w-[350px] p-0">
+            <SheetHeader className="px-6 py-4 border-b">
+              <SheetTitle>Todas as Categorias</SheetTitle>
+            </SheetHeader>
+            <div className="px-4 py-4 overflow-y-auto max-h-[calc(100vh-80px)]">
+              <CategoryMenuAccordion
+                categories={categories}
+                onNavigate={handleNavigate}
+              />
+            </div>
+          </SheetContent>
+        </Sheet>
+
+        {/* Outros itens do menu */}
+        {otherMenuItems.map((item) => {
           const Icon = item.icon;
           return (
             <Link
@@ -44,6 +90,7 @@ export function MobileBottomMenu() {
           );
         })}
 
+        {/* Carrinho */}
         <button
           type="button"
           onClick={openCart}

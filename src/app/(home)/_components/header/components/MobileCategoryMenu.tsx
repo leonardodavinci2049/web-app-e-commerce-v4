@@ -1,7 +1,8 @@
 "use client";
 
 import { Menu } from "lucide-react";
-import Link from "next/link";
+import { useState } from "react";
+import { CategoryMenuAccordion } from "@/components/category-menu/CategoryMenuAccordion";
 import {
   Sheet,
   SheetContent,
@@ -9,23 +10,21 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  href: string;
-}
+import type { UICategory } from "@/lib/transformers";
 
 interface MobileCategoryMenuProps {
-  categories?: Category[];
+  categories: UICategory[];
 }
 
-export function MobileCategoryMenu({
-  categories = [],
-}: MobileCategoryMenuProps) {
+export function MobileCategoryMenu({ categories }: MobileCategoryMenuProps) {
+  const [open, setOpen] = useState(false);
+
+  const handleNavigate = () => {
+    setOpen(false);
+  };
+
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <button
           type="button"
@@ -35,24 +34,16 @@ export function MobileCategoryMenu({
           <Menu className="h-5 w-5" />
         </button>
       </SheetTrigger>
-      <SheetContent side="left">
-        <SheetHeader>
+      <SheetContent side="left" className="w-[300px] sm:w-[350px] p-0">
+        <SheetHeader className="px-6 py-4 border-b">
           <SheetTitle>Todas as Categorias</SheetTitle>
         </SheetHeader>
-        <nav className="px-4 pb-4">
-          <ul className="space-y-1">
-            {categories.map((category) => (
-              <li key={category.id}>
-                <Link
-                  href={category.href}
-                  className="block rounded-md px-3 py-2 text-sm text-foreground hover:bg-muted"
-                >
-                  {category.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <div className="px-4 py-4 overflow-y-auto max-h-[calc(100vh-80px)]">
+          <CategoryMenuAccordion
+            categories={categories}
+            onNavigate={handleNavigate}
+          />
+        </div>
       </SheetContent>
     </Sheet>
   );
