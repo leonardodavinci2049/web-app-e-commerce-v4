@@ -9,7 +9,6 @@
 git checkout develop
 git pull origin develop
 
-git pull origin main develop
 
 git branch
 
@@ -77,7 +76,7 @@ git flow feature start featr-36
 git checkout develop
 git checkout release/rls-36
 
-git branch -D feature/featr-27
+git branch -D feature/featr-38
 git branch
 
 ```
