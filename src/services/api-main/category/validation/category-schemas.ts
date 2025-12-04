@@ -11,7 +11,7 @@ export const TaxonomyWebMenuSchema = z.object({
   pe_id_tipo: z
     .number()
     .int()
-    .positive({ message: "pe_id_tipo deve ser um número positivo" }),
+    .min(0, { message: "pe_id_tipo deve ser um número não-negativo" }),
   pe_parent_id: z
     .number()
     .int()

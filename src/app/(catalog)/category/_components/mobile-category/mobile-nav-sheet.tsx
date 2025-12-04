@@ -23,7 +23,7 @@ interface Category {
   id: string;
   name: string;
   slug: string;
-  iconName: string; // ← Mudou de LucideIcon para string
+  iconName?: string;
   href: string;
   subcategories?: Subcategory[];
 }

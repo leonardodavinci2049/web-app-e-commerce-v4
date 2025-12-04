@@ -37,7 +37,7 @@ interface Category {
   id: string;
   name: string;
   slug: string;
-  iconName: string; // ← Mudou de 'icon' para 'iconName'
+  iconName?: string;
   href: string;
   subcategories?: Subcategory[];
 }
@@ -47,6 +47,9 @@ interface MobileCategoryItemProps {
   onNavigate: () => void;
 }
 
+// Ícone padrão quando não há iconName definido
+const DefaultIcon = Star;
+
 export function MobileCategoryItem({
   category,
   onNavigate,
@@ -54,12 +57,9 @@ export function MobileCategoryItem({
   const pathname = usePathname();
   const [isExpanded, setIsExpanded] = useState(false);
   const isActive = pathname.startsWith(category.href);
-  const Icon = iconMap[category.iconName]; // ← Busca o ícone pelo nome
-
-  if (!Icon) {
-    console.warn(`Icon "${category.iconName}" not found in iconMap`);
-    return null;
-  }
+  const Icon = category.iconName
+    ? iconMap[category.iconName] || DefaultIcon
+    : DefaultIcon;
 
   // Auto-expand if active
   const shouldExpand = isExpanded || isActive;

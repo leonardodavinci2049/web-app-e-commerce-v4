@@ -4,14 +4,16 @@ import type {
   RawProduct,
   TransformedProduct,
 } from "@/types/product";
+import type { UICategory, UIProduct } from "@/lib/transformers";
 
 /**
  * Transforma produtos brutos (com IDs) em produtos com nomes resolvidos
  * Esta função é executada no servidor para evitar processamento no cliente
+ * Suporta tanto RawProduct (mock) quanto UIProduct (API)
  */
 export function transformProducts(
-  rawProducts: RawProduct[],
-  categories: Category[],
+  rawProducts: (RawProduct | UIProduct)[],
+  categories: (Category | UICategory)[],
 ): TransformedProduct[] {
   return rawProducts.map((product) => {
     const categoryObj = categories.find((c) => c.id === product.categoryId);
@@ -19,8 +21,10 @@ export function transformProducts(
 
     let subcategoryName = "";
     if (categoryObj?.subcategories) {
-      const subObj = categoryObj.subcategories.find((s) =>
-        s.id.endsWith(`-${product.subcategoryId}`),
+      const subObj = categoryObj.subcategories.find(
+        (s) =>
+          s.id === product.subcategoryId ||
+          s.id.endsWith(`-${product.subcategoryId}`),
       );
       subcategoryName = subObj?.name || "";
     }
@@ -28,27 +32,28 @@ export function transformProducts(
     return {
       id: product.id,
       name: product.name,
-      description: product.description,
+      description: product.description ?? "",
       price: product.price,
       image: product.image,
       category: categoryName,
       subcategory: subcategoryName,
       inStock: product.inStock,
-      brand: product.brand,
+      brand: product.brand ?? undefined,
       discount: product.discount,
       isNew: product.isNew,
-      specifications: product.specifications,
-      shipping: product.shipping,
+      specifications: product.specifications as Record<string, string>,
+      shipping: product.shipping as TransformedProduct["shipping"],
     };
   });
 }
 
 /**
  * Extrai lista única de nomes de categorias dos produtos
+ * Suporta tanto RawProduct (mock) quanto UIProduct (API)
  */
 export function extractUniqueCategories(
-  rawProducts: RawProduct[],
-  categories: Category[],
+  rawProducts: (RawProduct | UIProduct)[],
+  categories: (Category | UICategory)[],
 ): string[] {
   const uniqueCategoryIds = new Set(rawProducts.map((p) => p.categoryId));
   return Array.from(uniqueCategoryIds)
@@ -59,10 +64,11 @@ export function extractUniqueCategories(
 
 /**
  * Gera mapa de categoria -> subcategorias para lookup rápido no cliente
+ * Suporta tanto Category (mock) quanto UICategory (API)
  */
 export function extractCategoryMap(
-  rawProducts: RawProduct[],
-  categories: Category[],
+  rawProducts: (RawProduct | UIProduct)[],
+  categories: (Category | UICategory)[],
 ): CategoryMap {
   const categoryMap: CategoryMap = {};
 
@@ -72,13 +78,13 @@ export function extractCategoryMap(
       (p) => p.categoryId === category.id,
     );
     const uniqueSubcategoryIds = new Set(
-      productsInCategory.map((p) => p.subcategoryId),
+      productsInCategory.map((p) => p.subcategoryId).filter(Boolean),
     );
 
     const subcategoryNames = Array.from(uniqueSubcategoryIds)
       .map((subId) => {
-        const subObj = category.subcategories?.find((s) =>
-          s.id.endsWith(`-${subId}`),
+        const subObj = category.subcategories?.find(
+          (s) => s.id === subId || s.id.endsWith(`-${subId}`),
         );
         return subObj?.name || "";
       })

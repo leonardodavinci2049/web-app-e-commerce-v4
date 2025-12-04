@@ -30,7 +30,7 @@ interface Category {
   id: string;
   name: string;
   slug: string;
-  iconName: string;
+  iconName?: string;
   href: string;
   subcategories?: Subcategory[];
 }
@@ -39,12 +39,22 @@ interface CategoryItemProps {
   category: Category;
 }
 
+// Ícone padrão quando não há iconName definido
+const DefaultIcon = Star;
+
 export function CategoryItem({ category }: CategoryItemProps) {
-  const Icon = iconMap[category.iconName];
+  const Icon = category.iconName ? iconMap[category.iconName] : DefaultIcon;
 
   if (!Icon) {
-    console.warn(`Icon "${category.iconName}" not found in iconMap`);
-    return null;
+    // Fallback para ícone padrão se o nome não for encontrado no mapa
+    return (
+      <CategoryLink
+        href={category.href}
+        icon={<DefaultIcon className="w-4 h-4" />}
+        name={category.name}
+        subcategories={category.subcategories}
+      />
+    );
   }
 
   return (

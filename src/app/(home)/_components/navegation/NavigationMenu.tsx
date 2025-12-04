@@ -1,8 +1,10 @@
 import { ChevronDown, Menu } from "lucide-react";
 import Link from "next/link";
-import { CATEGORIES } from "@/data/mock-data";
+import { fetchCategoriesAction } from "@/app/actions/product";
 
-export function NavigationMenu() {
+export async function NavigationMenu() {
+  const categories = await fetchCategoriesAction();
+
   return (
     <nav className="bg-primary text-primary-foreground shadow-md hidden md:block">
       <div className="container mx-auto px-4">
@@ -18,10 +20,10 @@ export function NavigationMenu() {
               <ChevronDown className="w-4 h-4 ml-2" />
             </button>
 
-            {/* Dropdown Content (Mock) */}
+            {/* Dropdown Content */}
             <div className="absolute top-full left-0 w-64 bg-card text-card-foreground shadow-xl rounded-b-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 border border-border">
               <ul className="py-2">
-                {CATEGORIES.map((category) => (
+                {categories.map((category) => (
                   <li key={category.id}>
                     <Link
                       href={category.href}
@@ -44,17 +46,17 @@ export function NavigationMenu() {
               {
                 label: "Eletrônicos",
                 href:
-                  CATEGORIES.find((c) => c.slug === "eletronicos")?.href || "#",
+                  categories.find((c) => c.slug === "eletronicos")?.href || "#",
               },
               {
                 label: "Informática",
                 href:
-                  CATEGORIES.find((c) => c.slug === "informatica")?.href || "#",
+                  categories.find((c) => c.slug === "informatica")?.href || "#",
               },
               {
                 label: "Perfumes",
                 href:
-                  CATEGORIES.find((c) => c.slug === "perfumes-importados")
+                  categories.find((c) => c.slug === "perfumes-importados")
                     ?.href || "#",
               },
               {

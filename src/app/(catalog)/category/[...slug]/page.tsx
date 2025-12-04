@@ -21,26 +21,37 @@ interface CategoryPageProps {
 /**
  * Generate static params for top category pages
  * Pre-renders category pages at build time for cache warming
+ * Returns a placeholder if no categories are available (required by Next.js Cache Components)
  */
 export async function generateStaticParams() {
-  const categories = await fetchCategoriesAction();
+  try {
+    const categories = await fetchCategoriesAction();
 
-  // Generate params for main categories and their subcategories
-  const params: { slug: string[] }[] = [];
+    // If no categories, return a placeholder to satisfy Next.js requirement
+    if (!categories || categories.length === 0) {
+      return [{ slug: ["placeholder"] }];
+    }
 
-  for (const category of categories) {
-    // Main category page
-    params.push({ slug: [category.slug] });
+    // Generate params for main categories and their subcategories
+    const params: { slug: string[] }[] = [];
 
-    // Subcategory pages
-    if (category.subcategories) {
-      for (const subcategory of category.subcategories) {
-        params.push({ slug: [category.slug, subcategory.slug] });
+    for (const category of categories) {
+      // Main category page
+      params.push({ slug: [category.slug] });
+
+      // Subcategory pages
+      if (category.subcategories) {
+        for (const subcategory of category.subcategories) {
+          params.push({ slug: [category.slug, subcategory.slug] });
+        }
       }
     }
-  }
 
-  return params;
+    return params;
+  } catch (error) {
+    // Return placeholder on error to satisfy Next.js requirement
+    return [{ slug: ["placeholder"] }];
+  }
 }
 
 export async function generateMetadata({
