@@ -1,10 +1,13 @@
 import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { fetchCategoriesAction } from "@/app/actions/product";
 import ModeToggle from "@/components/theme/mode-toggle";
 import { MobileCategoryMenu } from "./components/MobileCategoryMenu";
 
-export function MobileMainHeader() {
+export async function MobileMainHeader() {
+  const categories = await fetchCategoriesAction();
+
   return (
     <header className="bg-card border-b border-border shadow-sm sticky top-0 z-50 md:hidden">
       <div className="container mx-auto px-4 py-4 flex flex-col gap-4">
@@ -12,7 +15,7 @@ export function MobileMainHeader() {
         <div className="relative flex items-center justify-center w-full">
           {/* Hamburger - esquerda */}
           <div className="absolute left-0 flex items-center">
-            <MobileCategoryMenu />
+            <MobileCategoryMenu categories={categories} />
           </div>
 
           {/* Logo centralizada */}

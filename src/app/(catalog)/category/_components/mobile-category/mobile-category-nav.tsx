@@ -11,7 +11,7 @@ interface Category {
   id: string;
   name: string;
   slug: string;
-  iconName: string;
+  iconName?: string;
   href: string;
   subcategories?: Subcategory[];
 }

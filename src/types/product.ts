@@ -37,21 +37,21 @@ export interface ProductFilters {
 export interface RawProduct {
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   price: number;
   image: string;
   categoryId: string;
-  subcategoryId: string;
+  subcategoryId?: string;
   inStock: boolean;
   brand?: string;
   discount?: number;
   isNew?: boolean;
-  specifications?: Record<string, string>;
+  specifications?: Record<string, string | unknown>;
   shipping?: {
     freeShippingMinValue: number;
     estimatedDays: string;
     returnDays: number;
-  };
+  } | Record<string, unknown>;
 }
 
 export interface TransformedProduct {

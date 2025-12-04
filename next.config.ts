@@ -29,6 +29,19 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+    {
+        protocol: "https",
+        hostname: "mundialmegastore.com.br",
+        port: "",
+        pathname: "/**",
+      },
+      // Production assets domain
+      {
+        protocol: "https",
+        hostname: "assents01.comsuporte.com.br",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };

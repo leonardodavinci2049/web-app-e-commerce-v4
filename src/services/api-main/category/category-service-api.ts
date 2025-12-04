@@ -82,8 +82,17 @@ export class CategoryServiceApi extends BaseApiService {
         requestBody,
       );
 
+      // Treat NOT_FOUND as empty result instead of error
       if (response.statusCode === API_STATUS_CODES.NOT_FOUND) {
-        throw new CategoryNotFoundError(validatedParams);
+        return {
+          ...response,
+          statusCode: API_STATUS_CODES.SUCCESS,
+          data: [
+            [],
+            [{ sp_return_id: 0, sp_message: "Nenhuma categoria encontrada", sp_error_id: 0 }],
+            { fieldCount: 0, affectedRows: 0, insertId: 0, info: "", serverStatus: 0, warningStatus: 0, changedRows: 0 },
+          ],
+        };
       }
 
       if (isApiError(response.statusCode)) {
