@@ -169,8 +169,12 @@ export default function FooterHome() {
               <div className="flex items-center space-x-3">
                 <Clock className="h-5 w-5 flex-shrink-0 text-blue-400" />
                 <div className="text-sm">
-                  <p className="text-gray-400">Seg - Sex:  {envs.NEXT_PUBLIC_COMPANY_OPENING_HOURS}</p>
-                  <p className="text-gray-400">Sáb:  {envs.NEXT_PUBLIC_COMPANY_OPENING_HOURS}</p>
+                  <p className="text-gray-400">
+                    Seg - Sex: {envs.NEXT_PUBLIC_COMPANY_OPENING_HOURS}
+                  </p>
+                  <p className="text-gray-400">
+                    Sáb: {envs.NEXT_PUBLIC_COMPANY_OPENING_HOURS}
+                  </p>
                 </div>
               </div>
             </div>

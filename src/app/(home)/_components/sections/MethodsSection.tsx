@@ -1,5 +1,5 @@
-import { envs } from "@/core/config";
 import { CreditCard, QrCode, ShieldCheck, Truck } from "lucide-react";
+import { envs } from "@/core/config";
 
 export function MethodsSection() {
   return (
@@ -11,21 +11,27 @@ export function MethodsSection() {
               <QrCode className="h-8 w-8 text-primary" />
             </div>
             <p className="text-sm font-medium">PIX</p>
-            <p className="text-xs text-muted-foreground">{envs.NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT}% desconto à vista</p>
+            <p className="text-xs text-muted-foreground">
+              {envs.NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT}% desconto à vista
+            </p>
           </div>
           <div className="p-4 space-y-2">
             <div className="flex justify-center">
               <CreditCard className="h-8 w-8 text-primary" />
             </div>
             <p className="text-sm font-medium">Cartões</p>
-            <p className="text-xs text-muted-foreground">Parcele até {envs.NEXT_PUBLIC_PAY_IN_UP_TO}x</p>
+            <p className="text-xs text-muted-foreground">
+              Parcele até {envs.NEXT_PUBLIC_PAY_IN_UP_TO}x
+            </p>
           </div>
           <div className="p-4 space-y-2">
             <div className="flex justify-center">
               <Truck className="h-8 w-8 text-secondary" />
             </div>
             <p className="text-sm font-medium">Frete Grátis</p>
-            <p className="text-xs text-muted-foreground">Acima de R$ {envs.NEXT_PUBLIC_FREE_SHIPPING_OVER}</p>
+            <p className="text-xs text-muted-foreground">
+              Acima de R$ {envs.NEXT_PUBLIC_FREE_SHIPPING_OVER}
+            </p>
           </div>
           <div className="p-4 space-y-2">
             <div className="flex justify-center">

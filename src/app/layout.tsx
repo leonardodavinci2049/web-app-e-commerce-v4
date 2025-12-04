@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: `${envs.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN} - ${envs.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION}`,
-  description: `${envs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION}`
+  description: `${envs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION}`,
 };
 
 export default function RootLayout({
