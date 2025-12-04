@@ -9,11 +9,13 @@ import { ProductListingClient } from "./components/ProductListingClient";
 interface ProductListingProps {
   initialProducts: RawProduct[];
   categories: Category[];
+  searchTerm?: string;
 }
 
 export function ProductListing({
   initialProducts,
   categories,
+  searchTerm,
 }: ProductListingProps) {
   // Transformação de dados no servidor
   const transformedProducts = transformProducts(initialProducts, categories);
@@ -25,6 +27,7 @@ export function ProductListing({
       products={transformedProducts}
       categories={uniqueCategories}
       categoryMap={categoryMap}
+      searchTerm={searchTerm}
     />
   );
 }

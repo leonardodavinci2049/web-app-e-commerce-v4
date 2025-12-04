@@ -9,7 +9,6 @@
 git checkout develop
 git pull origin develop
 
-git pull origin main develop
 
 git branch
 
@@ -47,10 +46,10 @@ git push origin develop
 
 ```shell
 
-git flow release start rls-37
+git flow release start rls-38
 # atualize os pacotes e faça o build novamente
-git flow release finish rls-37
-finish release rls-37
+git flow release finish rls-38
+finish release rls-38
 
 git branch
 
@@ -77,7 +76,7 @@ git flow feature start featr-36
 git checkout develop
 git checkout release/rls-36
 
-git branch -D feature/featr-27
+git branch -D feature/featr-38
 git branch
 
 ```

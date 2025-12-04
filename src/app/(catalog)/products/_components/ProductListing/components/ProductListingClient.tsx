@@ -12,12 +12,14 @@ interface ProductListingClientProps {
   products: TransformedProduct[];
   categories: string[];
   categoryMap: CategoryMap;
+  searchTerm?: string;
 }
 
 export function ProductListingClient({
   products,
   categories,
   categoryMap,
+  searchTerm,
 }: ProductListingClientProps) {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
@@ -106,7 +108,9 @@ export function ProductListingClient({
           ) : (
             <div className="text-center py-16">
               <p className="text-xl text-muted-foreground">
-                Nenhum produto encontrado com os filtros selecionados.
+                {searchTerm
+                  ? `Nenhum produto encontrado para "${searchTerm}".`
+                  : "Nenhum produto encontrado com os filtros selecionados."}
               </p>
             </div>
           )}

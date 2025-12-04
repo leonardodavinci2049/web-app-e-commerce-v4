@@ -10,27 +10,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { MobileCategoryItem } from "./mobile-category-item";
-
-interface Subcategory {
-  id: string;
-  name: string;
-  slug: string;
-  href: string;
-  children?: Subcategory[];
-}
-
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  iconName?: string;
-  href: string;
-  subcategories?: Subcategory[];
-}
+import type { UICategory } from "@/lib/transformers";
+import { CategoryMenu } from "../category-sidebar/category-menu";
 
 interface MobileNavSheetProps {
-  categories: Category[];
+  categories: UICategory[];
 }
 
 export function MobileNavSheet({ categories }: MobileNavSheetProps) {
@@ -55,15 +39,9 @@ export function MobileNavSheet({ categories }: MobileNavSheetProps) {
         <SheetHeader>
           <SheetTitle>Categorias</SheetTitle>
         </SheetHeader>
-        <nav className="flex flex-col gap-2 mt-4">
-          {categories.map((category) => (
-            <MobileCategoryItem
-              key={category.id}
-              category={category}
-              onNavigate={handleNavigate}
-            />
-          ))}
-        </nav>
+        <div className="mt-4">
+          <CategoryMenu categories={categories} onNavigate={handleNavigate} />
+        </div>
       </SheetContent>
     </Sheet>
   );
