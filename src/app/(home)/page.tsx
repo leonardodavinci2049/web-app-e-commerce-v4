@@ -27,7 +27,9 @@ import { Testimonials } from "./_components/sections/Testimonials";
  * Home page with Suspense boundaries for async Server Components
  * Static page shell is cached, async components stream in
  */
-export default function Home() {
+export default async function Home() {
+  const { fetchCategoriesAction } = await import("@/app/actions/product");
+  const categories = await fetchCategoriesAction();
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
       {/* Static header components */}
@@ -77,7 +79,7 @@ export default function Home() {
       <Suspense fallback={<div>Loading...</div>}>
         <FooterHome />
       </Suspense>
-      <MobileBottomMenu />
+      <MobileBottomMenu categories={categories} />
     </div>
   );
 }
