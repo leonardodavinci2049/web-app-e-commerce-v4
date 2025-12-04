@@ -124,6 +124,39 @@ const envsSchema = z.object({
   NEXT_PUBLIC_COMPANY_CALLTO_ACTION5: z
     .string()
     .min(1, "NEXT_PUBLIC_COMPANY_CALLTO_ACTION5 is required"),
+  NEXT_PUBLIC_COMPANY_META_TITLE_MAIN: z
+    .string()
+    .min(1, "NEXT_PUBLIC_COMPANY_META_TITLE_MAIN is required"),
+  NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION: z
+    .string()
+    .min(1, "NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION is required"),
+  NEXT_PUBLIC_COMPANY_META_DESCRIPTION: z
+    .string()
+    .min(1, "NEXT_PUBLIC_COMPANY_META_DESCRIPTION is required"),
+
+  // Payment & Shipping
+  NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(
+      z
+        .number()
+        .min(0, "NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT must be a positive number"),
+    ),
+  NEXT_PUBLIC_PAY_IN_UP_TO: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(
+      z.number().positive("NEXT_PUBLIC_PAY_IN_UP_TO must be a positive number"),
+    ),
+  NEXT_PUBLIC_FREE_SHIPPING_OVER: z
+    .string()
+    .transform((val) => parseFloat(val))
+    .pipe(
+      z
+        .number()
+        .min(0, "NEXT_PUBLIC_FREE_SHIPPING_OVER must be a positive number"),
+    ),
 
   // INFO DEVELOPER
   NEXT_PUBLIC_DEVELOPER_NAME: z
@@ -269,6 +302,39 @@ const publicEnvSchema = z.object({
   NEXT_PUBLIC_COMPANY_CALLTO_ACTION5: z
     .string()
     .min(1, "NEXT_PUBLIC_COMPANY_CALLTO_ACTION5 is required"),
+  NEXT_PUBLIC_COMPANY_META_TITLE_MAIN: z
+    .string()
+    .min(1, "NEXT_PUBLIC_COMPANY_META_TITLE_MAIN is required"),
+  NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION: z
+    .string()
+    .min(1, "NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION is required"),
+  NEXT_PUBLIC_COMPANY_META_DESCRIPTION: z
+    .string()
+    .min(1, "NEXT_PUBLIC_COMPANY_META_DESCRIPTION is required"),
+
+  // Payment & Shipping
+  NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(
+      z
+        .number()
+        .min(0, "NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT must be a positive number"),
+    ),
+  NEXT_PUBLIC_PAY_IN_UP_TO: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(
+      z.number().positive("NEXT_PUBLIC_PAY_IN_UP_TO must be a positive number"),
+    ),
+  NEXT_PUBLIC_FREE_SHIPPING_OVER: z
+    .string()
+    .transform((val) => parseFloat(val))
+    .pipe(
+      z
+        .number()
+        .min(0, "NEXT_PUBLIC_FREE_SHIPPING_OVER must be a positive number"),
+    ),
   NEXT_PUBLIC_DEVELOPER_NAME: z
     .string()
     .min(1, "NEXT_PUBLIC_DEVELOPER_NAME is required"),
@@ -346,6 +412,18 @@ if (typeof window === "undefined") {
           process.env.NEXT_PUBLIC_COMPANY_CALLTO_ACTION4 || "",
         NEXT_PUBLIC_COMPANY_CALLTO_ACTION5:
           process.env.NEXT_PUBLIC_COMPANY_CALLTO_ACTION5 || "",
+        NEXT_PUBLIC_COMPANY_META_TITLE_MAIN:
+          process.env.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN || "",
+        NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION:
+          process.env.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION || "",
+        NEXT_PUBLIC_COMPANY_META_DESCRIPTION:
+          process.env.NEXT_PUBLIC_COMPANY_META_DESCRIPTION || "",
+        NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT:
+          Number(process.env.NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT) || 0,
+        NEXT_PUBLIC_PAY_IN_UP_TO:
+          Number(process.env.NEXT_PUBLIC_PAY_IN_UP_TO) || 0,
+        NEXT_PUBLIC_FREE_SHIPPING_OVER:
+          Number(process.env.NEXT_PUBLIC_FREE_SHIPPING_OVER) || 0,
         NEXT_PUBLIC_DEVELOPER_NAME:
           process.env.NEXT_PUBLIC_DEVELOPER_NAME || "",
         NEXT_PUBLIC_DEVELOPER_URL: process.env.NEXT_PUBLIC_DEVELOPER_URL || "",
@@ -444,6 +522,17 @@ export const envs = {
     envVars.NEXT_PUBLIC_COMPANY_CALLTO_ACTION4,
   NEXT_PUBLIC_COMPANY_CALLTO_ACTION5:
     envVars.NEXT_PUBLIC_COMPANY_CALLTO_ACTION5,
+  NEXT_PUBLIC_COMPANY_META_TITLE_MAIN:
+    envVars.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN,
+  NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION:
+    envVars.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION,
+  NEXT_PUBLIC_COMPANY_META_DESCRIPTION:
+    envVars.NEXT_PUBLIC_COMPANY_META_DESCRIPTION,
+
+  // Payment & Shipping
+  NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT: envVars.NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT,
+  NEXT_PUBLIC_PAY_IN_UP_TO: envVars.NEXT_PUBLIC_PAY_IN_UP_TO,
+  NEXT_PUBLIC_FREE_SHIPPING_OVER: envVars.NEXT_PUBLIC_FREE_SHIPPING_OVER,
 
   // INFO DEVELOPER
   NEXT_PUBLIC_DEVELOPER_NAME: envVars.NEXT_PUBLIC_DEVELOPER_NAME,

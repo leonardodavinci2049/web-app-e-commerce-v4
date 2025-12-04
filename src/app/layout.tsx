@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import { CartSidebar } from "@/components/cart/CartSidebar";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { CartProvider } from "@/contexts/CartContext";
+import { envs } from "@/core/config";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,8 +18,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Mundial Megastore - E-commerce B2C e B2B",
-  description: " Loja de Informática e Importados de Ribeirão Preto - SP",
+  title: `${envs.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN} - ${envs.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION}`,
+  description: `${envs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION}`
 };
 
 export default function RootLayout({
