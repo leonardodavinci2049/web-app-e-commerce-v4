@@ -50,7 +50,7 @@ git push origin develop
 ```shell
 # crie uma nova 
 git branch
-git flow feature start featr-30
+git flow feature start featr-33
 
 ```
 ### Task 8 - excluir branchs

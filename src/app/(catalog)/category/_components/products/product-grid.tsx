@@ -14,6 +14,7 @@ interface ProductGridProps {
     subcategoryId?: string;
   }>;
   categoryId: string;
+  taxonomyId?: number;
   subcategoryId?: string;
   initialCount?: number;
 }
@@ -27,6 +28,7 @@ const ITEMS_PER_PAGE = 20;
 export function ProductGrid({
   products,
   categoryId,
+  taxonomyId,
   subcategoryId,
   initialCount = ITEMS_PER_PAGE,
 }: ProductGridProps) {
@@ -56,6 +58,7 @@ export function ProductGrid({
       {/* Client Island for pagination */}
       <LoadMoreProducts
         categoryId={categoryId}
+        taxonomyId={taxonomyId}
         subcategoryId={subcategoryId}
         initialCount={initialCount}
         totalCount={totalCount}

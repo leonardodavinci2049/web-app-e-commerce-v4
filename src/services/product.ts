@@ -181,13 +181,106 @@ export async function getProductsByCategory(
   }
 }
 
+/**
+ * Fetch products by taxonomy slug with cache
+ * Uses pe_slug_taxonomy to filter by category slug from URL
+ */
+export async function getProductsBySlug(
+  slugTaxonomy: string,
+  limit = 50,
+  page = 0,
+): Promise<UIProduct[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.products, CACHE_TAGS.category(slugTaxonomy));
+
+  try {
+    const response = await ProductWebServiceApi.findProducts({
+      pe_slug_taxonomy: slugTaxonomy,
+      pe_qt_registros: limit,
+      pe_pagina_id: page,
+    });
+
+    const products = ProductWebServiceApi.extractProductList(response);
+    return transformProductList(products);
+  } catch (error) {
+    logger.error(`Failed to fetch products by slug:`, error);
+    return [];
+  }
+}
+
+/**
+ * Fetch products by taxonomy - uses both slug and ID for best results
+ * @param slugOrId - Can be a slug string or taxonomy ID
+ * @param taxonomyId - Optional taxonomy ID to use for filtering
+ */
+export async function getProductsByTaxonomy(
+  slugOrId: string,
+  taxonomyId?: number,
+  limit = 50,
+  page = 0,
+): Promise<UIProduct[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.products, CACHE_TAGS.category(slugOrId));
+
+  try {
+    // Se temos um taxonomyId válido, priorizar busca por ID
+    if (taxonomyId && taxonomyId > 0) {
+      const responseById = await ProductWebServiceApi.findProducts({
+        pe_id_taxonomy: taxonomyId,
+        pe_slug_taxonomy: slugOrId, // Enviar slug também para melhor precisão
+        pe_qt_registros: limit,
+        pe_pagina_id: page,
+      });
+
+      const productsById = ProductWebServiceApi.extractProductList(responseById);
+      if (productsById.length > 0) {
+        return transformProductList(productsById);
+      }
+    }
+
+    // Tentar busca apenas por slug
+    const responseBySlug = await ProductWebServiceApi.findProducts({
+      pe_slug_taxonomy: slugOrId,
+      pe_qt_registros: limit,
+      pe_pagina_id: page,
+    });
+
+    const productsBySlug = ProductWebServiceApi.extractProductList(responseBySlug);
+    if (productsBySlug.length > 0) {
+      return transformProductList(productsBySlug);
+    }
+
+    // Se slugOrId for um ID numérico, tentar busca por ID
+    const numericId = Number.parseInt(slugOrId, 10);
+    if (!Number.isNaN(numericId) && numericId > 0) {
+      const responseById = await ProductWebServiceApi.findProducts({
+        pe_id_taxonomy: numericId,
+        pe_qt_registros: limit,
+        pe_pagina_id: page,
+      });
+
+      const productsById = ProductWebServiceApi.extractProductList(responseById);
+      return transformProductList(productsById);
+    }
+
+    return [];
+  } catch (error) {
+    logger.error(`Failed to fetch products by taxonomy:`, error);
+    return [];
+  }
+}
+
 
 // ============================================================================
 // Category Functions
 // ============================================================================
 
-// pe_id_tipo for category menu (0 = all categories)
-const CATEGORY_MENU_TYPE_ID = 0;
+// pe_id_tipo: 1 = menu hierárquico completo (conforme teste Postman)
+// pe_parent_id: 0 = buscar a partir da raiz
+const CATEGORY_MENU_TYPE_ID = 1;
+const CATEGORY_PARENT_ID = 0;
 
 /**
  * Fetch all categories (menu) with cache
@@ -201,10 +294,25 @@ export async function getCategories(): Promise<UICategory[]> {
   try {
     const response = await CategoryServiceApi.findMenu({
       pe_id_tipo: CATEGORY_MENU_TYPE_ID,
+      pe_parent_id: CATEGORY_PARENT_ID,
+    });
+
+    logger.debug("Category menu response:", {
+      statusCode: response.statusCode,
+      message: response.message,
+      dataLength: response.data?.[0]?.length ?? 0,
     });
 
     const menu = CategoryServiceApi.extractCategories(response);
-    return transformCategoryMenu(menu);
+
+    if (menu.length === 0) {
+      logger.warn("No categories found in menu response");
+    }
+
+    const transformed = transformCategoryMenu(menu);
+    logger.debug("Transformed categories:", { count: transformed.length });
+
+    return transformed;
   } catch (error) {
     logger.error("Failed to fetch categories:", error);
     return [];
