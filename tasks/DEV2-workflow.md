@@ -38,7 +38,7 @@ sempre execute o lint e o build
 git add .
 git commit -m " task final adjustments and completion"
 
-git flow feature finish featr-30
+git flow feature finish featr-32
 git branch
 git push origin develop
 
