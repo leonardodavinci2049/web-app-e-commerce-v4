@@ -5,12 +5,12 @@
  * Centralizes data mapping logic for products and categories.
  */
 
+import type { TblTaxonomyWebMenu } from "@/services/api-main/category/types/category-types";
 import type {
   ProductWebDetail,
   ProductWebListItem,
   ProductWebRelatedItem,
 } from "@/services/api-main/product/types/product-types";
-import type { TblTaxonomyWebMenu } from "@/services/api-main/category/types/category-types";
 
 // ============================================================================
 // Constants
@@ -59,7 +59,6 @@ export interface CategoryLookupResult {
   category: UICategory;
   subcategory: UISubcategory | null;
 }
-
 
 // ============================================================================
 // Product Transformers
@@ -120,7 +119,6 @@ function calculateDiscount(item: ProductWebListItem): number | undefined {
   return undefined;
 }
 
-
 /**
  * Transforms a ProductWebDetail from API to UIProduct for product detail page
  */
@@ -180,7 +178,9 @@ function buildShippingInfo(detail: ProductWebDetail): Record<string, unknown> {
 /**
  * Transforms ProductWebRelatedItem to UIProduct for related products
  */
-export function transformRelatedProduct(item: ProductWebRelatedItem): UIProduct {
+export function transformRelatedProduct(
+  item: ProductWebRelatedItem,
+): UIProduct {
   return {
     id: String(item.SKU ?? 0),
     name: item.PRODUTO ?? "",
@@ -204,7 +204,6 @@ export function transformRelatedProducts(
   return items.map(transformRelatedProduct);
 }
 
-
 // ============================================================================
 // Category Transformers
 // ============================================================================
@@ -220,8 +219,7 @@ function generateSlug(item: TblTaxonomyWebMenu): string {
 
   // Generate slug from name if available
   if (item.TAXONOMIA && item.TAXONOMIA.trim() !== "") {
-    return item.TAXONOMIA
-      .toLowerCase()
+    return item.TAXONOMIA.toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "") // Remove accents
       .replace(/[^a-z0-9]+/g, "-") // Replace non-alphanumeric with hyphens
@@ -300,7 +298,6 @@ export function transformCategoryMenu(
 ): UICategory[] {
   return menu.map((item) => transformToCategory(item));
 }
-
 
 /**
  * Finds a category by slug in the hierarchical structure

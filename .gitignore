@@ -43,3 +43,7 @@ next-env.d.ts
 # others
 ecosystem.config.js
 /generated/prisma
+/docs
+/tasks
+/.github
+/.kiro

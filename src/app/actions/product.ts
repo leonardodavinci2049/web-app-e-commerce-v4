@@ -57,7 +57,6 @@ export async function fetchProductBySlugAction(slug: string[]) {
   }
 }
 
-
 /**
  * Fetch related products (cached via 'use cache' in service)
  */

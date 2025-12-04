@@ -21,7 +21,9 @@ interface MobileCategoryMenuProps {
   categories?: Category[];
 }
 
-export function MobileCategoryMenu({ categories = [] }: MobileCategoryMenuProps) {
+export function MobileCategoryMenu({
+  categories = [],
+}: MobileCategoryMenuProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>

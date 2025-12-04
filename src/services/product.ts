@@ -1,20 +1,19 @@
 import "server-only";
 
 import { cacheLife, cacheTag } from "next/cache";
-import { CACHE_TAGS } from "@/lib/cache-config";
 import { createLogger } from "@/core/logger";
+import { CACHE_TAGS } from "@/lib/cache-config";
 import {
-  transformProductList,
-  transformProductDetail,
-  transformRelatedProducts,
-  transformCategoryMenu,
-  findCategoryBySlug,
-  type UIProduct,
-  type UICategory,
   type CategoryLookupResult,
+  findCategoryBySlug,
+  transformCategoryMenu,
+  transformProductDetail,
+  transformProductList,
+  type UICategory,
+  type UIProduct,
 } from "@/lib/transformers";
-import { ProductWebServiceApi } from "@/services/api-main/product/product-service-api";
 import { CategoryServiceApi } from "@/services/api-main/category/category-service-api";
+import { ProductWebServiceApi } from "@/services/api-main/product/product-service-api";
 
 const logger = createLogger("ProductService");
 
@@ -53,7 +52,6 @@ export async function getProducts(
     return [];
   }
 }
-
 
 /**
  * Fetch a product by ID with cache
@@ -136,8 +134,17 @@ export async function getRelatedProducts(
   cacheTag(CACHE_TAGS.products, CACHE_TAGS.category(taxonomyId));
 
   try {
+    // Validar se taxonomyId é um número válido
+    const parsedTaxonomyId = Number.parseInt(taxonomyId, 10);
+
+    // Se taxonomyId for inválido ou 0, retornar array vazio silenciosamente
+    // (alguns produtos podem não ter categoria associada)
+    if (Number.isNaN(parsedTaxonomyId) || parsedTaxonomyId <= 0) {
+      return [];
+    }
+
     const response = await ProductWebServiceApi.findProducts({
-      pe_id_taxonomy: Number.parseInt(taxonomyId, 10),
+      pe_id_taxonomy: parsedTaxonomyId,
       pe_qt_registros: 10,
     });
 
@@ -164,9 +171,14 @@ export async function getProductsByCategory(
 
   try {
     // Use subcategory ID if provided, otherwise use category ID
-    const taxonomyId = subcategoryId
-      ? Number.parseInt(subcategoryId, 10)
-      : Number.parseInt(categoryId, 10);
+    const idToUse = subcategoryId || categoryId;
+    const taxonomyId = Number.parseInt(idToUse, 10);
+
+    // Se taxonomyId for inválido ou 0, retornar array vazio
+    if (Number.isNaN(taxonomyId) || taxonomyId <= 0) {
+      logger.warn(`Invalid categoryId/subcategoryId: ${idToUse}`);
+      return [];
+    }
 
     const response = await ProductWebServiceApi.findProducts({
       pe_id_taxonomy: taxonomyId,
@@ -234,7 +246,8 @@ export async function getProductsByTaxonomy(
         pe_pagina_id: page,
       });
 
-      const productsById = ProductWebServiceApi.extractProductList(responseById);
+      const productsById =
+        ProductWebServiceApi.extractProductList(responseById);
       if (productsById.length > 0) {
         return transformProductList(productsById);
       }
@@ -247,7 +260,8 @@ export async function getProductsByTaxonomy(
       pe_pagina_id: page,
     });
 
-    const productsBySlug = ProductWebServiceApi.extractProductList(responseBySlug);
+    const productsBySlug =
+      ProductWebServiceApi.extractProductList(responseBySlug);
     if (productsBySlug.length > 0) {
       return transformProductList(productsBySlug);
     }
@@ -261,7 +275,8 @@ export async function getProductsByTaxonomy(
         pe_pagina_id: page,
       });
 
-      const productsById = ProductWebServiceApi.extractProductList(responseById);
+      const productsById =
+        ProductWebServiceApi.extractProductList(responseById);
       return transformProductList(productsById);
     }
 
@@ -271,7 +286,6 @@ export async function getProductsByTaxonomy(
     return [];
   }
 }
-
 
 // ============================================================================
 // Category Functions
@@ -297,12 +311,6 @@ export async function getCategories(): Promise<UICategory[]> {
       pe_parent_id: CATEGORY_PARENT_ID,
     });
 
-    logger.debug("Category menu response:", {
-      statusCode: response.statusCode,
-      message: response.message,
-      dataLength: response.data?.[0]?.length ?? 0,
-    });
-
     const menu = CategoryServiceApi.extractCategories(response);
 
     if (menu.length === 0) {
@@ -310,7 +318,6 @@ export async function getCategories(): Promise<UICategory[]> {
     }
 
     const transformed = transformCategoryMenu(menu);
-    logger.debug("Transformed categories:", { count: transformed.length });
 
     return transformed;
   } catch (error) {
