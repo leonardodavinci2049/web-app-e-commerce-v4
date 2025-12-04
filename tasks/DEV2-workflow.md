@@ -19,12 +19,12 @@ git branch
 ```
 
 
-### Task 2 - Iniciar feaure
+### Task 2 - Iniciar nova feaure
 
 ```shell
 
 git branch
-git flow feature start featr-32
+git flow feature start featr-38
 
 ```
 

@@ -31,6 +31,7 @@ export async function getProducts(
     brandId?: number;
     limit?: number;
     page?: number;
+    searchTerm?: string;
   } = {},
 ): Promise<UIProduct[]> {
   "use cache";
@@ -43,6 +44,7 @@ export async function getProducts(
       pe_id_marca: params.brandId ?? 0,
       pe_qt_registros: params.limit ?? 20,
       pe_pagina_id: params.page ?? 0,
+      pe_produto: params.searchTerm ?? "",
     });
 
     const products = ProductWebServiceApi.extractProductList(response);
