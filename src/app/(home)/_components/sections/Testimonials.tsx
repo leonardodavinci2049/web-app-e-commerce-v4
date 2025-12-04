@@ -1,7 +1,12 @@
 import { Building2, Factory, Users } from "lucide-react";
 import { TESTIMONIALS } from "@/data/mock-data";
+import { cn } from "@/lib/utils";
 
-export function Testimonials() {
+interface TestimonialsProps {
+  className?: string;
+}
+
+export function Testimonials({ className }: TestimonialsProps) {
   const icons = {
     "Pessoa Física": Users,
     "Pequenas Empresas": Building2,
@@ -9,7 +14,7 @@ export function Testimonials() {
   };
 
   return (
-    <section className="py-16 bg-muted">
+    <section className={cn("py-16 bg-muted", className)}>
       <div className="container mx-auto px-4">
         <h2 className="text-2xl font-bold text-center mb-12 text-foreground">
           Departamentos dos Clientes

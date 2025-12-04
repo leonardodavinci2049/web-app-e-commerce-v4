@@ -18,6 +18,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { envs } from "@/core/config";
 
 export default function FooterHome() {
   const currentYear = new Date().getFullYear();
@@ -53,9 +54,7 @@ export default function FooterHome() {
               </Link>
             </div>
             <p className="text-sm leading-relaxed text-gray-400">
-              Distribuidora Atacadista especializada em eletrônicos, informática
-              e perfumes importados. Atendemos todo o Brasil com qualidade e
-              confiança.
+              {envs.NEXT_PUBLIC_COMPANY_ABOUT}
             </p>
 
             {/* Redes sociais */}
@@ -138,9 +137,12 @@ export default function FooterHome() {
               <div className="flex items-start space-x-3">
                 <MapPin className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-400" />
                 <div className="text-sm">
-                  <p className="text-gray-400">Av. Caramuru, 1008</p>
-                  <p className="text-gray-400">Jardim Sumare</p>
-                  <p className="text-gray-400">Ribeirão Preto - SP</p>
+                  <p className="text-gray-400">
+                    {envs.NEXT_PUBLIC_COMPANY_ADDRESS}
+                  </p>
+                  <p className="text-gray-400">
+                    {envs.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION}
+                  </p>
                 </div>
               </div>
 
@@ -167,8 +169,12 @@ export default function FooterHome() {
               <div className="flex items-center space-x-3">
                 <Clock className="h-5 w-5 flex-shrink-0 text-blue-400" />
                 <div className="text-sm">
-                  <p className="text-gray-400">Seg - Sex: 8h às 18h</p>
-                  <p className="text-gray-400">Sáb: 8h às 12h</p>
+                  <p className="text-gray-400">
+                    Seg - Sex: {envs.NEXT_PUBLIC_COMPANY_OPENING_HOURS}
+                  </p>
+                  <p className="text-gray-400">
+                    Sáb: {envs.NEXT_PUBLIC_COMPANY_OPENING_HOURS}
+                  </p>
                 </div>
               </div>
             </div>
@@ -256,7 +262,7 @@ export default function FooterHome() {
           <div className="flex flex-col items-center justify-between space-y-2 md:flex-row md:space-y-0">
             <p className="text-sm text-gray-400">
               &copy; {currentYear} {process.env.NEXT_PUBLIC_COMPANY_NAME}. Todos
-              os direitos reservados - Build 0.2.0
+              os direitos reservados - CNPJ: {envs.NEXT_PUBLIC_COMPANY_CNPJ}
             </p>
             <div className="flex space-x-6 text-sm">
               <Link

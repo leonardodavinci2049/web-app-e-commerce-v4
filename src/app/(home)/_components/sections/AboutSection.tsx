@@ -1,9 +1,15 @@
 import { CheckCircle2 } from "lucide-react";
 import Image from "next/image";
 
-export function AboutSection() {
+import { cn } from "@/lib/utils";
+
+interface AboutSectionProps {
+  className?: string;
+}
+
+export function AboutSection({ className }: AboutSectionProps) {
   return (
-    <section className="py-16 bg-background">
+    <section className={cn("py-16 bg-background", className)}>
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
