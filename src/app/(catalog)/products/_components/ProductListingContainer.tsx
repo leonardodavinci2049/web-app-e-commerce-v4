@@ -4,11 +4,23 @@ import {
 } from "@/app/actions/product";
 import { ProductListing } from "./ProductListing/ProductListing";
 
-export async function ProductListingContainer() {
+interface ProductListingContainerProps {
+  searchTerm?: string;
+}
+
+export async function ProductListingContainer({
+  searchTerm,
+}: ProductListingContainerProps) {
   const [products, categories] = await Promise.all([
-    fetchProductsAction(),
+    fetchProductsAction({ searchTerm }),
     fetchCategoriesAction(),
   ]);
 
-  return <ProductListing initialProducts={products} categories={categories} />;
+  return (
+    <ProductListing
+      initialProducts={products}
+      categories={categories}
+      searchTerm={searchTerm}
+    />
+  );
 }

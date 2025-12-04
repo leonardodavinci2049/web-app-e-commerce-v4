@@ -19,12 +19,12 @@ git branch
 ```
 
 
-### Task 2 - Iniciar feaure
+### Task 2 - Iniciar nova feaure
 
 ```shell
 
 git branch
-git flow feature start featr-32
+git flow feature start featr-38
 
 ```
 
@@ -38,7 +38,7 @@ sempre execute o lint e o build
 git add .
 git commit -m " task final adjustments and completion"
 
-git flow feature finish featr-33
+git flow feature finish featr-38
 git branch
 git push origin develop
 

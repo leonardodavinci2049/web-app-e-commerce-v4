@@ -23,6 +23,7 @@ export async function fetchProductsAction(
     brandId?: number;
     limit?: number;
     page?: number;
+    searchTerm?: string;
   } = {},
 ) {
   try {
