@@ -1,22 +1,34 @@
 "use server";
 
+import { createLogger } from "@/core/logger";
 import {
   getCategories,
   getCategoryBySlug,
   getProductBySlug,
   getProducts,
   getProductsByCategory,
+  getProductsBySlug,
+  getProductsByTaxonomy,
   getRelatedProducts,
 } from "@/services/product";
+
+const logger = createLogger("ProductActions");
 
 /**
  * Fetch all products (cached via 'use cache' in service)
  */
-export async function fetchProductsAction() {
+export async function fetchProductsAction(
+  params: {
+    taxonomyId?: number;
+    brandId?: number;
+    limit?: number;
+    page?: number;
+  } = {},
+) {
   try {
-    return await getProducts();
+    return await getProducts(params);
   } catch (error) {
-    console.error("Failed to fetch products:", error);
+    logger.error("Failed to fetch products:", error);
     return [];
   }
 }
@@ -28,7 +40,7 @@ export async function fetchCategoriesAction() {
   try {
     return await getCategories();
   } catch (error) {
-    console.error("Failed to fetch categories:", error);
+    logger.error("Failed to fetch categories:", error);
     return [];
   }
 }
@@ -40,7 +52,7 @@ export async function fetchProductBySlugAction(slug: string[]) {
   try {
     return await getProductBySlug(slug);
   } catch (error) {
-    console.error("Failed to fetch product by slug:", error);
+    logger.error("Failed to fetch product by slug:", error);
     return undefined;
   }
 }
@@ -50,12 +62,12 @@ export async function fetchProductBySlugAction(slug: string[]) {
  */
 export async function fetchRelatedProductsAction(
   productId: string,
-  categoryId: string,
+  taxonomyId: string,
 ) {
   try {
-    return await getRelatedProducts(productId, categoryId);
+    return await getRelatedProducts(productId, taxonomyId);
   } catch (error) {
-    console.error("Failed to fetch related products:", error);
+    logger.error("Failed to fetch related products:", error);
     return [];
   }
 }
@@ -70,7 +82,7 @@ export async function fetchCategoryBySlugAction(
   try {
     return await getCategoryBySlug(categorySlug, subcategorySlug);
   } catch (error) {
-    console.error("Failed to fetch category by slug:", error);
+    logger.error("Failed to fetch category by slug:", error);
     return null;
   }
 }
@@ -85,7 +97,40 @@ export async function fetchProductsByCategoryAction(
   try {
     return await getProductsByCategory(categoryId, subcategoryId);
   } catch (error) {
-    console.error("Failed to fetch products by category:", error);
+    logger.error("Failed to fetch products by category:", error);
+    return [];
+  }
+}
+
+/**
+ * Fetch products by taxonomy slug (cached via 'use cache' in service)
+ */
+export async function fetchProductsBySlugAction(
+  slugTaxonomy: string,
+  limit?: number,
+  page?: number,
+) {
+  try {
+    return await getProductsBySlug(slugTaxonomy, limit, page);
+  } catch (error) {
+    logger.error("Failed to fetch products by slug:", error);
+    return [];
+  }
+}
+
+/**
+ * Fetch products by taxonomy - tries slug first, falls back to ID
+ */
+export async function fetchProductsByTaxonomyAction(
+  slugOrId: string,
+  taxonomyId?: number,
+  limit?: number,
+  page?: number,
+) {
+  try {
+    return await getProductsByTaxonomy(slugOrId, taxonomyId, limit, page);
+  } catch (error) {
+    logger.error("Failed to fetch products by taxonomy:", error);
     return [];
   }
 }

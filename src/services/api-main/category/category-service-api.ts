@@ -16,7 +16,7 @@ import type {
   TaxonomyWebMenuResponse,
   TblTaxonomyWebMenu,
 } from "./types/category-types";
-import { CategoryError, CategoryNotFoundError } from "./types/category-types";
+import { CategoryError } from "./types/category-types";
 import { TaxonomyWebMenuSchema } from "./validation/category-schemas";
 
 const logger = createLogger("CategoryServiceApi");
@@ -65,10 +65,15 @@ export class CategoryServiceApi extends BaseApiService {
       Partial<Pick<TaxonomyWebMenuRequest, "pe_parent_id">>,
   ): Promise<TaxonomyWebMenuResponse> {
     try {
-      const payloadInput = {
+      // Build payload without undefined values
+      const payloadInput: Record<string, unknown> = {
         pe_id_tipo: params.pe_id_tipo,
-        pe_parent_id: params.pe_parent_id,
       };
+
+      // Only include pe_parent_id if it's defined
+      if (params.pe_parent_id !== undefined) {
+        payloadInput.pe_parent_id = params.pe_parent_id;
+      }
 
       const validatedParams = TaxonomyWebMenuSchema.parse(payloadInput);
 
@@ -82,8 +87,31 @@ export class CategoryServiceApi extends BaseApiService {
         requestBody,
       );
 
+      // Treat NOT_FOUND as empty result instead of error
       if (response.statusCode === API_STATUS_CODES.NOT_FOUND) {
-        throw new CategoryNotFoundError(validatedParams);
+        return {
+          ...response,
+          statusCode: API_STATUS_CODES.SUCCESS,
+          data: [
+            [],
+            [
+              {
+                sp_return_id: 0,
+                sp_message: "Nenhuma categoria encontrada",
+                sp_error_id: 0,
+              },
+            ],
+            {
+              fieldCount: 0,
+              affectedRows: 0,
+              insertId: 0,
+              info: "",
+              serverStatus: 0,
+              warningStatus: 0,
+              changedRows: 0,
+            },
+          ],
+        };
       }
 
       if (isApiError(response.statusCode)) {

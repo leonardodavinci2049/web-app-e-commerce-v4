@@ -41,9 +41,9 @@ yarn-error.log*
 next-env.d.ts
 
 # others
+ecosystem.config.js
+/generated/prisma
 /docs
 /tasks
 /.github
 /.kiro
-ecosystem.config.js
-/generated/prisma

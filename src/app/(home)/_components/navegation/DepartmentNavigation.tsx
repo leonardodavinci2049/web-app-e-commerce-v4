@@ -20,6 +20,9 @@ const iconMap: Record<string, LucideIcon> = {
   Sun,
 };
 
+// Ícone padrão quando não há iconName definido
+const DefaultIcon = Star;
+
 /**
  * Async Server Component - fetches categories via Server Action
  * Cached for 1 hour via navigation cache tag
@@ -35,12 +38,9 @@ export async function DepartmentNavigation() {
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
           {categories.map((category) => {
-            const Icon = iconMap[category.iconName];
-
-            if (!Icon) {
-              console.warn(`Icon "${category.iconName}" not found in iconMap`);
-              return null;
-            }
+            const Icon = category.iconName
+              ? iconMap[category.iconName] || DefaultIcon
+              : DefaultIcon;
 
             return (
               <Link

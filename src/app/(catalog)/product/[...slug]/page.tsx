@@ -13,13 +13,24 @@ interface ProductDetailPageProps {
 /**
  * Generate static params for all product pages
  * Pre-renders product detail pages at build time for cache warming
+ * Returns a placeholder if no products are available (required by Next.js Cache Components)
  */
 export async function generateStaticParams() {
-  const products = await fetchProductsAction();
+  try {
+    const products = await fetchProductsAction();
 
-  return products.map((product) => ({
-    slug: [generateSlug(product.name, product.id)],
-  }));
+    // If no products, return a placeholder to satisfy Next.js requirement
+    if (!products || products.length === 0) {
+      return [{ slug: ["placeholder-0"] }];
+    }
+
+    return products.map((product) => ({
+      slug: [generateSlug(product.name, product.id)],
+    }));
+  } catch (_error) {
+    // Return placeholder on error to satisfy Next.js requirement
+    return [{ slug: ["placeholder-0"] }];
+  }
 }
 
 /**

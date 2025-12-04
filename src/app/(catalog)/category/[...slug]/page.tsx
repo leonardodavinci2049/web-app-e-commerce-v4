@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import {
   fetchCategoriesAction,
-  fetchCategoryBySlugAction,
-  fetchProductsByCategoryAction,
+  fetchProductsByTaxonomyAction,
 } from "@/app/actions/product";
 import { ProductGridSkeleton } from "@/components/skeletons";
 import { Breadcrumbs } from "../_components/breadcrumbs";
@@ -18,49 +16,14 @@ interface CategoryPageProps {
   }>;
 }
 
-/**
- * Generate static params for top category pages
- * Pre-renders category pages at build time for cache warming
- */
-export async function generateStaticParams() {
-  const categories = await fetchCategoriesAction();
-
-  // Generate params for main categories and their subcategories
-  const params: { slug: string[] }[] = [];
-
-  for (const category of categories) {
-    // Main category page
-    params.push({ slug: [category.slug] });
-
-    // Subcategory pages
-    if (category.subcategories) {
-      for (const subcategory of category.subcategories) {
-        params.push({ slug: [category.slug, subcategory.slug] });
-      }
-    }
-  }
-
-  return params;
-}
-
 export async function generateMetadata({
   params,
 }: CategoryPageProps): Promise<Metadata> {
   const resolvedParams = await params;
-  const [categorySlug, subcategorySlug] = resolvedParams.slug;
-
-  const data = await fetchCategoryBySlugAction(categorySlug, subcategorySlug);
-
-  if (!data) {
-    return {
-      title: "Categoria não encontrada",
-    };
-  }
-
-  const { category, subcategory } = data;
-  const title = subcategory
-    ? `${subcategory.name} - ${category.name}`
-    : category.name;
+  const slugParts = resolvedParams.slug;
+  const title = slugParts[slugParts.length - 1]
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
 
   return {
     title: `${title} | Store Name`,
@@ -74,45 +37,83 @@ async function CategoryContent({
 }: {
   params: Promise<{ slug: string[] }>;
 }) {
-  // Resolver params DENTRO do boundary Suspense
   const resolvedParams = await params;
-  const [categorySlug, subcategorySlug] = resolvedParams.slug;
+  const slugParts = resolvedParams.slug;
 
-  const data = await fetchCategoryBySlugAction(categorySlug, subcategorySlug);
+  // Usar o último segmento do slug para filtrar produtos
+  const taxonomySlug = slugParts[slugParts.length - 1];
 
-  if (!data) {
-    notFound();
-  }
+  // Buscar categorias primeiro para obter o ID e slug real
+  const categories = await fetchCategoriesAction();
 
-  const { category, subcategory } = data;
+  // Tentar encontrar a categoria pelo slug para obter o ID, slug real e nome (busca em 3 níveis)
+  const findTaxonomyInfo = (): {
+    id: number | undefined;
+    slug: string | undefined;
+    name: string | undefined;
+  } => {
+    for (const cat of categories) {
+      // Level 1 - Família
+      if (cat.slug === taxonomySlug || cat.id === taxonomySlug) {
+        return { id: Number(cat.id), slug: cat.slug, name: cat.name };
+      }
+      if (cat.subcategories) {
+        for (const sub of cat.subcategories) {
+          // Level 2 - Grupo
+          if (sub.slug === taxonomySlug || sub.id === taxonomySlug) {
+            return { id: Number(sub.id), slug: sub.slug, name: sub.name };
+          }
+          // Level 3 - Subgrupo
+          if (sub.children) {
+            for (const child of sub.children) {
+              if (child.slug === taxonomySlug || child.id === taxonomySlug) {
+                return {
+                  id: Number(child.id),
+                  slug: child.slug,
+                  name: child.name,
+                };
+              }
+            }
+          }
+        }
+      }
+    }
+    return { id: undefined, slug: undefined, name: undefined };
+  };
 
-  // Buscar produtos e categorias
-  const [products, categories] = await Promise.all([
-    fetchProductsByCategoryAction(category.id, subcategory?.id),
-    fetchCategoriesAction(),
-  ]);
+  const taxonomyInfo = findTaxonomyInfo();
 
-  // Mapear produtos com nomes de categoria/subcategoria
-  const filteredProducts = products.map((product) => {
-    // Encontrar nomes de categoria e subcategoria para o produto
-    const prodCategory = categories.find((c) => c.id === product.categoryId);
-    const prodSubcategory = prodCategory?.subcategories?.find(
-      (s) => s.id === product.subcategoryId,
-    );
+  // Usar o slug real da categoria se encontrado, senão usar o da URL
+  const effectiveSlug = taxonomyInfo.slug || taxonomySlug;
+  const taxonomyId = taxonomyInfo.id;
 
-    return {
-      ...product,
-      category: prodCategory?.name || "",
-      subcategory: prodSubcategory?.name || "",
-    };
+  // Buscar produtos por slug ou ID
+  const products = await fetchProductsByTaxonomyAction(
+    effectiveSlug,
+    taxonomyId,
+  );
+
+  // Construir breadcrumbs a partir dos slugs
+  const breadcrumbs = slugParts.map((slug, index) => {
+    const label = slug
+      .replace(/-/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+    const href = `/category/${slugParts.slice(0, index + 1).join("/")}`;
+    return { label, href };
   });
 
-  // Breadcrumbs
-  const breadcrumbs = [{ label: category.name, href: category.href }];
+  // Título da página - usar nome da categoria se encontrado, senão formatar o slug
+  const pageTitle =
+    taxonomyInfo.name ||
+    slugParts[slugParts.length - 1]
+      .replace(/-/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase());
 
-  if (subcategory) {
-    breadcrumbs.push({ label: subcategory.name, href: subcategory.href });
-  }
+  // Mapear produtos para incluir category como string
+  const mappedProducts = products.map((product) => ({
+    ...product,
+    category: pageTitle,
+  }));
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -130,18 +131,18 @@ async function CategoryContent({
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold tracking-tight mb-2">
-              {subcategory ? subcategory.name : category.name}
+              {pageTitle}
             </h1>
             <p className="text-muted-foreground">
-              {filteredProducts.length} produtos encontrados
+              {products.length} produtos encontrados
             </p>
           </div>
 
           {/* Product Grid */}
           <ProductGrid
-            products={filteredProducts}
-            categoryId={category.id}
-            subcategoryId={subcategory?.id}
+            products={mappedProducts}
+            categoryId={effectiveSlug}
+            taxonomyId={taxonomyId}
           />
         </div>
       </div>

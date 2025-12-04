@@ -1,6 +1,7 @@
 "use client";
 
 import { Menu } from "lucide-react";
+import Link from "next/link";
 import {
   Sheet,
   SheetContent,
@@ -9,7 +10,20 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-export function MobileCategoryMenu() {
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  href: string;
+}
+
+interface MobileCategoryMenuProps {
+  categories?: Category[];
+}
+
+export function MobileCategoryMenu({
+  categories = [],
+}: MobileCategoryMenuProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -27,21 +41,14 @@ export function MobileCategoryMenu() {
         </SheetHeader>
         <nav className="px-4 pb-4">
           <ul className="space-y-1">
-            {[
-              "Eletrônicos",
-              "Informática",
-              "Gamer",
-              "Casa Inteligente",
-              "Ferramentas",
-              "Automotivo",
-            ].map((item) => (
-              <li key={item}>
-                <a
-                  href="/"
+            {categories.map((category) => (
+              <li key={category.id}>
+                <Link
+                  href={category.href}
                   className="block rounded-md px-3 py-2 text-sm text-foreground hover:bg-muted"
                 >
-                  {item}
-                </a>
+                  {category.name}
+                </Link>
               </li>
             ))}
           </ul>

@@ -1,127 +1,348 @@
-import { cacheLife, cacheTag } from "next/cache";
-import { CATEGORIES, PRODUCTS } from "@/data/mock-data";
-import { CACHE_TAGS } from "@/lib/cache-config";
+import "server-only";
 
-// Types for mock data
-type MockProduct = (typeof PRODUCTS)[number];
-type MockCategory = (typeof CATEGORIES)[number];
+import { cacheLife, cacheTag } from "next/cache";
+import { createLogger } from "@/core/logger";
+import { CACHE_TAGS } from "@/lib/cache-config";
+import {
+  type CategoryLookupResult,
+  findCategoryBySlug,
+  transformCategoryMenu,
+  transformProductDetail,
+  transformProductList,
+  type UICategory,
+  type UIProduct,
+} from "@/lib/transformers";
+import { CategoryServiceApi } from "@/services/api-main/category/category-service-api";
+import { ProductWebServiceApi } from "@/services/api-main/product/product-service-api";
+
+const logger = createLogger("ProductService");
+
+// ============================================================================
+// Product Functions
+// ============================================================================
 
 /**
- * Fetch all products with 1 hour cache
+ * Fetch all products with cache
+ * Uses ProductWebServiceApi.findProducts
  */
-export async function getProducts(): Promise<MockProduct[]> {
+export async function getProducts(
+  params: {
+    taxonomyId?: number;
+    brandId?: number;
+    limit?: number;
+    page?: number;
+  } = {},
+): Promise<UIProduct[]> {
   "use cache";
   cacheLife("hours");
   cacheTag(CACHE_TAGS.products);
 
-  // Simulate network delay
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  return PRODUCTS;
+  try {
+    const response = await ProductWebServiceApi.findProducts({
+      pe_id_taxonomy: params.taxonomyId ?? 0,
+      pe_id_marca: params.brandId ?? 0,
+      pe_qt_registros: params.limit ?? 20,
+      pe_pagina_id: params.page ?? 0,
+    });
+
+    const products = ProductWebServiceApi.extractProductList(response);
+    return transformProductList(products);
+  } catch (error) {
+    logger.error("Failed to fetch products:", error);
+    return [];
+  }
 }
 
 /**
- * Fetch all categories with 1 hour cache
- */
-export async function getCategories(): Promise<MockCategory[]> {
-  "use cache";
-  cacheLife("hours");
-  cacheTag(CACHE_TAGS.categories, CACHE_TAGS.navigation);
-
-  // Simulate network delay
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  return CATEGORIES;
-}
-
-/**
- * Fetch a product by ID with 1 hour cache
+ * Fetch a product by ID with cache
+ * Uses ProductWebServiceApi.findProductById
  */
 export async function getProductById(
   id: string,
-): Promise<MockProduct | undefined> {
+): Promise<UIProduct | undefined> {
   "use cache";
   cacheLife("hours");
   cacheTag(CACHE_TAGS.product(id), CACHE_TAGS.products);
 
-  await new Promise((resolve) => setTimeout(resolve, 50));
-  return PRODUCTS.find((p) => p.id === id);
+  try {
+    const response = await ProductWebServiceApi.findProductById({
+      pe_id_produto: Number.parseInt(id, 10),
+      pe_slug_produto: "",
+    });
+
+    const product = ProductWebServiceApi.extractProduct(response);
+    if (!product) {
+      return undefined;
+    }
+
+    return transformProductDetail(product);
+  } catch (error) {
+    logger.error(`Failed to fetch product by ID ${id}:`, error);
+    return undefined;
+  }
 }
 
 /**
- * Fetch a product by slug with 1 hour cache
+ * Fetch a product by slug with cache
+ * Extracts product ID from slug and uses findProductById
  */
 export async function getProductBySlug(
   slug: string[],
-): Promise<MockProduct | undefined> {
+): Promise<UIProduct | undefined> {
   "use cache";
   cacheLife("hours");
   cacheTag(CACHE_TAGS.products);
 
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  const fullSlug = slug.join("/");
-  const parts = fullSlug.split("-");
-  const id = parts[parts.length - 1];
-  return PRODUCTS.find((p) => p.id === id);
+  try {
+    const fullSlug = slug.join("/");
+    // Extract ID from slug (format: product-name-123)
+    const parts = fullSlug.split("-");
+    const id = parts[parts.length - 1];
+
+    if (!id || Number.isNaN(Number.parseInt(id, 10))) {
+      logger.error(`Invalid product slug: ${fullSlug}`);
+      return undefined;
+    }
+
+    const response = await ProductWebServiceApi.findProductById({
+      pe_id_produto: Number.parseInt(id, 10),
+      pe_slug_produto: fullSlug,
+    });
+
+    const product = ProductWebServiceApi.extractProduct(response);
+    if (!product) {
+      return undefined;
+    }
+
+    return transformProductDetail(product);
+  } catch (error) {
+    logger.error(`Failed to fetch product by slug:`, error);
+    return undefined;
+  }
 }
 
 /**
- * Fetch related products with 1 hour cache
+ * Fetch related products with cache
+ * Uses taxonomy ID to find products in the same category
  */
 export async function getRelatedProducts(
   productId: string,
-  categoryId: string,
-): Promise<MockProduct[]> {
+  taxonomyId: string,
+): Promise<UIProduct[]> {
   "use cache";
   cacheLife("hours");
-  cacheTag(CACHE_TAGS.products, CACHE_TAGS.category(categoryId));
+  cacheTag(CACHE_TAGS.products, CACHE_TAGS.category(taxonomyId));
 
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  return PRODUCTS.filter(
-    (p) => p.categoryId === categoryId && p.id !== productId,
-  );
-}
+  try {
+    // Validar se taxonomyId é um número válido
+    const parsedTaxonomyId = Number.parseInt(taxonomyId, 10);
 
-/**
- * Fetch category by slug with 1 hour cache
- */
-export async function getCategoryBySlug(
-  categorySlug: string,
-  subcategorySlug?: string,
-) {
-  "use cache";
-  cacheLife("hours");
-  cacheTag(CACHE_TAGS.categories);
+    // Se taxonomyId for inválido ou 0, retornar array vazio silenciosamente
+    // (alguns produtos podem não ter categoria associada)
+    if (Number.isNaN(parsedTaxonomyId) || parsedTaxonomyId <= 0) {
+      return [];
+    }
 
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  const category = CATEGORIES.find((c) => c.slug === categorySlug);
-  if (!category) return null;
+    const response = await ProductWebServiceApi.findProducts({
+      pe_id_taxonomy: parsedTaxonomyId,
+      pe_qt_registros: 10,
+    });
 
-  let subcategory = null;
-  if (subcategorySlug) {
-    subcategory = category.subcategories?.find(
-      (s) => s.slug === subcategorySlug,
-    );
-    if (!subcategory) return null;
+    const products = ProductWebServiceApi.extractProductList(response);
+    // Filter out the current product
+    return transformProductList(products).filter((p) => p.id !== productId);
+  } catch (error) {
+    logger.error(`Failed to fetch related products:`, error);
+    return [];
   }
-  return { category, subcategory };
 }
 
 /**
- * Fetch products by category with 1 hour cache
+ * Fetch products by category with cache
+ * Uses pe_id_taxonomy to filter by category
  */
 export async function getProductsByCategory(
   categoryId: string,
   subcategoryId?: string,
-): Promise<MockProduct[]> {
+): Promise<UIProduct[]> {
   "use cache";
   cacheLife("hours");
   cacheTag(CACHE_TAGS.products, CACHE_TAGS.category(categoryId));
 
-  await new Promise((resolve) => setTimeout(resolve, 100));
-  return PRODUCTS.filter((product) => {
-    const matchCategory = product.categoryId === categoryId;
-    const matchSubcategory = subcategoryId
-      ? product.subcategoryId === subcategoryId
-      : true;
-    return matchCategory && matchSubcategory;
-  });
+  try {
+    // Use subcategory ID if provided, otherwise use category ID
+    const idToUse = subcategoryId || categoryId;
+    const taxonomyId = Number.parseInt(idToUse, 10);
+
+    // Se taxonomyId for inválido ou 0, retornar array vazio
+    if (Number.isNaN(taxonomyId) || taxonomyId <= 0) {
+      logger.warn(`Invalid categoryId/subcategoryId: ${idToUse}`);
+      return [];
+    }
+
+    const response = await ProductWebServiceApi.findProducts({
+      pe_id_taxonomy: taxonomyId,
+      pe_qt_registros: 50,
+    });
+
+    const products = ProductWebServiceApi.extractProductList(response);
+    return transformProductList(products);
+  } catch (error) {
+    logger.error(`Failed to fetch products by category:`, error);
+    return [];
+  }
+}
+
+/**
+ * Fetch products by taxonomy slug with cache
+ * Uses pe_slug_taxonomy to filter by category slug from URL
+ */
+export async function getProductsBySlug(
+  slugTaxonomy: string,
+  limit = 50,
+  page = 0,
+): Promise<UIProduct[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.products, CACHE_TAGS.category(slugTaxonomy));
+
+  try {
+    const response = await ProductWebServiceApi.findProducts({
+      pe_slug_taxonomy: slugTaxonomy,
+      pe_qt_registros: limit,
+      pe_pagina_id: page,
+    });
+
+    const products = ProductWebServiceApi.extractProductList(response);
+    return transformProductList(products);
+  } catch (error) {
+    logger.error(`Failed to fetch products by slug:`, error);
+    return [];
+  }
+}
+
+/**
+ * Fetch products by taxonomy - uses both slug and ID for best results
+ * @param slugOrId - Can be a slug string or taxonomy ID
+ * @param taxonomyId - Optional taxonomy ID to use for filtering
+ */
+export async function getProductsByTaxonomy(
+  slugOrId: string,
+  taxonomyId?: number,
+  limit = 50,
+  page = 0,
+): Promise<UIProduct[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.products, CACHE_TAGS.category(slugOrId));
+
+  try {
+    // Se temos um taxonomyId válido, priorizar busca por ID
+    if (taxonomyId && taxonomyId > 0) {
+      const responseById = await ProductWebServiceApi.findProducts({
+        pe_id_taxonomy: taxonomyId,
+        pe_slug_taxonomy: slugOrId, // Enviar slug também para melhor precisão
+        pe_qt_registros: limit,
+        pe_pagina_id: page,
+      });
+
+      const productsById =
+        ProductWebServiceApi.extractProductList(responseById);
+      if (productsById.length > 0) {
+        return transformProductList(productsById);
+      }
+    }
+
+    // Tentar busca apenas por slug
+    const responseBySlug = await ProductWebServiceApi.findProducts({
+      pe_slug_taxonomy: slugOrId,
+      pe_qt_registros: limit,
+      pe_pagina_id: page,
+    });
+
+    const productsBySlug =
+      ProductWebServiceApi.extractProductList(responseBySlug);
+    if (productsBySlug.length > 0) {
+      return transformProductList(productsBySlug);
+    }
+
+    // Se slugOrId for um ID numérico, tentar busca por ID
+    const numericId = Number.parseInt(slugOrId, 10);
+    if (!Number.isNaN(numericId) && numericId > 0) {
+      const responseById = await ProductWebServiceApi.findProducts({
+        pe_id_taxonomy: numericId,
+        pe_qt_registros: limit,
+        pe_pagina_id: page,
+      });
+
+      const productsById =
+        ProductWebServiceApi.extractProductList(responseById);
+      return transformProductList(productsById);
+    }
+
+    return [];
+  } catch (error) {
+    logger.error(`Failed to fetch products by taxonomy:`, error);
+    return [];
+  }
+}
+
+// ============================================================================
+// Category Functions
+// ============================================================================
+
+// pe_id_tipo: 1 = menu hierárquico completo (conforme teste Postman)
+// pe_parent_id: 0 = buscar a partir da raiz
+const CATEGORY_MENU_TYPE_ID = 1;
+const CATEGORY_PARENT_ID = 0;
+
+/**
+ * Fetch all categories (menu) with cache
+ * Uses CategoryServiceApi.findMenu
+ */
+export async function getCategories(): Promise<UICategory[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.categories, CACHE_TAGS.navigation);
+
+  try {
+    const response = await CategoryServiceApi.findMenu({
+      pe_id_tipo: CATEGORY_MENU_TYPE_ID,
+      pe_parent_id: CATEGORY_PARENT_ID,
+    });
+
+    const menu = CategoryServiceApi.extractCategories(response);
+
+    if (menu.length === 0) {
+      logger.warn("No categories found in menu response");
+    }
+
+    const transformed = transformCategoryMenu(menu);
+
+    return transformed;
+  } catch (error) {
+    logger.error("Failed to fetch categories:", error);
+    return [];
+  }
+}
+
+/**
+ * Fetch category by slug with cache
+ * Searches the hierarchical menu structure for matching slug
+ */
+export async function getCategoryBySlug(
+  categorySlug: string,
+  subcategorySlug?: string,
+): Promise<CategoryLookupResult | null> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.categories);
+
+  try {
+    const categories = await getCategories();
+    return findCategoryBySlug(categories, categorySlug, subcategorySlug);
+  } catch (error) {
+    logger.error(`Failed to fetch category by slug:`, error);
+    return null;
+  }
 }

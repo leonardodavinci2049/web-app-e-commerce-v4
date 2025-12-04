@@ -2,11 +2,12 @@
 
 import { Loader2 } from "lucide-react";
 import { useState, useTransition } from "react";
-import { fetchProductsByCategoryAction } from "@/app/actions/product";
+import { fetchProductsByTaxonomyAction } from "@/app/actions/product";
 
 interface LoadMoreProductsProps {
   categoryId: string;
-  subcategoryId?: string;
+  taxonomyId?: number;
+  _subcategoryId?: string;
   initialCount: number;
   totalCount: number;
   pageSize?: number;
@@ -18,7 +19,8 @@ interface LoadMoreProductsProps {
  */
 export function LoadMoreProducts({
   categoryId,
-  subcategoryId,
+  taxonomyId,
+  _subcategoryId,
   initialCount,
   totalCount,
   pageSize = 8,
@@ -30,9 +32,8 @@ export function LoadMoreProducts({
 
   const handleLoadMore = () => {
     startTransition(async () => {
-      // Simulate loading more products
-      // In a real app, this would fetch the next page
-      await fetchProductsByCategoryAction(categoryId, subcategoryId);
+      // Buscar mais produtos usando a mesma lógica de taxonomy
+      await fetchProductsByTaxonomyAction(categoryId, taxonomyId);
       setDisplayedCount((prev) => Math.min(prev + pageSize, totalCount));
     });
   };

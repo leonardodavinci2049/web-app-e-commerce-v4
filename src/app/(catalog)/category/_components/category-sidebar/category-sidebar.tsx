@@ -5,13 +5,14 @@ interface Subcategory {
   name: string;
   slug: string;
   href: string;
+  children?: Subcategory[];
 }
 
 interface Category {
   id: string;
   name: string;
   slug: string;
-  iconName: string;
+  iconName?: string;
   href: string;
   subcategories?: Subcategory[];
 }

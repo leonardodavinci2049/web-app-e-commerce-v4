@@ -95,18 +95,38 @@ export async function ProductDetailContainer({
   }));
 
   // Dados padrão para especificações e entrega
-  const defaultSpecifications = {
+  const defaultSpecifications: Record<string, string> = {
     Marca: product.brand || "Genérica",
     Categoria: getCategoryName(product.categoryId),
     Subcategoria: getSubcategoryName(product.categoryId, product.subcategoryId),
     Condição: product.isNew ? "Novo" : "Usado",
   };
 
+  // Converte especificações do produto para Record<string, string>
+  const productSpecifications: Record<string, string> = product.specifications
+    ? Object.fromEntries(
+        Object.entries(product.specifications)
+          .filter(([, v]) => v !== null && v !== undefined)
+          .map(([k, v]) => [k, String(v)]),
+      )
+    : defaultSpecifications;
+
   const defaultShipping = {
     freeShippingMinValue: 199.9,
     estimatedDays: "3 a 7 dias úteis",
     returnDays: 7,
   };
+
+  // Converte shipping do produto para o formato esperado
+  const productShipping = product.shipping
+    ? {
+        freeShippingMinValue:
+          Number(product.shipping.freeShippingMinValue) || 199.9,
+        estimatedDays:
+          String(product.shipping.estimatedDays) || "3 a 7 dias úteis",
+        returnDays: Number(product.shipping.returnDays) || 7,
+      }
+    : defaultShipping;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -142,8 +162,8 @@ export async function ProductDetailContainer({
       <div className="mb-16">
         <ProductTabs
           description={product.description || "Sem descrição disponível."}
-          specifications={product.specifications || defaultSpecifications}
-          shipping={product.shipping || defaultShipping}
+          specifications={productSpecifications}
+          shipping={productShipping}
         />
       </div>
 
