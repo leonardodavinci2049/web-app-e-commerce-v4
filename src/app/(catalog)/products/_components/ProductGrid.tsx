@@ -20,12 +20,15 @@ export function ProductGrid({ products, viewMode = "grid" }: ProductGridProps) {
           key={product.id}
           product={{
             id: product.id,
+            sku: product.sku,
             name: product.name,
             price: product.price,
             image: product.image,
             isNew: product.isNew,
             discount: product.discount,
             category: product.category,
+            brand: product.brand,
+            inStock: product.inStock,
           }}
           variant={viewMode}
         />

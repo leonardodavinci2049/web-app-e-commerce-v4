@@ -45,7 +45,7 @@ export async function getProducts(
     const response = await ProductWebServiceApi.findProducts({
       pe_id_taxonomy: params.taxonomyId ?? 0,
       pe_id_marca: params.brandId ?? 0,
-      pe_qt_registros: params.limit ?? 20,
+      pe_qt_registros: params.limit ?? 100,
       pe_pagina_id: params.page ?? 0,
       pe_produto: params.searchTerm ?? "",
       pe_coluna_id: params.sortCol ?? 1,
