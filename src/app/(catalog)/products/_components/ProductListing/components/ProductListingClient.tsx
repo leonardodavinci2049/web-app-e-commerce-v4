@@ -9,6 +9,7 @@ import { ProductFilters } from "./ProductFilters";
 const PRODUCTS_PER_PAGE = 20;
 
 import { ProductSorter } from "@/components/product/ProductSorter";
+import { StockFilter } from "@/components/product/StockFilter";
 import { ViewToggle } from "@/components/product/ViewToggle";
 
 interface ProductListingClientProps {
@@ -96,7 +97,8 @@ export function ProductListingClient({
             Mostrando {displayedProducts.length} de {filteredProducts.length}{" "}
             produtos
           </p>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3 flex-wrap">
+            <StockFilter />
             <ProductSorter />
             <ViewToggle viewMode={viewMode} onToggle={setViewMode} />
           </div>

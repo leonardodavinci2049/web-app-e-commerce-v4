@@ -34,6 +34,7 @@ export async function getProducts(
     searchTerm?: string;
     sortCol?: number;
     sortOrd?: number;
+    stockOnly?: boolean;
   } = {},
 ): Promise<UIProduct[]> {
   "use cache";
@@ -49,6 +50,7 @@ export async function getProducts(
       pe_produto: params.searchTerm ?? "",
       pe_coluna_id: params.sortCol ?? 1,
       pe_ordem_id: params.sortOrd ?? 1,
+      pe_flag_estoque: params.stockOnly ? 1 : 0,
     });
 
     const products = ProductWebServiceApi.extractProductList(response);
@@ -235,6 +237,7 @@ export async function getProductsBySlug(
  * Fetch products by taxonomy - uses both slug and ID for best results
  * @param slugOrId - Can be a slug string or taxonomy ID
  * @param taxonomyId - Optional taxonomy ID to use for filtering
+ * @param stockOnly - If true, returns only products with stock
  */
 export async function getProductsByTaxonomy(
   slugOrId: string,
@@ -243,10 +246,13 @@ export async function getProductsByTaxonomy(
   page = 0,
   sortCol = 1,
   sortOrd = 1,
+  stockOnly?: boolean,
 ): Promise<UIProduct[]> {
   "use cache";
   cacheLife("hours");
   cacheTag(CACHE_TAGS.products, CACHE_TAGS.category(slugOrId));
+
+  const stockFlag = stockOnly ? 1 : 0;
 
   try {
     // Se temos um taxonomyId válido, priorizar busca por ID
@@ -258,6 +264,7 @@ export async function getProductsByTaxonomy(
         pe_pagina_id: page,
         pe_coluna_id: sortCol,
         pe_ordem_id: sortOrd,
+        pe_flag_estoque: stockFlag,
       });
 
       const productsById =
@@ -274,6 +281,7 @@ export async function getProductsByTaxonomy(
       pe_pagina_id: page,
       pe_coluna_id: sortCol,
       pe_ordem_id: sortOrd,
+      pe_flag_estoque: stockFlag,
     });
 
     const productsBySlug =
@@ -291,6 +299,7 @@ export async function getProductsByTaxonomy(
         pe_pagina_id: page,
         pe_coluna_id: sortCol,
         pe_ordem_id: sortOrd,
+        pe_flag_estoque: stockFlag,
       });
 
       const productsById =

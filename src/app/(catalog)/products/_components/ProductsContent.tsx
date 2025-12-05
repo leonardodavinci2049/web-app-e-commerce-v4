@@ -12,6 +12,7 @@ export async function ProductsContent({ searchParams }: ProductsContentProps) {
     typeof params.sort_col === "string" ? Number(params.sort_col) : undefined;
   const sortOrd =
     typeof params.sort_ord === "string" ? Number(params.sort_ord) : undefined;
+  const stockOnly = params.stock === "1";
 
   // Sanitize search term for display (prevent XSS)
   const sanitizedSearchTerm = searchTerm
@@ -37,6 +38,7 @@ export async function ProductsContent({ searchParams }: ProductsContentProps) {
         searchTerm={searchTerm}
         sortCol={sortCol}
         sortOrd={sortOrd}
+        stockOnly={stockOnly}
       />
     </>
   );

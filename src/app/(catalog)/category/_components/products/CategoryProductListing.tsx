@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ProductSorter } from "@/components/product/ProductSorter";
+import { StockFilter } from "@/components/product/StockFilter";
 import { ViewToggle } from "@/components/product/ViewToggle";
 import { ProductGrid } from "./product-grid";
 
@@ -32,11 +33,12 @@ export function CategoryProductListing({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex justify-between items-center bg-background py-2 border-b border-border">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-background py-2 border-b border-border">
         <p className="text-sm text-muted-foreground">
           {products.length} produtos encontrados
         </p>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3 flex-wrap">
+          <StockFilter />
           <ProductSorter />
           <ViewToggle viewMode={viewMode} onToggle={setViewMode} />
         </div>

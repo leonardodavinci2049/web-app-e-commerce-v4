@@ -51,6 +51,7 @@ async function CategoryContent({
     typeof resolvedSearchParams.sort_ord === "string"
       ? Number(resolvedSearchParams.sort_ord)
       : undefined;
+  const stockOnly = resolvedSearchParams.stock === "1";
 
   const slugParts = resolvedParams.slug;
 
@@ -109,6 +110,7 @@ async function CategoryContent({
     undefined, // page
     sortCol,
     sortOrd,
+    stockOnly,
   );
 
   // Construir breadcrumbs a partir dos slugs

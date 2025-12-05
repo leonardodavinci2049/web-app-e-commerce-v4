@@ -26,6 +26,7 @@ export async function fetchProductsAction(
     searchTerm?: string;
     sortCol?: number;
     sortOrd?: number;
+    stockOnly?: boolean;
   } = {},
 ) {
   try {
@@ -133,6 +134,7 @@ export async function fetchProductsByTaxonomyAction(
   page?: number,
   sortCol: number = 1,
   sortOrd: number = 1,
+  stockOnly?: boolean,
 ) {
   try {
     return await getProductsByTaxonomy(
@@ -142,6 +144,7 @@ export async function fetchProductsByTaxonomyAction(
       page,
       sortCol,
       sortOrd,
+      stockOnly,
     );
   } catch (error) {
     logger.error("Failed to fetch products by taxonomy:", error);
