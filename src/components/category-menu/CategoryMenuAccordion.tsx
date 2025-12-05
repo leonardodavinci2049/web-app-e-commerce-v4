@@ -1,9 +1,9 @@
 "use client";
 
-import { FolderOpen, Layers, Tag } from "lucide-react";
+import { FolderOpen, Layers, LayoutGrid, Tag } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -87,6 +87,10 @@ export function CategoryMenuAccordion({
 }: CategoryMenuAccordionProps) {
   const pathname = usePathname();
 
+  // Check if "Todos" (All Products) is active
+  const isTodosActive =
+    pathname === "/products" || pathname.startsWith("/products?");
+
   // Derive expanded state from URL
   const expandedFromUrl = useMemo(
     () => getExpandedCategoriesFromPath(pathname, categories),
@@ -98,8 +102,18 @@ export function CategoryMenuAccordion({
     undefined,
   );
 
+  // Reset manual expanded state when navigating to /products
+  useEffect(() => {
+    if (isTodosActive) {
+      setManualExpanded(undefined);
+    }
+  }, [isTodosActive]);
+
   // Use URL-derived state, but allow manual override
-  const effectiveLevel1 = manualExpanded ?? expandedFromUrl.level1;
+  // When "Todos" is active, force accordion to be closed
+  const effectiveLevel1 = isTodosActive
+    ? undefined
+    : (manualExpanded ?? expandedFromUrl.level1);
 
   const handleLevel1Change = useCallback((value: string | undefined) => {
     setManualExpanded(value);
@@ -120,8 +134,34 @@ export function CategoryMenuAccordion({
     [pathname, isSelected],
   );
 
+  // Handle "Todos" click - close accordion and navigate
+  const handleTodosClick = useCallback(() => {
+    setManualExpanded(undefined);
+    onNavigate?.();
+  }, [onNavigate]);
+
   return (
     <div className="rounded-lg overflow-hidden bg-card shadow-sm">
+      {/* "Todos" (All Products) option - always first */}
+      <Link
+        href="/products"
+        onClick={handleTodosClick}
+        className={cn(
+          "flex items-center gap-3 py-3 px-4 text-sm transition-colors border-b",
+          isTodosActive
+            ? "bg-primary/10 border-l-4 border-l-primary pl-3 text-primary font-bold"
+            : "text-foreground font-medium hover:bg-muted/50",
+        )}
+      >
+        <LayoutGrid
+          className={cn(
+            "h-5 w-5 shrink-0",
+            isTodosActive ? "text-primary" : "text-muted-foreground",
+          )}
+        />
+        Todos
+      </Link>
+
       <Accordion
         type="single"
         collapsible

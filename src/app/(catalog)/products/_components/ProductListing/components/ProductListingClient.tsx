@@ -92,7 +92,7 @@ export function ProductListingClient({
 
       {/* Contador de Produtos e Toggle de Visualização */}
       <section className="bg-background py-4 border-b border-border">
-        <div className="container mx-auto px-4 flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <p className="text-sm text-muted-foreground">
             Mostrando {displayedProducts.length} de {filteredProducts.length}{" "}
             produtos
@@ -106,27 +106,25 @@ export function ProductListingClient({
       </section>
 
       {/* Grid de Produtos */}
-      <section className="py-12 bg-background">
-        <div className="container mx-auto px-4">
-          {displayedProducts.length > 0 ? (
-            <>
-              <ProductGrid products={displayedProducts} viewMode={viewMode} />
-              <LoadMoreButton
-                onClick={loadMore}
-                loading={loading}
-                hasMore={hasMore}
-              />
-            </>
-          ) : (
-            <div className="text-center py-16">
-              <p className="text-xl text-muted-foreground">
-                {searchTerm
-                  ? `Nenhum produto encontrado para "${searchTerm}".`
-                  : "Nenhum produto encontrado com os filtros selecionados."}
-              </p>
-            </div>
-          )}
-        </div>
+      <section className="py-8 bg-background">
+        {displayedProducts.length > 0 ? (
+          <>
+            <ProductGrid products={displayedProducts} viewMode={viewMode} />
+            <LoadMoreButton
+              onClick={loadMore}
+              loading={loading}
+              hasMore={hasMore}
+            />
+          </>
+        ) : (
+          <div className="text-center py-16">
+            <p className="text-xl text-muted-foreground">
+              {searchTerm
+                ? `Nenhum produto encontrado para "${searchTerm}".`
+                : "Nenhum produto encontrado com os filtros selecionados."}
+            </p>
+          </div>
+        )}
       </section>
     </>
   );
