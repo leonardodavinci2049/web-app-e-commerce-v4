@@ -9,6 +9,7 @@ import { ProductGrid } from "./product-grid";
 interface CategoryProductListingProps {
   products: Array<{
     id: string;
+    sku?: string;
     name: string;
     price: number;
     image: string;
@@ -17,6 +18,8 @@ interface CategoryProductListingProps {
     category: string;
     categoryId?: string;
     subcategoryId?: string;
+    brand?: string;
+    inStock?: boolean;
   }>;
   categoryId: string;
   taxonomyId?: number;

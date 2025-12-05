@@ -43,12 +43,15 @@ export async function ProductGrid({
   // Transform products to include category name
   const productsWithCategory = products.map((product) => ({
     id: product.id,
+    sku: product.sku,
     name: product.name,
     price: product.price,
     image: product.image,
     isNew: product.isNew,
     discount: product.discount,
     category: getCategoryName(product.categoryId),
+    brand: product.brand,
+    inStock: product.inStock,
   }));
 
   return (

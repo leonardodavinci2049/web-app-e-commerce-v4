@@ -24,6 +24,7 @@ export const PLACEHOLDER_IMAGE = "/images/product/no-image.jpeg";
 
 export interface UIProduct {
   id: string;
+  sku?: string;
   name: string;
   description: string | null;
   price: number;
@@ -87,6 +88,7 @@ function getImagePath(path: string | null | undefined): string {
 export function transformProductListItem(item: ProductWebListItem): UIProduct {
   return {
     id: String(item.ID_PRODUTO),
+    sku: item.SKU ? String(item.SKU) : undefined,
     name: item.PRODUTO,
     description: item.DESCRICAO_TAB ?? item.DESCRICAO_VENDA ?? null,
     price: parsePrice(item.VL_VAREJO),
@@ -125,6 +127,7 @@ function calculateDiscount(item: ProductWebListItem): number | undefined {
 export function transformProductDetail(detail: ProductWebDetail): UIProduct {
   return {
     id: String(detail.ID_PRODUTO),
+    sku: detail.SKU ? String(detail.SKU) : undefined,
     name: detail.PRODUTO,
     description: detail.DESCRICAO_TAB ?? detail.DESCRICAO_VENDA ?? null,
     price: parsePrice(detail.VL_VAREJO),
@@ -183,6 +186,7 @@ export function transformRelatedProduct(
 ): UIProduct {
   return {
     id: String(item.SKU ?? 0),
+    sku: item.SKU ? String(item.SKU) : undefined,
     name: item.PRODUTO ?? "",
     description: item.DESCRICAO_TAB ?? null,
     price: parsePrice(item.VL_VAREJO),
