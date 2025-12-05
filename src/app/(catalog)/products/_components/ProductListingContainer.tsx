@@ -6,13 +6,17 @@ import { ProductListing } from "./ProductListing/ProductListing";
 
 interface ProductListingContainerProps {
   searchTerm?: string;
+  sortCol?: number;
+  sortOrd?: number;
 }
 
 export async function ProductListingContainer({
   searchTerm,
+  sortCol,
+  sortOrd,
 }: ProductListingContainerProps) {
   const [products, categories] = await Promise.all([
-    fetchProductsAction({ searchTerm }),
+    fetchProductsAction({ searchTerm, sortCol, sortOrd }),
     fetchCategoriesAction(),
   ]);
 

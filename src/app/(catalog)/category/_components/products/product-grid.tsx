@@ -17,6 +17,7 @@ interface ProductGridProps {
   taxonomyId?: number;
   subcategoryId?: string;
   initialCount?: number;
+  viewMode?: "grid" | "list";
 }
 
 const ITEMS_PER_PAGE = 20;
@@ -31,6 +32,7 @@ export function ProductGrid({
   taxonomyId,
   subcategoryId,
   initialCount = ITEMS_PER_PAGE,
+  viewMode = "grid",
 }: ProductGridProps) {
   const displayedProducts = products.slice(0, initialCount);
   const totalCount = products.length;
@@ -47,10 +49,19 @@ export function ProductGrid({
 
   return (
     <div className="space-y-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div
+        className={
+          viewMode === "grid"
+            ? "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6"
+            : "flex flex-col gap-4"
+        }
+      >
         {displayedProducts.map((product) => (
-          <div key={product.id} className="h-full">
-            <ProductCard product={product} />
+          <div
+            key={product.id}
+            className={viewMode === "list" ? "h-auto" : "h-full"}
+          >
+            <ProductCard product={product} variant={viewMode} />
           </div>
         ))}
       </div>

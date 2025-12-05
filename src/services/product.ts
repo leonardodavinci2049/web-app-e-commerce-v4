@@ -32,6 +32,8 @@ export async function getProducts(
     limit?: number;
     page?: number;
     searchTerm?: string;
+    sortCol?: number;
+    sortOrd?: number;
   } = {},
 ): Promise<UIProduct[]> {
   "use cache";
@@ -45,6 +47,8 @@ export async function getProducts(
       pe_qt_registros: params.limit ?? 20,
       pe_pagina_id: params.page ?? 0,
       pe_produto: params.searchTerm ?? "",
+      pe_coluna_id: params.sortCol ?? 1,
+      pe_ordem_id: params.sortOrd ?? 1,
     });
 
     const products = ProductWebServiceApi.extractProductList(response);
@@ -203,6 +207,8 @@ export async function getProductsBySlug(
   slugTaxonomy: string,
   limit = 50,
   page = 0,
+  sortCol = 1,
+  sortOrd = 1,
 ): Promise<UIProduct[]> {
   "use cache";
   cacheLife("hours");
@@ -213,6 +219,8 @@ export async function getProductsBySlug(
       pe_slug_taxonomy: slugTaxonomy,
       pe_qt_registros: limit,
       pe_pagina_id: page,
+      pe_coluna_id: sortCol,
+      pe_ordem_id: sortOrd,
     });
 
     const products = ProductWebServiceApi.extractProductList(response);
@@ -233,6 +241,8 @@ export async function getProductsByTaxonomy(
   taxonomyId?: number,
   limit = 50,
   page = 0,
+  sortCol = 1,
+  sortOrd = 1,
 ): Promise<UIProduct[]> {
   "use cache";
   cacheLife("hours");
@@ -246,6 +256,8 @@ export async function getProductsByTaxonomy(
         pe_slug_taxonomy: slugOrId, // Enviar slug também para melhor precisão
         pe_qt_registros: limit,
         pe_pagina_id: page,
+        pe_coluna_id: sortCol,
+        pe_ordem_id: sortOrd,
       });
 
       const productsById =
@@ -260,6 +272,8 @@ export async function getProductsByTaxonomy(
       pe_slug_taxonomy: slugOrId,
       pe_qt_registros: limit,
       pe_pagina_id: page,
+      pe_coluna_id: sortCol,
+      pe_ordem_id: sortOrd,
     });
 
     const productsBySlug =
@@ -275,6 +289,8 @@ export async function getProductsByTaxonomy(
         pe_id_taxonomy: numericId,
         pe_qt_registros: limit,
         pe_pagina_id: page,
+        pe_coluna_id: sortCol,
+        pe_ordem_id: sortOrd,
       });
 
       const productsById =

@@ -24,6 +24,8 @@ export async function fetchProductsAction(
     limit?: number;
     page?: number;
     searchTerm?: string;
+    sortCol?: number;
+    sortOrd?: number;
   } = {},
 ) {
   try {
@@ -110,9 +112,11 @@ export async function fetchProductsBySlugAction(
   slugTaxonomy: string,
   limit?: number,
   page?: number,
+  sortCol: number = 1,
+  sortOrd: number = 1,
 ) {
   try {
-    return await getProductsBySlug(slugTaxonomy, limit, page);
+    return await getProductsBySlug(slugTaxonomy, limit, page, sortCol, sortOrd);
   } catch (error) {
     logger.error("Failed to fetch products by slug:", error);
     return [];
@@ -127,9 +131,18 @@ export async function fetchProductsByTaxonomyAction(
   taxonomyId?: number,
   limit?: number,
   page?: number,
+  sortCol: number = 1,
+  sortOrd: number = 1,
 ) {
   try {
-    return await getProductsByTaxonomy(slugOrId, taxonomyId, limit, page);
+    return await getProductsByTaxonomy(
+      slugOrId,
+      taxonomyId,
+      limit,
+      page,
+      sortCol,
+      sortOrd,
+    );
   } catch (error) {
     logger.error("Failed to fetch products by taxonomy:", error);
     return [];
