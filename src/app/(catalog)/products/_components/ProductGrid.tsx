@@ -3,11 +3,18 @@ import { ProductCard } from "../../category/_components/products/components/Prod
 
 interface ProductGridProps {
   products: TransformedProduct[];
+  viewMode?: "grid" | "list";
 }
 
-export function ProductGrid({ products }: ProductGridProps) {
+export function ProductGrid({ products, viewMode = "grid" }: ProductGridProps) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+    <div
+      className={
+        viewMode === "grid"
+          ? "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"
+          : "flex flex-col gap-4"
+      }
+    >
       {products.map((product) => (
         <ProductCard
           key={product.id}
@@ -20,6 +27,7 @@ export function ProductGrid({ products }: ProductGridProps) {
             discount: product.discount,
             category: product.category,
           }}
+          variant={viewMode}
         />
       ))}
     </div>

@@ -1,12 +1,13 @@
 import { Suspense } from "react";
-
 import { ProductsContent } from "./_components/ProductsContent";
 
 interface ProductsPageProps {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default function ProductsPage({ searchParams }: ProductsPageProps) {
+export default async function ProductsPage({
+  searchParams,
+}: ProductsPageProps) {
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans">
       <main className="grow">

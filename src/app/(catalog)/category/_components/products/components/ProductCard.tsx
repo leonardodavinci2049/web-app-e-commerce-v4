@@ -21,8 +21,99 @@ interface ProductCardProps {
  * Client Components (AddToCartButton, WishlistButton) are imported as islands
  * for interactive functionality while keeping the card cacheable
  */
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({
+  product,
+  variant = "grid",
+}: ProductCardProps & { variant?: "grid" | "list" }) {
   const productUrl = getProductPath(product.name, product.id);
+
+  if (variant === "list") {
+    return (
+      <div className="group relative bg-card border border-border rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-row h-full">
+        {/* Badges */}
+        <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
+          {product.isNew && (
+            <span className="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded">
+              NOVO
+            </span>
+          )}
+          {product.discount && (
+            <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+              -{product.discount}%
+            </span>
+          )}
+        </div>
+
+        {/* Image */}
+        <Link
+          href={productUrl}
+          className="relative w-48 min-w-[12rem] bg-white p-4 block shrink-0"
+        >
+          <div className="relative w-full h-full">
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              className="object-contain group-hover:scale-110 transition-transform duration-500"
+            />
+          </div>
+        </Link>
+
+        {/* Content */}
+        <div className="p-4 flex flex-col grow justify-between">
+          <div>
+            <div className="flex justify-between items-start mb-2">
+              <p className="text-xs text-muted-foreground">
+                {product.category}
+              </p>
+              {/* Wishlist Button - Client Island */}
+              <div className="z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                <WishlistButton productId={product.id} />
+              </div>
+            </div>
+
+            <Link
+              href={productUrl}
+              className="font-medium text-foreground text-lg mb-2 block hover:text-primary transition-colors"
+              title={product.name}
+            >
+              {product.name}
+            </Link>
+          </div>
+
+          <div className="flex items-center justify-between mt-4">
+            <div className="flex flex-col">
+              {product.discount && (
+                <span className="text-sm text-muted-foreground line-through">
+                  {new Intl.NumberFormat("pt-BR", {
+                    style: "currency",
+                    currency: "BRL",
+                  }).format(product.price * (1 + product.discount / 100))}
+                </span>
+              )}
+              <span className="text-xl font-bold text-primary">
+                {new Intl.NumberFormat("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                }).format(product.price)}
+              </span>
+            </div>
+
+            {/* Add to Cart Button - Client Island */}
+            <div className="w-auto min-w-[140px] shrink-0">
+              <AddToCartButton
+                productId={product.id}
+                productName={product.name}
+                price={product.price}
+                image={product.image}
+                category={product.category}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="group relative bg-card border border-border rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full">

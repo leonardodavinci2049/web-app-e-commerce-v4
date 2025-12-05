@@ -1,12 +1,17 @@
 import { ProductListingContainer } from "./ProductListingContainer";
 
 interface ProductsContentProps {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export async function ProductsContent({ searchParams }: ProductsContentProps) {
   const params = await searchParams;
-  const searchTerm = params.q ? decodeURIComponent(params.q) : undefined;
+  const searchTerm =
+    typeof params.q === "string" ? decodeURIComponent(params.q) : undefined;
+  const sortCol =
+    typeof params.sort_col === "string" ? Number(params.sort_col) : undefined;
+  const sortOrd =
+    typeof params.sort_ord === "string" ? Number(params.sort_ord) : undefined;
 
   // Sanitize search term for display (prevent XSS)
   const sanitizedSearchTerm = searchTerm
@@ -28,7 +33,11 @@ export async function ProductsContent({ searchParams }: ProductsContentProps) {
         </div>
       </section>
 
-      <ProductListingContainer searchTerm={searchTerm} />
+      <ProductListingContainer
+        searchTerm={searchTerm}
+        sortCol={sortCol}
+        sortOrd={sortOrd}
+      />
     </>
   );
 }

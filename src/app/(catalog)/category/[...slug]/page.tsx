@@ -8,12 +8,14 @@ import { ProductGridSkeleton } from "@/components/skeletons";
 import { Breadcrumbs } from "../_components/breadcrumbs";
 import { CategorySidebar } from "../_components/category-sidebar/category-sidebar";
 import { MobileCategoryNav } from "../_components/mobile-category/mobile-category-nav";
-import { ProductGrid } from "../_components/products/product-grid";
+
+import { CategoryProductListing } from "../_components/products/CategoryProductListing";
 
 interface CategoryPageProps {
   params: Promise<{
     slug: string[];
   }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export async function generateMetadata({
@@ -34,10 +36,22 @@ export async function generateMetadata({
 // Componente interno para encapsular a lógica de dados
 async function CategoryContent({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string[] }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
+  const sortCol =
+    typeof resolvedSearchParams.sort_col === "string"
+      ? Number(resolvedSearchParams.sort_col)
+      : undefined;
+  const sortOrd =
+    typeof resolvedSearchParams.sort_ord === "string"
+      ? Number(resolvedSearchParams.sort_ord)
+      : undefined;
+
   const slugParts = resolvedParams.slug;
 
   // Usar o último segmento do slug para filtrar produtos
@@ -91,6 +105,10 @@ async function CategoryContent({
   const products = await fetchProductsByTaxonomyAction(
     effectiveSlug,
     taxonomyId,
+    undefined, // limit
+    undefined, // page
+    sortCol,
+    sortOrd,
   );
 
   // Construir breadcrumbs a partir dos slugs
@@ -124,22 +142,19 @@ async function CategoryContent({
         <div className="flex-1">
           {/* Mobile Navigation */}
           <MobileCategoryNav categories={categories} />
-
           {/* Breadcrumbs */}
           <Breadcrumbs items={breadcrumbs} />
-
           {/* Header */}
-          <div className="mb-8">
+          <div className="mb-2">
             <h1 className="text-3xl font-bold tracking-tight mb-2">
               {pageTitle}
             </h1>
-            <p className="text-muted-foreground">
+            {/* <p className="text-muted-foreground">
               {products.length} produtos encontrados
-            </p>
+            </p> OLD LOCATION */}
           </div>
-
-          {/* Product Grid */}
-          <ProductGrid
+          {/* Product Listing with Toggle */}
+          <CategoryProductListing
             products={mappedProducts}
             categoryId={effectiveSlug}
             taxonomyId={taxonomyId}
@@ -179,10 +194,13 @@ function CategoryPageSkeleton() {
   );
 }
 
-export default async function CategoryPage({ params }: CategoryPageProps) {
+export default async function CategoryPage({
+  params,
+  searchParams,
+}: CategoryPageProps) {
   return (
     <Suspense fallback={<CategoryPageSkeleton />}>
-      <CategoryContent params={params} />
+      <CategoryContent params={params} searchParams={searchParams} />
     </Suspense>
   );
 }

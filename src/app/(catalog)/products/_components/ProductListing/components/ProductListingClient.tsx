@@ -8,12 +8,17 @@ import { ProductFilters } from "./ProductFilters";
 
 const PRODUCTS_PER_PAGE = 20;
 
+import { ProductSorter } from "@/components/product/ProductSorter";
+import { ViewToggle } from "@/components/product/ViewToggle";
+
 interface ProductListingClientProps {
   products: TransformedProduct[];
   categories: string[];
   categoryMap: CategoryMap;
   searchTerm?: string;
 }
+
+// ... existing imports
 
 export function ProductListingClient({
   products,
@@ -25,6 +30,7 @@ export function ProductListingClient({
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
   const [displayCount, setDisplayCount] = useState(PRODUCTS_PER_PAGE);
   const [loading, setLoading] = useState(false);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
@@ -83,13 +89,17 @@ export function ProductListingClient({
         onSubcategoryChange={handleSubcategoryChange}
       />
 
-      {/* Contador de Produtos */}
+      {/* Contador de Produtos e Toggle de Visualização */}
       <section className="bg-background py-4 border-b border-border">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 flex justify-between items-center">
           <p className="text-sm text-muted-foreground">
             Mostrando {displayedProducts.length} de {filteredProducts.length}{" "}
             produtos
           </p>
+          <div className="flex items-center gap-2">
+            <ProductSorter />
+            <ViewToggle viewMode={viewMode} onToggle={setViewMode} />
+          </div>
         </div>
       </section>
 
@@ -98,7 +108,7 @@ export function ProductListingClient({
         <div className="container mx-auto px-4">
           {displayedProducts.length > 0 ? (
             <>
-              <ProductGrid products={displayedProducts} />
+              <ProductGrid products={displayedProducts} viewMode={viewMode} />
               <LoadMoreButton
                 onClick={loadMore}
                 loading={loading}
