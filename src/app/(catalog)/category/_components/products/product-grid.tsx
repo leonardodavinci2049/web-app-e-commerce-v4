@@ -4,6 +4,7 @@ import { ProductCard } from "@/app/(catalog)/category/_components/products/compo
 interface ProductGridProps {
   products: Array<{
     id: string;
+    sku?: string;
     name: string;
     price: number;
     image: string;
@@ -12,6 +13,8 @@ interface ProductGridProps {
     category: string;
     categoryId?: string;
     subcategoryId?: string;
+    brand?: string;
+    inStock?: boolean;
   }>;
   categoryId: string;
   taxonomyId?: number;

@@ -11,6 +11,7 @@ interface AddToCartButtonProps {
   price: number;
   image?: string;
   category?: string;
+  disabled?: boolean;
 }
 
 /**
@@ -23,11 +24,13 @@ export function AddToCartButton({
   price,
   image = "/images/product/no-image.jpeg",
   category = "Geral",
+  disabled = false,
 }: AddToCartButtonProps) {
   const { addItem } = useCart();
   const [isAdding, setIsAdding] = useState(false);
 
   const handleAddToCart = async () => {
+    if (disabled) return;
     setIsAdding(true);
 
     addItem({
@@ -50,12 +53,20 @@ export function AddToCartButton({
     <button
       type="button"
       onClick={handleAddToCart}
-      disabled={isAdding}
-      className="w-full bg-primary text-primary-foreground py-2 rounded-md font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
-      aria-label={`Adicionar ${productName} ao carrinho`}
+      disabled={isAdding || disabled}
+      className={`w-full py-2 rounded-md font-medium transition-colors flex items-center justify-center gap-2 ${
+        disabled
+          ? "bg-muted text-muted-foreground cursor-not-allowed"
+          : "bg-primary text-primary-foreground hover:bg-primary/90"
+      }`}
+      aria-label={
+        disabled
+          ? `Produto ${productName} indisponível`
+          : `Adicionar ${productName} ao carrinho`
+      }
     >
       <ShoppingCart className="w-4 h-4" />
-      {isAdding ? "Adicionando..." : "Adicionar"}
+      {isAdding ? "Adicionando..." : disabled ? "Indisponível" : "Adicionar"}
     </button>
   );
 }
