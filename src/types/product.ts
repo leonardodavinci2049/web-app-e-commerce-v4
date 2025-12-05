@@ -36,6 +36,7 @@ export interface ProductFilters {
 // Tipos para otimização do ProductListing (Server/Client split)
 export interface RawProduct {
   id: string;
+  sku?: string;
   name: string;
   description: string | null;
   price: number;
@@ -58,6 +59,7 @@ export interface RawProduct {
 
 export interface TransformedProduct {
   id: string;
+  sku?: string;
   name: string;
   description: string;
   price: number;

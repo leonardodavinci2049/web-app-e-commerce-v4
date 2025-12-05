@@ -31,6 +31,7 @@ export function transformProducts(
 
     return {
       id: product.id,
+      sku: product.sku,
       name: product.name,
       description: product.description ?? "",
       price: product.price,

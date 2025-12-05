@@ -36,11 +36,11 @@ export function CategoryProductListing({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-background py-2 border-b border-border">
+      <div className="flex flex-col gap-3 bg-background py-2 border-b border-border">
         <p className="text-sm text-muted-foreground">
           {products.length} produtos encontrados
         </p>
-        <div className="flex items-center gap-3 flex-wrap">
+        <div className="flex items-center justify-between gap-2">
           <StockFilter />
           <ProductSorter />
           <ViewToggle viewMode={viewMode} onToggle={setViewMode} />

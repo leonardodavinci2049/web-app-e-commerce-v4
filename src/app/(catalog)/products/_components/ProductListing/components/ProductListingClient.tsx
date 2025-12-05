@@ -92,12 +92,12 @@ export function ProductListingClient({
 
       {/* Contador de Produtos e Toggle de Visualização */}
       <section className="bg-background py-4 border-b border-border">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div className="flex flex-col gap-3">
           <p className="text-sm text-muted-foreground">
             Mostrando {displayedProducts.length} de {filteredProducts.length}{" "}
             produtos
           </p>
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="flex items-center justify-between gap-2">
             <StockFilter />
             <ProductSorter />
             <ViewToggle viewMode={viewMode} onToggle={setViewMode} />
@@ -114,6 +114,8 @@ export function ProductListingClient({
               onClick={loadMore}
               loading={loading}
               hasMore={hasMore}
+              totalCount={filteredProducts.length}
+              displayedCount={displayedProducts.length}
             />
           </>
         ) : (

@@ -6,16 +6,22 @@ interface LoadMoreButtonProps {
   onClick: () => void;
   loading: boolean;
   hasMore: boolean;
+  totalCount: number;
+  displayedCount: number;
 }
 
 export function LoadMoreButton({
   onClick,
   loading,
   hasMore,
+  totalCount,
+  displayedCount,
 }: LoadMoreButtonProps) {
   if (!hasMore) {
     return null;
   }
+
+  const remainingCount = totalCount - displayedCount;
 
   return (
     <div className="flex justify-center py-8">
@@ -31,7 +37,7 @@ export function LoadMoreButton({
             Carregando...
           </>
         ) : (
-          "Carregar Mais Produtos"
+          `Carregar mais (${remainingCount} restantes)`
         )}
       </button>
     </div>
