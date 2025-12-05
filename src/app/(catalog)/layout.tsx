@@ -16,7 +16,6 @@ const CatalogLayout = async ({
 
   return (
     <>
-      <TopBar />
       <MobileMainHeader />
       <MainHeader />
       <NavigationMenu />
