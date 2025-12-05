@@ -88,8 +88,11 @@ export function CategoryMenuAccordion({
   const pathname = usePathname();
 
   // Check if "Todos" (All Products) is active
+  // Match /products with or without query parameters
   const isTodosActive =
-    pathname === "/products" || pathname.startsWith("/products?");
+    pathname === "/products" ||
+    pathname.startsWith("/products/") ||
+    pathname.startsWith("/products?");
 
   // Derive expanded state from URL
   const expandedFromUrl = useMemo(
