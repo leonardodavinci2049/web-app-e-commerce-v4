@@ -51,8 +51,8 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       lucide-react:
-        specifier: ^0.555.0
-        version: 0.555.0(react@19.2.1)
+        specifier: ^0.556.0
+        version: 0.556.0(react@19.2.1)
       next:
         specifier: 16.0.7
         version: 16.0.7(babel-plugin-react-compiler@1.0.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -97,8 +97,8 @@ importers:
         specifier: 1.0.0
         version: 1.0.0
       baseline-browser-mapping:
-        specifier: ^2.9.0
-        version: 2.9.0
+        specifier: ^2.9.4
+        version: 2.9.4
       tailwindcss:
         specifier: ^4.1.17
         version: 4.1.17
@@ -934,8 +934,8 @@ packages:
   babel-plugin-react-compiler@1.0.0:
     resolution: {integrity: sha512-Ixm8tFfoKKIPYdCCKYTsqv+Fd4IJ0DQqMyEimo+pxUOMUR9cVPlwTrFt9Avu+3cb6Zp3mAzl+t1MrG2fxxKsxw==}
 
-  baseline-browser-mapping@2.9.0:
-    resolution: {integrity: sha512-Mh++g+2LPfzZToywfE1BUzvZbfOY52Nil0rn9H1CPC5DJ7fX+Vir7nToBeoiSbB1zTNeGYbELEvJESujgGrzXw==}
+  baseline-browser-mapping@2.9.4:
+    resolution: {integrity: sha512-ZCQ9GEWl73BVm8bu5Fts8nt7MHdbt5vY9bP6WGnUh+r3l8M7CgfyTlwsgCbMC66BNxPr6Xoce3j66Ms5YUQTNA==}
     hasBin: true
 
   call-bind-apply-helpers@1.0.2:
@@ -1124,8 +1124,8 @@ packages:
     resolution: {integrity: sha512-utfs7Pr5uJyyvDETitgsaqSyjCb2qNRAtuqUeWIAKztsOYdcACf2KtARYXg2pSvhkt+9NfoaNY7fxjl6nuMjIQ==}
     engines: {node: '>= 12.0.0'}
 
-  lucide-react@0.555.0:
-    resolution: {integrity: sha512-D8FvHUGbxWBRQM90NZeIyhAvkFfsh3u9ekrMvJ30Z6gnpBHS6HC6ldLg7tL45hwiIz/u66eKDtdA23gwwGsAHA==}
+  lucide-react@0.556.0:
+    resolution: {integrity: sha512-iOb8dRk7kLaYBZhR2VlV1CeJGxChBgUthpSP8wom9jfj79qovgG6qcSdiy6vkoREKPnbUYzJsCn4o4PtG3Iy+A==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -2054,7 +2054,7 @@ snapshots:
     dependencies:
       '@babel/types': 7.28.5
 
-  baseline-browser-mapping@2.9.0: {}
+  baseline-browser-mapping@2.9.4: {}
 
   call-bind-apply-helpers@1.0.2:
     dependencies:
@@ -2218,7 +2218,7 @@ snapshots:
       lightningcss-win32-arm64-msvc: 1.30.2
       lightningcss-win32-x64-msvc: 1.30.2
 
-  lucide-react@0.555.0(react@19.2.1):
+  lucide-react@0.556.0(react@19.2.1):
     dependencies:
       react: 19.2.1
 
