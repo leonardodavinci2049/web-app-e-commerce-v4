@@ -89,7 +89,7 @@ export function transformProductListItem(item: ProductWebListItem): UIProduct {
   return {
     id: String(item.ID_PRODUTO),
     sku: item.SKU ? String(item.SKU) : undefined,
-    name: item.PRODUTO,
+    name: item.PRODUTO ?? "Produto sem nome",
     description: item.DESCRICAO_TAB ?? item.DESCRICAO_VENDA ?? null,
     price: parsePrice(item.VL_VAREJO),
     image: getImagePath(item.PATH_IMAGEM),

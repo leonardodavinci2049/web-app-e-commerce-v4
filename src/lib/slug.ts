@@ -7,7 +7,7 @@ import { PRODUCTS } from "@/data/mock-data";
  * @returns Slug no formato "nome-do-produto-id"
  */
 export function generateSlug(name: string, id: string): string {
-  const slugName = name
+  const slugName = (name || "")
     .toLowerCase()
     .normalize("NFD") // Normaliza caracteres acentuados
     .replace(/[\u0300-\u036f]/g, "") // Remove acentos
