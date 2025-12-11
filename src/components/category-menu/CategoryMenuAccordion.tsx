@@ -223,13 +223,17 @@ export function CategoryMenuAccordion({
               </div>
 
               {category.subcategories && category.subcategories.length > 0 && (
-                <AccordionContent className="pb-0 pt-0 border-t bg-muted/20">
-                  <Level2Categories
-                    subcategories={category.subcategories}
-                    pathname={pathname}
-                    expandedFromUrl={expandedFromUrl.level2}
-                    onNavigate={onNavigate}
-                  />
+                <AccordionContent className="pb-0 pt-0 border-t">
+                  <div className="pl-6 py-1">
+                    <div className="border-l-2 border-foreground/20 pl-1">
+                      <Level2Categories
+                        subcategories={category.subcategories}
+                        pathname={pathname}
+                        expandedFromUrl={expandedFromUrl.level2}
+                        onNavigate={onNavigate}
+                      />
+                    </div>
+                  </div>
                 </AccordionContent>
               )}
             </AccordionItem>
@@ -296,11 +300,11 @@ function Level2Categories({
           >
             <div
               className={cn(
-                "flex items-center justify-between py-2 pl-8 pr-4 transition-colors",
-                selected && "bg-primary/10 border-l-4 border-l-primary pl-7",
+                "flex items-center justify-between py-2 pl-4 pr-4 transition-colors rounded-r-md mr-1",
+                selected && "bg-primary/10 border-l-4 border-l-primary pl-3",
                 parentOfActive &&
                   !selected &&
-                  "bg-muted/30 border-l-2 border-l-primary/40 pl-7.5",
+                  "bg-muted/30 border-l-2 border-l-primary/40 pl-3.5",
                 !selected && !parentOfActive && "hover:bg-muted/50",
               )}
             >
@@ -311,7 +315,7 @@ function Level2Categories({
                   "flex-1 flex items-center gap-2 text-sm transition-colors",
                   selected && "text-primary font-semibold",
                   parentOfActive && !selected && "text-foreground font-medium",
-                  !selected && !parentOfActive && "text-muted-foreground",
+                  !selected && !parentOfActive && "text-foreground/80",
                 )}
               >
                 <FolderOpen
@@ -330,12 +334,14 @@ function Level2Categories({
             </div>
 
             {subcategory.children && subcategory.children.length > 0 && (
-              <AccordionContent className="pb-2 pt-0">
-                <Level3Categories
-                  subcategories={subcategory.children}
-                  pathname={pathname}
-                  onNavigate={onNavigate}
-                />
+              <AccordionContent className="pb-2 pt-0 pl-6">
+                <div className="border-l-2 border-foreground/20 pl-1">
+                  <Level3Categories
+                    subcategories={subcategory.children}
+                    pathname={pathname}
+                    onNavigate={onNavigate}
+                  />
+                </div>
               </AccordionContent>
             )}
           </AccordionItem>
@@ -369,10 +375,10 @@ function Level3Categories({
             href={subcategory.href}
             onClick={onNavigate}
             className={cn(
-              "flex items-center gap-2 text-sm py-2 pl-12 pr-4 transition-colors border-l-2",
+              "flex items-center gap-2 text-sm py-2 pl-4 pr-4 transition-colors border-l-2 rounded-r-md mr-1",
               selected
                 ? "text-primary font-semibold bg-primary/10 border-l-primary"
-                : "text-muted-foreground border-transparent hover:bg-muted/50",
+                : "text-foreground/70 border-transparent hover:bg-muted/50",
             )}
           >
             <Tag
