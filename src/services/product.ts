@@ -190,7 +190,7 @@ export async function getProductsByCategory(
 
     const response = await ProductWebServiceApi.findProducts({
       pe_id_taxonomy: taxonomyId,
-      pe_qt_registros: 50,
+      pe_qt_registros: 30,
     });
 
     const products = ProductWebServiceApi.extractProductList(response);
@@ -207,7 +207,7 @@ export async function getProductsByCategory(
  */
 export async function getProductsBySlug(
   slugTaxonomy: string,
-  limit = 50,
+  limit = 30,
   page = 0,
   sortCol = 1,
   sortOrd = 1,
@@ -242,7 +242,7 @@ export async function getProductsBySlug(
 export async function getProductsByTaxonomy(
   slugOrId: string,
   taxonomyId?: number,
-  limit = 50,
+  limit = 30,
   page = 0,
   sortCol = 1,
   sortOrd = 1,
@@ -255,27 +255,10 @@ export async function getProductsByTaxonomy(
   const stockFlag = stockOnly ? 1 : 0;
 
   try {
-    // Se temos um taxonomyId válido, priorizar busca por ID
-    if (taxonomyId && taxonomyId > 0) {
-      const responseById = await ProductWebServiceApi.findProducts({
-        pe_id_taxonomy: taxonomyId,
-        pe_slug_taxonomy: slugOrId, // Enviar slug também para melhor precisão
-        pe_qt_registros: limit,
-        pe_pagina_id: page,
-        pe_coluna_id: sortCol,
-        pe_ordem_id: sortOrd,
-        pe_flag_estoque: stockFlag,
-      });
-
-      const productsById =
-        ProductWebServiceApi.extractProductList(responseById);
-      if (productsById.length > 0) {
-        return transformProductList(productsById);
-      }
-    }
-
-    // Tentar busca apenas por slug
-    const responseBySlug = await ProductWebServiceApi.findProducts({
+    // Fazer UMA ÚNICA chamada à API enviando tanto ID quanto slug
+    // A API decide qual usar baseado nos parâmetros fornecidos
+    const response = await ProductWebServiceApi.findProducts({
+      pe_id_taxonomy: taxonomyId && taxonomyId > 0 ? taxonomyId : 0,
       pe_slug_taxonomy: slugOrId,
       pe_qt_registros: limit,
       pe_pagina_id: page,
@@ -284,30 +267,17 @@ export async function getProductsByTaxonomy(
       pe_flag_estoque: stockFlag,
     });
 
-    const productsBySlug =
-      ProductWebServiceApi.extractProductList(responseBySlug);
-    if (productsBySlug.length > 0) {
-      return transformProductList(productsBySlug);
+    const products = ProductWebServiceApi.extractProductList(response);
+
+    // Se não encontrou produtos, retornar array vazio
+    if (products.length === 0) {
+      logger.info(
+        `No products found for taxonomy: ${slugOrId} (ID: ${taxonomyId})`,
+      );
+      return [];
     }
 
-    // Se slugOrId for um ID numérico, tentar busca por ID
-    const numericId = Number.parseInt(slugOrId, 10);
-    if (!Number.isNaN(numericId) && numericId > 0) {
-      const responseById = await ProductWebServiceApi.findProducts({
-        pe_id_taxonomy: numericId,
-        pe_qt_registros: limit,
-        pe_pagina_id: page,
-        pe_coluna_id: sortCol,
-        pe_ordem_id: sortOrd,
-        pe_flag_estoque: stockFlag,
-      });
-
-      const productsById =
-        ProductWebServiceApi.extractProductList(responseById);
-      return transformProductList(productsById);
-    }
-
-    return [];
+    return transformProductList(products);
   } catch (error) {
     logger.error(`Failed to fetch products by taxonomy:`, error);
     return [];
@@ -329,7 +299,7 @@ const CATEGORY_PARENT_ID = 0;
  */
 export async function getCategories(): Promise<UICategory[]> {
   "use cache";
-  cacheLife("hours");
+  cacheLife("quarter");
   cacheTag(CACHE_TAGS.categories, CACHE_TAGS.navigation);
 
   try {
