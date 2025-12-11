@@ -3,14 +3,14 @@
 import { Loader2 } from "lucide-react";
 import { useState, useTransition } from "react";
 import { fetchProductsByTaxonomyAction } from "@/app/actions/product";
+import type { UIProduct } from "@/lib/transformers";
 
 interface LoadMoreProductsProps {
   categoryId: string;
   taxonomyId?: number;
   _subcategoryId?: string;
-  initialCount: number;
-  totalCount: number;
   pageSize?: number;
+  onLoadMore: (newProducts: UIProduct[]) => void;
 }
 
 /**
@@ -21,26 +21,30 @@ export function LoadMoreProducts({
   categoryId,
   taxonomyId,
   _subcategoryId,
-  initialCount,
-  totalCount,
-  pageSize = 8,
+  pageSize = 30,
+  onLoadMore,
 }: LoadMoreProductsProps) {
-  const [displayedCount, setDisplayedCount] = useState(initialCount);
   const [isPending, startTransition] = useTransition();
-
-  const hasMore = displayedCount < totalCount;
+  const [currentPage, setCurrentPage] = useState(0);
 
   const handleLoadMore = () => {
     startTransition(async () => {
-      // Buscar mais produtos usando a mesma lógica de taxonomy
-      await fetchProductsByTaxonomyAction(categoryId, taxonomyId);
-      setDisplayedCount((prev) => Math.min(prev + pageSize, totalCount));
+      const nextPage = currentPage + 1;
+
+      // Buscar mais produtos da próxima página
+      const newProducts = await fetchProductsByTaxonomyAction(
+        categoryId,
+        taxonomyId,
+        pageSize, // limit
+        nextPage, // page
+      );
+
+      if (newProducts && newProducts.length > 0) {
+        onLoadMore(newProducts);
+        setCurrentPage(nextPage);
+      }
     });
   };
-
-  if (!hasMore) {
-    return null;
-  }
 
   return (
     <div className="flex justify-center mt-8">
@@ -56,7 +60,7 @@ export function LoadMoreProducts({
             Carregando...
           </>
         ) : (
-          `Carregar mais (${totalCount - displayedCount} restantes)`
+          "Carregar mais produtos"
         )}
       </button>
     </div>

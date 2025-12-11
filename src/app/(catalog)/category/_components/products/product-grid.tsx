@@ -1,46 +1,43 @@
+"use client";
+
+import { useState } from "react";
 import { LoadMoreProducts } from "@/app/(catalog)/category/_components/products/components/LoadMoreProducts";
 import { ProductCard } from "@/app/(catalog)/category/_components/products/components/ProductCard";
+import type { UIProduct } from "@/lib/transformers";
 
 interface ProductGridProps {
-  products: Array<{
-    id: string;
-    sku?: string;
-    name: string;
-    price: number;
-    image: string;
-    isNew?: boolean;
-    discount?: number;
-    category: string;
-    categoryId?: string;
-    subcategoryId?: string;
-    brand?: string;
-    inStock?: boolean;
-  }>;
+  products: UIProduct[];
   categoryId: string;
   taxonomyId?: number;
   subcategoryId?: string;
-  initialCount?: number;
   viewMode?: "grid" | "list";
 }
 
-const ITEMS_PER_PAGE = 20;
+const ITEMS_PER_PAGE = 30;
 
 /**
- * Server Component for category product grid
+ * Client Component for category product grid
  * Uses LoadMoreProducts client island for pagination
  */
 export function ProductGrid({
-  products,
+  products: initialProducts,
   categoryId,
   taxonomyId,
   subcategoryId,
-  initialCount = ITEMS_PER_PAGE,
   viewMode = "grid",
 }: ProductGridProps) {
-  const displayedProducts = products.slice(0, initialCount);
-  const totalCount = products.length;
+  const [allProducts, setAllProducts] = useState(initialProducts);
+  const [hasMore, setHasMore] = useState(
+    initialProducts.length >= ITEMS_PER_PAGE,
+  );
 
-  if (products.length === 0) {
+  const handleLoadMore = (newProducts: UIProduct[]) => {
+    setAllProducts((prev) => [...prev, ...newProducts]);
+    // Se retornou menos que ITEMS_PER_PAGE, não há mais produtos
+    setHasMore(newProducts.length >= ITEMS_PER_PAGE);
+  };
+
+  if (allProducts.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <p className="text-lg font-medium text-muted-foreground">
@@ -59,7 +56,7 @@ export function ProductGrid({
             : "flex flex-col gap-4"
         }
       >
-        {displayedProducts.map((product) => (
+        {allProducts.map((product) => (
           <div
             key={product.id}
             className={viewMode === "list" ? "h-auto" : "h-full"}
@@ -70,17 +67,19 @@ export function ProductGrid({
       </div>
 
       {/* Client Island for pagination */}
-      <LoadMoreProducts
-        categoryId={categoryId}
-        taxonomyId={taxonomyId}
-        _subcategoryId={subcategoryId}
-        initialCount={initialCount}
-        totalCount={totalCount}
-        pageSize={ITEMS_PER_PAGE}
-      />
+      {hasMore && (
+        <LoadMoreProducts
+          categoryId={categoryId}
+          taxonomyId={taxonomyId}
+          _subcategoryId={subcategoryId}
+          pageSize={ITEMS_PER_PAGE}
+          onLoadMore={handleLoadMore}
+        />
+      )}
 
       <div className="text-center text-sm text-muted-foreground">
-        Mostrando {displayedProducts.length} de {totalCount} produtos
+        Mostrando {allProducts.length} produto
+        {allProducts.length !== 1 ? "s" : ""}
       </div>
     </div>
   );
