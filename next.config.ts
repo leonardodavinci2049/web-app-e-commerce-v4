@@ -10,6 +10,12 @@ const nextConfig: NextConfig = {
       revalidate: 900, // 15 min - revalida em background
       expire: 3600, // 1 hora - expira completamente
     },
+    // Perfil para menu de categorias (15 minutos)
+    quarter: {
+      stale: 900, // 15 minutos - serve do cache
+      revalidate: 300, // 5 min - revalida em background
+      expire: 900, // 15 minutos - expira completamente
+    },
     // Perfil para dados que mudam frequentemente (5 minutos)
     frequent: {
       stale: 300, // 5 minutos

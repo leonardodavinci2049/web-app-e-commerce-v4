@@ -112,8 +112,10 @@ export class ProductWebServiceApi extends BaseApiService {
 
       /*       logger.debug("Payload de busca de produtos", {
         payload: requestBody,
-      });
- */
+        timestamp: new Date().toISOString(),
+        stack: new Error().stack?.split("\n").slice(2, 5).join("\n"),
+      }); */
+
       const instance = new ProductWebServiceApi();
       const response = await instance.post<ProductWebFindResponse>(
         PRODUCT_WEB_ENDPOINTS.FIND,
@@ -174,7 +176,7 @@ export class ProductWebServiceApi extends BaseApiService {
       pe_produto: params.pe_produto ?? "",
       pe_id_marca: params.pe_id_marca ?? 0,
       pe_flag_estoque: params.pe_flag_estoque ?? 0,
-      pe_qt_registros: params.pe_qt_registros ?? 20,
+      pe_qt_registros: params.pe_qt_registros ?? 30,
       pe_pagina_id: params.pe_pagina_id ?? 0,
       pe_coluna_id: params.pe_coluna_id ?? 1,
       pe_ordem_id: params.pe_ordem_id ?? 1,
@@ -205,7 +207,7 @@ export class ProductWebServiceApi extends BaseApiService {
       pe_flag_promotions: params.pe_flag_promotions ?? 0,
       pe_flag_highlight: params.pe_flag_highlight ?? 0,
       pe_flag_lancamento: params.pe_flag_lancamento ?? 0,
-      pe_qt_registros: params.pe_qt_registros ?? 20,
+      pe_qt_registros: params.pe_qt_registros ?? 30,
       pe_pagina_id: params.pe_pagina_id ?? 0,
       pe_coluna_id: params.pe_coluna_id ?? 1,
       pe_ordem_id: params.pe_ordem_id ?? 1,

@@ -30,6 +30,7 @@ export interface UIProduct {
   price: number;
   image: string;
   categoryId: string;
+  category?: string;
   subcategoryId?: string;
   inStock: boolean;
   brand?: string;
@@ -94,6 +95,7 @@ export function transformProductListItem(item: ProductWebListItem): UIProduct {
     price: parsePrice(item.VL_VAREJO),
     image: getImagePath(item.PATH_IMAGEM),
     categoryId: "", // Will be set from taxonomy context
+    category: "", // Will be set from taxonomy context
     subcategoryId: undefined,
     inStock: item.ESTOQUE_LOJA > 0,
     brand: item.MARCA ?? undefined,
@@ -133,6 +135,7 @@ export function transformProductDetail(detail: ProductWebDetail): UIProduct {
     price: parsePrice(detail.VL_VAREJO),
     image: getImagePath(detail.PATH_IMAGEM),
     categoryId: detail.ID_FAMILIA ? String(detail.ID_FAMILIA) : "",
+    category: undefined,
     subcategoryId: detail.ID_GRUPO ? String(detail.ID_GRUPO) : undefined,
     inStock: detail.ESTOQUE_LOJA > 0,
     brand: detail.MARCA ?? undefined,
@@ -192,6 +195,7 @@ export function transformRelatedProduct(
     price: parsePrice(item.VL_VAREJO),
     image: getImagePath(item.PATH_IMAGEM),
     categoryId: item.ID_TAXONOMY ? String(item.ID_TAXONOMY) : "",
+    category: "",
     inStock: (item.ESTOQUE_LOJA ?? 0) > 0,
     brand: undefined,
     isNew: item.LANCAMENTO === 1,

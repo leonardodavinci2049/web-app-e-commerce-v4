@@ -129,12 +129,6 @@ async function CategoryContent({
       .replace(/-/g, " ")
       .replace(/\b\w/g, (c) => c.toUpperCase());
 
-  // Mapear produtos para incluir category como string
-  const mappedProducts = products.map((product) => ({
-    ...product,
-    category: pageTitle,
-  }));
-
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col lg:flex-row gap-8">
@@ -157,7 +151,7 @@ async function CategoryContent({
           </div>
           {/* Product Listing with Toggle */}
           <CategoryProductListing
-            products={mappedProducts}
+            products={products}
             categoryId={effectiveSlug}
             taxonomyId={taxonomyId}
           />

@@ -4,33 +4,19 @@ import { useState } from "react";
 import { ProductSorter } from "@/components/product/ProductSorter";
 import { StockFilter } from "@/components/product/StockFilter";
 import { ViewToggle } from "@/components/product/ViewToggle";
+import type { UIProduct } from "@/lib/transformers";
 import { ProductGrid } from "./product-grid";
 
 interface CategoryProductListingProps {
-  products: Array<{
-    id: string;
-    sku?: string;
-    name: string;
-    price: number;
-    image: string;
-    isNew?: boolean;
-    discount?: number;
-    category: string;
-    categoryId?: string;
-    subcategoryId?: string;
-    brand?: string;
-    inStock?: boolean;
-  }>;
+  products: UIProduct[];
   categoryId: string;
   taxonomyId?: number;
-  initialCount?: number;
 }
 
 export function CategoryProductListing({
   products,
   categoryId,
   taxonomyId,
-  initialCount,
 }: CategoryProductListingProps) {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
@@ -51,7 +37,6 @@ export function CategoryProductListing({
         products={products}
         categoryId={categoryId}
         taxonomyId={taxonomyId}
-        initialCount={initialCount}
         viewMode={viewMode}
       />
     </div>

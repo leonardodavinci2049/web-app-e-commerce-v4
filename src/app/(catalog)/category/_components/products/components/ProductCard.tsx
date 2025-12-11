@@ -15,7 +15,7 @@ interface ProductCardProps {
     image: string;
     isNew?: boolean;
     discount?: number;
-    category: string;
+    category?: string;
     brand?: string;
     inStock?: boolean;
   };
