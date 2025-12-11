@@ -235,14 +235,14 @@ export function ProductCard({
   return (
     <div className="group relative bg-card border border-border rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full">
       {/* Badges */}
-      <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
+      <div className="absolute top-1.5 left-1.5 md:top-2 md:left-2 z-10 flex flex-col gap-1">
         {product.isNew && (
-          <span className="bg-blue-500 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
+          <span className="bg-blue-500 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
             NOVO
           </span>
         )}
         {product.discount && (
-          <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
+          <span className="bg-red-500 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
             -{product.discount}%
           </span>
         )}
@@ -256,7 +256,7 @@ export function ProductCard({
       {/* Image */}
       <Link
         href={productUrl}
-        className="relative aspect-square overflow-hidden bg-white p-4 block"
+        className="relative aspect-square overflow-hidden bg-white p-3 md:p-4 block"
       >
         <div className="relative w-full h-full">
           <Image
@@ -271,11 +271,11 @@ export function ProductCard({
       </Link>
 
       {/* Content */}
-      <div className="p-4 flex flex-col grow">
+      <div className="p-3 md:p-4 flex flex-col grow">
         <div className="mb-2">
           <Link
             href={productUrl}
-            className="font-medium text-foreground line-clamp-2 hover:text-primary transition-colors text-sm mb-1"
+            className="font-medium text-foreground line-clamp-2 hover:text-primary transition-colors text-xs md:text-sm mb-1"
             title={product.name}
           >
             {product.name}
@@ -301,7 +301,7 @@ export function ProductCard({
         <div className="mt-auto pt-2 border-t border-border/50">
           <div className="flex flex-col mb-3">
             {product.discount && (
-              <span className="text-xs text-muted-foreground line-through">
+              <span className="text-[10px] md:text-xs text-muted-foreground line-through">
                 De:{" "}
                 {new Intl.NumberFormat("pt-BR", {
                   style: "currency",
@@ -309,13 +309,13 @@ export function ProductCard({
                 }).format(originalPrice)}
               </span>
             )}
-            <span className="text-lg font-bold text-primary">
+            <span className="text-base md:text-lg font-bold text-primary">
               {new Intl.NumberFormat("pt-BR", {
                 style: "currency",
                 currency: "BRL",
               }).format(finalPrice)}
             </span>
-            <span className="text-[10px] text-muted-foreground">
+            <span className="text-[9px] md:text-[10px] text-muted-foreground">
               Em até {maxInstallments}x de{" "}
               {new Intl.NumberFormat("pt-BR", {
                 style: "currency",
