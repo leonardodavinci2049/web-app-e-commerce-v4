@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoadMoreProducts } from "@/app/(catalog)/category/_components/products/components/LoadMoreProducts";
 import { ProductCard } from "@/app/(catalog)/category/_components/products/components/ProductCard";
 import type { UIProduct } from "@/lib/transformers";
@@ -11,6 +11,9 @@ interface ProductGridProps {
   taxonomyId?: number;
   subcategoryId?: string;
   viewMode?: "grid" | "list";
+  sortCol?: number;
+  sortOrd?: number;
+  stockOnly?: boolean;
 }
 
 const ITEMS_PER_PAGE = 30;
@@ -24,12 +27,22 @@ export function ProductGrid({
   categoryId,
   taxonomyId,
   subcategoryId,
+  sortCol,
+  sortOrd,
+  stockOnly,
   viewMode = "grid",
 }: ProductGridProps) {
   const [allProducts, setAllProducts] = useState(initialProducts);
   const [hasMore, setHasMore] = useState(
     initialProducts.length >= ITEMS_PER_PAGE,
   );
+
+  // Important: `allProducts` is derived from props, so it must reset when the
+  // server sends a new product list (e.g. changing `stock=1` or sort params).
+  useEffect(() => {
+    setAllProducts(initialProducts);
+    setHasMore(initialProducts.length >= ITEMS_PER_PAGE);
+  }, [initialProducts]);
 
   const handleLoadMore = (newProducts: UIProduct[]) => {
     setAllProducts((prev) => [...prev, ...newProducts]);
@@ -69,10 +82,14 @@ export function ProductGrid({
       {/* Client Island for pagination */}
       {hasMore && (
         <LoadMoreProducts
+          key={`${categoryId}:${taxonomyId ?? ""}:${sortCol ?? ""}:${sortOrd ?? ""}:${stockOnly ? "1" : "0"}`}
           categoryId={categoryId}
           taxonomyId={taxonomyId}
           _subcategoryId={subcategoryId}
           pageSize={ITEMS_PER_PAGE}
+          sortCol={sortCol}
+          sortOrd={sortOrd}
+          stockOnly={stockOnly}
           onLoadMore={handleLoadMore}
         />
       )}

@@ -11,12 +11,18 @@ interface CategoryProductListingProps {
   products: UIProduct[];
   categoryId: string;
   taxonomyId?: number;
+  sortCol?: number;
+  sortOrd?: number;
+  stockOnly?: boolean;
 }
 
 export function CategoryProductListing({
   products,
   categoryId,
   taxonomyId,
+  sortCol,
+  sortOrd,
+  stockOnly,
 }: CategoryProductListingProps) {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
@@ -26,6 +32,7 @@ export function CategoryProductListing({
         <p className="text-sm text-muted-foreground">
           {products.length} produtos encontrados
         </p>
+
         <div className="flex items-center justify-between gap-2">
           <StockFilter />
           <ProductSorter />
@@ -37,6 +44,9 @@ export function CategoryProductListing({
         products={products}
         categoryId={categoryId}
         taxonomyId={taxonomyId}
+        sortCol={sortCol}
+        sortOrd={sortOrd}
+        stockOnly={stockOnly}
         viewMode={viewMode}
       />
     </div>

@@ -154,6 +154,9 @@ async function CategoryContent({
             products={products}
             categoryId={effectiveSlug}
             taxonomyId={taxonomyId}
+            sortCol={sortCol}
+            sortOrd={sortOrd}
+            stockOnly={stockOnly}
           />
         </div>
       </div>
