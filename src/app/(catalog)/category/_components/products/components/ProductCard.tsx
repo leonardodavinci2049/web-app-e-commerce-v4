@@ -121,14 +121,14 @@ export function ProductCard({
     return (
       <div className="group relative bg-card border border-border rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-row h-full">
         {/* Badges */}
-        <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
+        <div className="absolute top-1.5 left-1.5 md:top-2 md:left-2 z-10 flex flex-col gap-1">
           {product.isNew && (
-            <span className="bg-blue-500 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
+            <span className="bg-blue-500 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
               NOVO
             </span>
           )}
           {product.discount && (
-            <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
+            <span className="bg-red-500 text-white text-[9px] md:text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">
               -{product.discount}%
             </span>
           )}
@@ -137,7 +137,7 @@ export function ProductCard({
         {/* Image */}
         <Link
           href={productUrl}
-          className="relative w-48 min-w-48 bg-white p-4 block shrink-0"
+          className="relative w-28 min-w-28 md:w-48 md:min-w-48 bg-white p-2 md:p-4 block shrink-0"
         >
           <div className="relative w-full h-full">
             <Image
@@ -152,18 +152,18 @@ export function ProductCard({
         </Link>
 
         {/* Content */}
-        <div className="p-4 flex flex-col grow justify-between">
+        <div className="p-2 md:p-4 flex flex-col grow justify-between">
           <div>
             <div className="flex justify-between items-start mb-1">
               <Link
                 href={productUrl}
-                className="font-medium text-foreground text-lg mb-1 block hover:text-primary transition-colors"
+                className="font-medium text-foreground text-sm md:text-lg mb-1 block hover:text-primary transition-colors line-clamp-2 md:line-clamp-none"
                 title={product.name}
               >
                 {product.name}
               </Link>
               {/* Wishlist Button - Client Island */}
-              <div className="z-10 opacity-0 group-hover:opacity-100 transition-opacity ml-2 shrink-0">
+              <div className="z-10 opacity-0 group-hover:opacity-100 transition-opacity ml-2 shrink-0 hidden md:block">
                 <WishlistButton productId={product.id} />
               </div>
             </div>
@@ -186,10 +186,10 @@ export function ProductCard({
             </div>
           </div>
 
-          <div className="flex items-end justify-between mt-2">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mt-2">
             <div className="flex flex-col">
               {product.discount && (
-                <span className="text-xs text-muted-foreground line-through">
+                <span className="text-[10px] md:text-xs text-muted-foreground line-through">
                   De:{" "}
                   {new Intl.NumberFormat("pt-BR", {
                     style: "currency",
@@ -198,13 +198,13 @@ export function ProductCard({
                 </span>
               )}
               <div className="flex flex-col">
-                <span className="text-xl font-bold text-primary">
+                <span className="text-base md:text-xl font-bold text-primary">
                   {new Intl.NumberFormat("pt-BR", {
                     style: "currency",
                     currency: "BRL",
                   }).format(finalPrice)}
                 </span>
-                <span className="text-[10px] text-muted-foreground">
+                <span className="text-[9px] md:text-[10px] text-muted-foreground">
                   Em até {maxInstallments}x de{" "}
                   {new Intl.NumberFormat("pt-BR", {
                     style: "currency",
@@ -216,7 +216,7 @@ export function ProductCard({
             </div>
 
             {/* Add to Cart Button - Client Island */}
-            <div className="w-auto min-w-[140px] shrink-0">
+            <div className="w-full sm:w-auto sm:min-w-[140px] shrink-0">
               <AddToCartButton
                 productId={product.id}
                 productName={product.name}
