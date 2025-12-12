@@ -10,6 +10,9 @@ interface LoadMoreProductsProps {
   taxonomyId?: number;
   _subcategoryId?: string;
   pageSize?: number;
+  sortCol?: number;
+  sortOrd?: number;
+  stockOnly?: boolean;
   onLoadMore: (newProducts: UIProduct[]) => void;
 }
 
@@ -22,6 +25,9 @@ export function LoadMoreProducts({
   taxonomyId,
   _subcategoryId,
   pageSize = 30,
+  sortCol,
+  sortOrd,
+  stockOnly,
   onLoadMore,
 }: LoadMoreProductsProps) {
   const [isPending, startTransition] = useTransition();
@@ -37,6 +43,9 @@ export function LoadMoreProducts({
         taxonomyId,
         pageSize, // limit
         nextPage, // page
+        sortCol,
+        sortOrd,
+        stockOnly,
       );
 
       if (newProducts && newProducts.length > 0) {
