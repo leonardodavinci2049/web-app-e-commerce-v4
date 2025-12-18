@@ -15,7 +15,7 @@ import {
 import { CategoryServiceApi } from "@/services/api-main/category/category-service-api";
 import { ProductWebServiceApi } from "@/services/api-main/product/product-service-api";
 
-const logger = createLogger("ProductService");
+const logger = createLogger("ProductWebCachedService");
 
 // ============================================================================
 // Product Functions
