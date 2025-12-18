@@ -7,7 +7,7 @@ import {
 import { envs } from "@/core/config/envs";
 import { PromoBanner } from "./_components/banner/PromoBanner";
 import { PromoBannersGrid } from "./_components/banner/PromoBannersGrid";
-import { SpecificCategory } from "./_components/banner/SpecificCategory";
+
 import FooterHome from "./_components/footer/FooterHome";
 import { MobileBottomMenu } from "./_components/footer/MobileBottomMenu";
 import { MainHeader } from "./_components/header/MainHeader";
@@ -15,9 +15,15 @@ import { MobileMainHeader } from "./_components/header/MobileMainHeader";
 import { HeroBanner } from "./_components/hero/HeroBanner";
 import { DepartmentNavigation } from "./_components/navegation/DepartmentNavigation";
 import { NavigationMenu } from "./_components/navegation/NavigationMenu";
-import { ProductGrid } from "./_components/product/ProductGrid";
 import ProductSectionCat01 from "./_components/product/ProductSectionCat01";
+import ProductSectionCat02 from "./_components/product/ProductSectionCat02";
+import ProductSectionCat03 from "./_components/product/ProductSectionCat03";
+import ProductSectionCat04 from "./_components/product/ProductSectionCat04";
+import ProductSectionCat05 from "./_components/product/ProductSectionCat05";
+import ProductSectionHighlights from "./_components/product/ProductSectionHighlights";
+import ProductSectionNewReleases from "./_components/product/ProductSectionNewReleases";
 import ProductsSection from "./_components/product/ProductsSection";
+import { SpecificCategoryWrapper } from "./_components/product/SpecificCategoryWrapper";
 import { AboutSection } from "./_components/sections/AboutSection";
 import Advantages from "./_components/sections/advantages";
 import { LocationSectionV1 } from "./_components/sections/LocationSectionV1";
@@ -63,24 +69,71 @@ export default async function HomePage() {
           <ProductSectionCat01 />
         </Suspense>
 
-        {/* Product Grids with Suspense */}
-        <Suspense fallback={<ProductGridSkeleton count={8} />}>
-          <ProductGrid title="Lançamentos" limit={8} className="bg-muted/30" />
+        {/* Product Category Sections 2 */}
+        <Suspense
+          fallback={renderLoadingSection(
+            "home-produtos-categoria-2",
+            envs.HOME_SECTION_5_TITLE,
+          )}
+        >
+          <ProductSectionCat02 />
+        </Suspense>
+
+        {/* Product Category Sections 3*/}
+        <Suspense
+          fallback={renderLoadingSection(
+            "home-produtos-categoria-3",
+            envs.HOME_SECTION_6_TITLE,
+          )}
+        >
+          <ProductSectionCat03 />
+        </Suspense>
+
+        {/* Product Category Sections5*/}
+        <Suspense
+          fallback={renderLoadingSection(
+            "home-produtos-categoria-3",
+            envs.HOME_SECTION_7_TITLE,
+          )}
+        >
+          <ProductSectionCat04 />
+        </Suspense>
+
+        {/* Product Category Sections 5*/}
+        <Suspense
+          fallback={renderLoadingSection(
+            "home-produtos-categoria-3",
+            envs.HOME_SECTION_4_TITLE,
+          )}
+        >
+          <ProductSectionCat05 />
         </Suspense>
 
         <PromoBanner />
 
-        <Suspense fallback={<ProductGridSkeleton count={8} />}>
-          <ProductGrid
-            title="Destaques da Semana"
-            limit={8}
-            className="bg-muted/30"
-          />
+        {/* 6. Featured Products Section */}
+        <Suspense
+          fallback={renderLoadingSection(
+            "home-produtos-destaque",
+            envs.HOME_SECTION_1_TITLE,
+          )}
+        >
+          <ProductSectionHighlights />
         </Suspense>
 
         {/* SpecificCategory needs products passed - keeping static for now */}
         <Suspense fallback={<ProductGridSkeleton count={4} />}>
           <SpecificCategoryWrapper />
+        </Suspense>
+
+        {/* 6. Featured Products Section */}
+        <Suspense
+          fallback={renderLoadingSection(
+            "home-produtos-destaque",
+            envs.HOME_SECTION_3_TITLE,
+          )}
+        >
+          <ProductSectionNewReleases />
         </Suspense>
 
         <PromoBannersGrid className="bg-muted/30" />
@@ -95,44 +148,5 @@ export default async function HomePage() {
       </Suspense>
       <MobileBottomMenu categories={categories} />
     </div>
-  );
-}
-
-// Wrapper component for SpecificCategory to fetch data
-async function SpecificCategoryWrapper() {
-  const { fetchProductsAction, fetchCategoriesAction } = await import(
-    "@/app/actions/product"
-  );
-
-  const [products, categories] = await Promise.all([
-    fetchProductsAction(),
-    fetchCategoriesAction(),
-  ]);
-
-  const withCategoryName = (p: (typeof products)[number]) => ({
-    ...p,
-    category: categories.find((c) => c.id === p.categoryId)?.name || "",
-  });
-
-  // Filter for gamer products
-  const gamerProducts = products
-    .filter((p) => {
-      const categoryName = categories.find((c) => c.id === p.categoryId)?.name;
-      return categoryName === "Gamer" || categoryName === "Periféricos";
-    })
-    .map(withCategoryName);
-
-  // If no gamer products, show some featured ones
-  const displayProducts =
-    gamerProducts.length > 0
-      ? gamerProducts
-      : products.slice(0, 4).map(withCategoryName);
-
-  return (
-    <SpecificCategory
-      title="Mundo Gamer"
-      products={displayProducts}
-      className="bg-background"
-    />
   );
 }
