@@ -184,3 +184,26 @@
 body {
   letter-spacing: var(--tracking-normal);
 }
+
+/* 🎄 Animação de Neve de Natal - Remover após o período festivo */
+@keyframes snowfall {
+  0% {
+    transform: translateY(-10px) translateX(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(25vh) translateX(10px) rotate(90deg);
+  }
+  50% {
+    transform: translateY(50vh) translateX(-10px) rotate(180deg);
+  }
+  75% {
+    transform: translateY(75vh) translateX(10px) rotate(270deg);
+  }
+  100% {
+    transform: translateY(100vh) translateX(0) rotate(360deg);
+  }
+}
+
+.animate-snowfall {
+  animation: snowfall linear infinite;
+}
