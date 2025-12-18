@@ -10,7 +10,7 @@ import {
   getProductsBySlug,
   getProductsByTaxonomy,
   getRelatedProducts,
-} from "@/services/product";
+} from "@/services/api-main/product/product-web-cached-service";
 
 const logger = createLogger("ProductActions");
 
