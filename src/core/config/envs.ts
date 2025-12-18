@@ -208,12 +208,20 @@ const envsSchema = z.object({
     .string()
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().positive("HOME_CATEGORY5_ID must be a positive number")),
+  HOME_CATEGORY6_ID: z
+    .string()
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().positive("HOME_CATEGORY6_ID must be a positive number")),
   HOME_SECTION_1_TITLE: z.string().min(1, "HOME_SECTION_1_TITLE is required"),
   HOME_SECTION_2_TITLE: z.string().min(1, "HOME_SECTION_2_TITLE is required"),
   HOME_SECTION_3_TITLE: z.string().min(1, "HOME_SECTION_3_TITLE is required"),
   HOME_SECTION_4_TITLE: z.string().min(1, "HOME_SECTION_4_TITLE is required"),
   HOME_SECTION_5_TITLE: z.string().min(1, "HOME_SECTION_5_TITLE is required"),
   HOME_SECTION_6_TITLE: z.string().min(1, "HOME_SECTION_6_TITLE is required"),
+  HOME_SECTION_7_TITLE: z.string().min(1, "HOME_SECTION_7_TITLE is required"),
+  HOME_SECTION_8_TITLE: z.string().min(1, "HOME_SECTION_8_TITLE is required"),
+  HOME_SECTION_9_TITLE: z.string().min(1, "HOME_SECTION_9_TITLE is required"),
+  HOME_SECTION_10_TITLE: z.string().min(1, "HOME_SECTION_10_TITLE is required"),
 });
 
 // Inferir o tipo automaticamente a partir do schema
@@ -392,6 +400,7 @@ if (typeof window === "undefined") {
           process.env.NEXT_PUBLIC_COMPANY_QT_PRODUCTS || "",
         NEXT_PUBLIC_COMPANY_MAPS_URL:
           process.env.NEXT_PUBLIC_COMPANY_MAPS_URL || "",
+
         NEXT_PUBLIC_COMPANY_SLOGAN1:
           process.env.NEXT_PUBLIC_COMPANY_SLOGAN1 || "",
         NEXT_PUBLIC_COMPANY_SLOGAN2:
@@ -402,6 +411,7 @@ if (typeof window === "undefined") {
           process.env.NEXT_PUBLIC_COMPANY_SLOGAN4 || "",
         NEXT_PUBLIC_COMPANY_SLOGAN5:
           process.env.NEXT_PUBLIC_COMPANY_SLOGAN5 || "",
+
         NEXT_PUBLIC_COMPANY_CALLTO_ACTION1:
           process.env.NEXT_PUBLIC_COMPANY_CALLTO_ACTION1 || "",
         NEXT_PUBLIC_COMPANY_CALLTO_ACTION2:
@@ -412,6 +422,7 @@ if (typeof window === "undefined") {
           process.env.NEXT_PUBLIC_COMPANY_CALLTO_ACTION4 || "",
         NEXT_PUBLIC_COMPANY_CALLTO_ACTION5:
           process.env.NEXT_PUBLIC_COMPANY_CALLTO_ACTION5 || "",
+
         NEXT_PUBLIC_COMPANY_META_TITLE_MAIN:
           process.env.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN || "",
         NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION:
@@ -460,12 +471,18 @@ if (typeof window === "undefined") {
     HOME_CATEGORY3_ID: 0,
     HOME_CATEGORY4_ID: 0,
     HOME_CATEGORY5_ID: 0,
+    HOME_CATEGORY6_ID: 0,
+
     HOME_SECTION_1_TITLE: "",
     HOME_SECTION_2_TITLE: "",
     HOME_SECTION_3_TITLE: "",
     HOME_SECTION_4_TITLE: "",
     HOME_SECTION_5_TITLE: "",
     HOME_SECTION_6_TITLE: "",
+    HOME_SECTION_7_TITLE: "",
+    HOME_SECTION_8_TITLE: "",
+    HOME_SECTION_9_TITLE: "",
+    HOME_SECTION_10_TITLE: "",
   };
 }
 
@@ -563,6 +580,7 @@ export const envs = {
   HOME_CATEGORY3_ID: envVars.HOME_CATEGORY3_ID,
   HOME_CATEGORY4_ID: envVars.HOME_CATEGORY4_ID,
   HOME_CATEGORY5_ID: envVars.HOME_CATEGORY5_ID,
+  HOME_CATEGORY6_ID: envVars.HOME_CATEGORY6_ID,
 
   // Home Page Sections Titles
   HOME_SECTION_1_TITLE: envVars.HOME_SECTION_1_TITLE,
@@ -571,4 +589,8 @@ export const envs = {
   HOME_SECTION_4_TITLE: envVars.HOME_SECTION_4_TITLE,
   HOME_SECTION_5_TITLE: envVars.HOME_SECTION_5_TITLE,
   HOME_SECTION_6_TITLE: envVars.HOME_SECTION_6_TITLE,
+  HOME_SECTION_7_TITLE: envVars.HOME_SECTION_7_TITLE,
+  HOME_SECTION_8_TITLE: envVars.HOME_SECTION_8_TITLE,
+  HOME_SECTION_9_TITLE: envVars.HOME_SECTION_9_TITLE,
+  HOME_SECTION_10_TITLE: envVars.HOME_SECTION_10_TITLE,
 };

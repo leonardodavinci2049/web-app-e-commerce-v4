@@ -13,7 +13,7 @@ import type { ProductWithMetadata } from "@/types/product";
 const logger = createLogger("HomeSectionsActions");
 
 const DEFAULT_SECTION_LIMIT = 8;
-const DEFAULT_PAGE_ID = 1;
+const DEFAULT_PAGE_ID = 0;
 const DEFAULT_COLUMN_ID = 1;
 const DEFAULT_ORDER_ID = 1;
 
@@ -139,5 +139,47 @@ export async function getCategoryThreeSectionProducts(): Promise<
       pe_flag_lancamento: 0,
     }),
     "categoria3",
+  );
+}
+
+export async function getCategoryFourSectionProducts(): Promise<
+  ProductWithMetadata[]
+> {
+  return fetchSectionProducts(
+    withDefaultParams({
+      pe_id_taxonomy: envs.HOME_CATEGORY4_ID,
+      pe_flag_highlight: 0,
+      pe_flag_promotions: 0,
+      pe_flag_lancamento: 0,
+    }),
+    "categoria4",
+  );
+}
+
+export async function getCategoryFiveSectionProducts(): Promise<
+  ProductWithMetadata[]
+> {
+  return fetchSectionProducts(
+    withDefaultParams({
+      pe_id_taxonomy: envs.HOME_CATEGORY5_ID,
+      pe_flag_highlight: 0,
+      pe_flag_promotions: 0,
+      pe_flag_lancamento: 0,
+    }),
+    "categoria5",
+  );
+}
+
+export async function getCategorySixSectionProducts(): Promise<
+  ProductWithMetadata[]
+> {
+  return fetchSectionProducts(
+    withDefaultParams({
+      pe_id_taxonomy: envs.HOME_CATEGORY6_ID,
+      pe_flag_highlight: 0,
+      pe_flag_promotions: 0,
+      pe_flag_lancamento: 0,
+    }),
+    "categoria6",
   );
 }
