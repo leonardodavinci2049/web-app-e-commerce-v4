@@ -140,10 +140,10 @@ export class ProductWebServiceApi extends BaseApiService {
       const requestBody =
         ProductWebServiceApi.buildSectionsPayload(validatedParams);
 
-      logger.debug("Payload de busca de seções de produtos", {
+/*       logger.debug("Payload de busca de seções de produtos", {
         payload: requestBody,
         timestamp: new Date().toISOString(),
-      });
+      }); */
 
       const instance = new ProductWebServiceApi();
       const response = await instance.post<ProductWebSectionsResponse>(
