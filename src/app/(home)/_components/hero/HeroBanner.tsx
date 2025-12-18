@@ -8,8 +8,7 @@ const slides = [
     title: "Compre online e retire na loja!",
     subtitle: "Mais comodidade para o seu dia a dia",
     cta: "Conheça a promoção",
-    image:
-      "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=1000",
+    image: "/slides/image2.jpg",
     bg: "bg-gradient-to-r from-primary to-blue-600",
   },
   {
@@ -17,8 +16,7 @@ const slides = [
     title: "Ofertas de Hardware",
     subtitle: "Os melhores componentes para o seu PC",
     cta: "Ver Ofertas",
-    image:
-      "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1000",
+    image: "/slides/image1.jpg",
     bg: "bg-gradient-to-r from-slate-800 to-slate-900",
   },
 ];
