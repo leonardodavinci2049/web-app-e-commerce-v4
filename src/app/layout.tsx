@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { CartSidebar } from "@/components/cart/CartSidebar";
+import { SnowEffect } from "@/components/seasonal/SnowEffect";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { CartProvider } from "@/contexts/CartContext";
 import { envs } from "@/core/config";
@@ -42,6 +43,7 @@ export default function RootLayout({
             {children}
             <CartSidebar />
           </CartProvider>
+          <SnowEffect />
           <Toaster />
         </ThemeProvider>
       </body>
