@@ -4,6 +4,7 @@ import {
   NavigationSkeleton,
   ProductGridSkeleton,
 } from "@/components/skeletons";
+import { envs } from "@/core/config/envs";
 import { PromoBanner } from "./_components/banner/PromoBanner";
 import { PromoBannersGrid } from "./_components/banner/PromoBannersGrid";
 import { SpecificCategory } from "./_components/banner/SpecificCategory";
@@ -11,23 +12,26 @@ import FooterHome from "./_components/footer/FooterHome";
 import { MobileBottomMenu } from "./_components/footer/MobileBottomMenu";
 import { MainHeader } from "./_components/header/MainHeader";
 import { MobileMainHeader } from "./_components/header/MobileMainHeader";
-
 import { HeroBanner } from "./_components/hero/HeroBanner";
 import { DepartmentNavigation } from "./_components/navegation/DepartmentNavigation";
 import { NavigationMenu } from "./_components/navegation/NavigationMenu";
 import { ProductGrid } from "./_components/product/ProductGrid";
+import ProductSectionCat01 from "./_components/product/ProductSectionCat01";
+import ProductsSection from "./_components/product/ProductsSection";
 import { AboutSection } from "./_components/sections/AboutSection";
 import Advantages from "./_components/sections/advantages";
 import { LocationSectionV1 } from "./_components/sections/LocationSectionV1";
 import { MethodsSection } from "./_components/sections/MethodsSection";
-
 import { Testimonials } from "./_components/sections/Testimonials";
-
 /**
  * Home page with Suspense boundaries for async Server Components
  * Static page shell is cached, async components stream in
  */
-export default async function Home() {
+export default async function HomePage() {
+  const renderLoadingSection = (id: string, title: string) => (
+    <ProductsSection id={id} title={title} isLoading />
+  );
+
   const { fetchCategoriesAction } = await import("@/app/actions/product");
   const categories = await fetchCategoriesAction();
   return (
@@ -47,6 +51,16 @@ export default async function Home() {
         {/* Department Navigation with Suspense */}
         <Suspense fallback={<NavigationSkeleton />}>
           <DepartmentNavigation />
+        </Suspense>
+
+        {/* Product Category Sections 1 */}
+        <Suspense
+          fallback={renderLoadingSection(
+            "home-produtos-categoria-1",
+            envs.HOME_SECTION_4_TITLE,
+          )}
+        >
+          <ProductSectionCat01 />
         </Suspense>
 
         {/* Product Grids with Suspense */}
