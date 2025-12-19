@@ -28,7 +28,7 @@ export function PromoBannersGrid({ className }: PromoBannersGridProps) {
       title: "Perfumes",
       subtitle: "Importados Originais",
       image:
-        "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=80&w=500",
+        "https://images.unsplash.com/photo-1659343796661-984a0d8246a0?auto=format&fit=crop&q=80&w=500",
       bg: "bg-rose-900",
     },
   ];
