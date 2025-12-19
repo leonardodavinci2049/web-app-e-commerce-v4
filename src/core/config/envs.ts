@@ -4,10 +4,10 @@
 import { z } from "zod";
 
 const envsSchema = z.object({
-  APP_PORT: z
+  PORT: z
     .string()
     .transform((val) => parseInt(val, 10))
-    .pipe(z.number().positive("APP_PORT must be a positive number")),
+    .pipe(z.number().positive("PORT must be a positive number")),
 
   // API Externa
   EXTERNAL_API_MAIN_URL: z
@@ -442,7 +442,7 @@ if (typeof window === "undefined") {
 
   // Usar valores vazios ou default para variáveis privadas no cliente
   envVars = {
-    APP_PORT: 0,
+    PORT: 0,
     EXTERNAL_API_MAIN_URL: "",
     EXTERNAL_API_ASSETS_URL: "",
     APP_ID: 0,
@@ -487,7 +487,7 @@ if (typeof window === "undefined") {
 }
 
 export const envs = {
-  APP_PORT: envVars.APP_PORT,
+  PORT: envVars.PORT,
 
   // API Externa
   EXTERNAL_API_MAIN_URL: envVars.EXTERNAL_API_MAIN_URL,
