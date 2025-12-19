@@ -56,6 +56,20 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        // Redireciona URLs antigas de produtos (na raiz) para a home
+        // Exemplo: /perfume-afnan-9pm-masculino-edp-100ml-arabe -> /
+        // Não afeta rotas válidas: /product/*, /category/*, /products/*, etc
+        // Não afeta arquivos estáticos ou rotas do Next.js
+        source:
+          "/:path((?!product|category|products|_next|api|images|slides|favicon\\.ico|icon\\.png|robots\\.txt|sitemap\\.xml)[a-zA-Z0-9-]+)",
+        destination: "/",
+        permanent: true, // 308 redirect - mudança permanente
+      },
+    ];
+  },
 };
 
 export default nextConfig;
