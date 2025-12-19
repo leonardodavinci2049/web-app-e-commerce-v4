@@ -12,7 +12,7 @@ export function MethodsSection() {
             </div>
             <p className="text-sm font-medium">PIX</p>
             <p className="text-xs text-muted-foreground">
-              {envs.NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT}% desconto à vista
+              Ágil e facilita o pagamento
             </p>
           </div>
           <div className="p-4 space-y-2">
@@ -28,9 +28,9 @@ export function MethodsSection() {
             <div className="flex justify-center">
               <Truck className="h-8 w-8 text-secondary" />
             </div>
-            <p className="text-sm font-medium">Frete Grátis</p>
+            <p className="text-sm font-medium">Entrega Rápida</p>
             <p className="text-xs text-muted-foreground">
-              Acima de R$ {envs.NEXT_PUBLIC_FREE_SHIPPING_OVER}
+              Para a região de Ribeirão Preto
             </p>
           </div>
           <div className="p-4 space-y-2">
