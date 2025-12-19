@@ -102,7 +102,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       <div className="space-y-2 text-sm">
         <div className="flex items-center gap-2 text-green-600">
           <Check className="w-4 h-4" />
-          <span>À vista e Pix e em até 10x no Cartão</span>
+          <span>À vista no Pix e em até 10x no Cartão</span>
         </div>
         <div className="flex items-center gap-2 text-green-600">
           <Check className="w-4 h-4" />
