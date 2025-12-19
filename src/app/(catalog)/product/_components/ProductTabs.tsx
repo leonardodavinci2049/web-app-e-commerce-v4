@@ -18,7 +18,7 @@ export function ProductTabs({
   return (
     <Tabs defaultValue="description" className="w-full">
       <TabsList className="grid w-full grid-cols-3">
-        <TabsTrigger value="description">Descrição do Produto</TabsTrigger>
+        <TabsTrigger value="description">Descrição</TabsTrigger>
         <TabsTrigger value="specifications">Especificações</TabsTrigger>
         <TabsTrigger value="shipping">Entrega</TabsTrigger>
       </TabsList>
