@@ -210,7 +210,7 @@ export function ProductCard({
                     style: "currency",
                     currency: "BRL",
                   }).format(installmentValue)}{" "}
-                  sem juros
+                  no cartão
                 </span>
               </div>
             </div>
@@ -321,7 +321,7 @@ export function ProductCard({
                 style: "currency",
                 currency: "BRL",
               }).format(installmentValue)}{" "}
-              sem juros
+              no cartão
             </span>
           </div>
 

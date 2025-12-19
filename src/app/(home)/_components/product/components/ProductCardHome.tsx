@@ -130,7 +130,7 @@ export function ProductCardHome({ product }: ProductCardProps) {
                 style: "currency",
                 currency: "BRL",
               }).format(installmentValue)}{" "}
-              sem juros
+              no cartão
             </span>
           </div>
 

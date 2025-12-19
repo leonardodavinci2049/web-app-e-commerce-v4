@@ -101,7 +101,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       <div className="space-y-2 text-sm">
         <div className="flex items-center gap-2 text-green-600">
           <Check className="w-4 h-4" />
-          <span>Frete grátis para pedidos acima de R$ 199</span>
+          <span>Entrega  a partir de R$ 15,00 - Região de Ribeirão Preto</span>
         </div>
         <div className="flex items-center gap-2 text-muted-foreground">
           <Check className="w-4 h-4" />
