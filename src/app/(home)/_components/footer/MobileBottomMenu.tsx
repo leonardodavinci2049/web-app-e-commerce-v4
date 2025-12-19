@@ -1,11 +1,11 @@
 "use client";
 
 import {
+  Grid3x3,
+  Home as HomeIcon,
   Menu as MenuIcon,
-  PackageSearch,
+  MessageCircle,
   ShoppingCart,
-  Table2,
-  UserRound,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -17,6 +17,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { envs } from "@/core/config/envs";
 import { useCart } from "@/hooks/useCart";
 import type { UICategory } from "@/lib/transformers";
 
@@ -28,20 +29,20 @@ export function MobileBottomMenu({ categories }: MobileBottomMenuProps) {
   const { uniqueItems, openCart } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const handleWhatsAppClick = () => {
+    const message =
+      "Olá! estou no APP do Caixa Fechada, Gostaria de mais informações";
+    // Remove caracteres especiais do número de WhatsApp: (XX) XXXXX XXXX -> XXXXXXXXXX
+    const whatsappNumber = envs.NEXT_PUBLIC_COMPANY_WHATSAPP.replace(/\D/g, "");
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+      message,
+    )}`;
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+  };
+
   const handleNavigate = () => {
     setMenuOpen(false);
   };
-
-  const otherMenuItems = [
-    {
-      id: "catalogo",
-      label: "Catalogo",
-      icon: PackageSearch,
-      href: "#catalogo",
-    },
-    { id: "tabela", label: "Tabela", icon: Table2, href: "#tabela" },
-    { id: "conta", label: "Conta", icon: UserRound, href: "#conta" },
-  ];
 
   return (
     <nav className="fixed bottom-0 inset-x-0 z-40 border-t bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80 md:hidden">
@@ -73,22 +74,42 @@ export function MobileBottomMenu({ categories }: MobileBottomMenuProps) {
           </SheetContent>
         </Sheet>
 
-        {/* Outros itens do menu */}
-        {otherMenuItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.id}
-              href={item.href}
-              className="relative flex flex-1 flex-col items-center justify-center gap-1 px-1 py-1.5 text-[11px] leading-tight"
-            >
-              <div className="relative flex items-center justify-center">
-                <Icon className="h-5 w-5" />
-              </div>
-              <span>{item.label}</span>
-            </Link>
-          );
-        })}
+        {/* Home */}
+        <Link
+          href="/"
+          className="relative flex flex-1 flex-col items-center justify-center gap-1 px-1 py-1.5 text-[11px] leading-tight hover:text-foreground transition-colors"
+          aria-label="Ir para home"
+        >
+          <div className="relative flex items-center justify-center">
+            <HomeIcon className="h-5 w-5" />
+          </div>
+          <span>Home</span>
+        </Link>
+
+        {/* Catalogo */}
+        <Link
+          href="/products"
+          className="relative flex flex-1 flex-col items-center justify-center gap-1 px-1 py-1.5 text-[11px] leading-tight hover:text-foreground transition-colors"
+          aria-label="Ir para catálogo de produtos"
+        >
+          <div className="relative flex items-center justify-center">
+            <Grid3x3 className="h-5 w-5" />
+          </div>
+          <span>Catalogo</span>
+        </Link>
+
+        {/* Fale Conosco */}
+        <button
+          type="button"
+          onClick={handleWhatsAppClick}
+          className="relative flex flex-1 flex-col items-center justify-center gap-1 px-1 py-1.5 text-[11px] leading-tight hover:text-foreground transition-colors"
+          aria-label="Fale conosco no WhatsApp"
+        >
+          <div className="relative flex items-center justify-center">
+            <MessageCircle className="h-5 w-5" />
+          </div>
+          <span>Fale Conosco</span>
+        </button>
 
         {/* Carrinho */}
         <button
