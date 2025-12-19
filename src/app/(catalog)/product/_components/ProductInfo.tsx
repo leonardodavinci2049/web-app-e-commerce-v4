@@ -1,8 +1,8 @@
 import { Check } from "lucide-react";
 import { AddToCartButton } from "@/components/product/actions/AddToCartButton";
 import { QuantitySelector } from "@/components/product/actions/QuantitySelector";
-import { WishlistButton } from "@/components/product/actions/WishlistButton";
 import { WhatsAppProductButton } from "@/components/product/actions/WhatsAppProductButton";
+import { WishlistButton } from "@/components/product/actions/WishlistButton";
 
 interface ProductInfoProps {
   product: {
@@ -100,7 +100,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
 
       {/* Benefícios */}
       <div className="space-y-2 text-sm">
-                <div className="flex items-center gap-2 text-green-600">
+        <div className="flex items-center gap-2 text-green-600">
           <Check className="w-4 h-4" />
           <span>À vista no Pix ou em até 10x no Cartão</span>
         </div>

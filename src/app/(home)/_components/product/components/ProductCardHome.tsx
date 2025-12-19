@@ -35,8 +35,6 @@ export function ProductCardHome({ product }: ProductCardProps) {
     ? originalPrice * (1 - product.discount / 100)
     : originalPrice;
 
-  const installmentValue = finalPrice / maxInstallments;
-
   // Stock logic
   const isOutOfStock = product.inStock === false;
 
