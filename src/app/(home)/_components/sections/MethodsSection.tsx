@@ -30,7 +30,7 @@ export function MethodsSection() {
             </div>
             <p className="text-sm font-medium">Entrega Rápida</p>
             <p className="text-xs text-muted-foreground">
-              Para a região de Ribeirão Preto
+              Para a Região de Ribeirão Preto
             </p>
           </div>
           <div className="p-4 space-y-2">
