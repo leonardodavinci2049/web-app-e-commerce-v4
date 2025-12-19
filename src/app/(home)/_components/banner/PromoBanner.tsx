@@ -12,12 +12,10 @@ export function PromoBanner() {
               OFERTA RELÂMPAGO
             </span>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Até 50% OFF em Eletrônicos
+              Fale o código: "MegaNatal" com o seu consultor de vendas e
+              aproveite descontos exclusivos!
             </h2>
-            <p className="text-gray-200 mb-6 max-w-md">
-              Aproveite descontos imperdíveis em smartphones, notebooks e
-              acessórios. Oferta por tempo limitado!
-            </p>
+
             <button
               type="button"
               className="bg-primary text-primary-foreground px-8 py-3 rounded-lg font-bold hover:bg-primary/90 transition-colors shadow-lg hover:shadow-primary/50"

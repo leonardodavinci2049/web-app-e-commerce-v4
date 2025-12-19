@@ -205,12 +205,7 @@ export function ProductCard({
                   }).format(finalPrice)}
                 </span>
                 <span className="text-[9px] md:text-[10px] text-muted-foreground">
-                  Em até {maxInstallments}x de{" "}
-                  {new Intl.NumberFormat("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  }).format(installmentValue)}{" "}
-                  no cartão
+                  Em até {maxInstallments}x no Cartão
                 </span>
               </div>
             </div>
@@ -316,12 +311,7 @@ export function ProductCard({
               }).format(finalPrice)}
             </span>
             <span className="text-[9px] md:text-[10px] text-muted-foreground">
-              Em até {maxInstallments}x de{" "}
-              {new Intl.NumberFormat("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              }).format(installmentValue)}{" "}
-              no cartão
+                Em até {maxInstallments}x no Cartão
             </span>
           </div>
 
