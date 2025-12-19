@@ -17,7 +17,11 @@ interface PaymentMethodSelectorProps {
 const paymentMethods: { value: PaymentMethod; label: string; icon: string }[] =
   [
     { value: "PIX", label: "PIX", icon: "💳" },
-    { value: "Cartão", label: "Cartão - Consulte Taxas de Parcelamentos", icon: "💳" },
+    {
+      value: "Cartão",
+      label: "Cartão - Consulte Taxas de Parcelamentos",
+      icon: "💳",
+    },
     { value: "Dinheiro", label: "Dinheiro", icon: "💵" },
   ];
 
