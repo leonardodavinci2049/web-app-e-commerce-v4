@@ -112,8 +112,6 @@ export function ProductCard({
     ? originalPrice * (1 - product.discount / 100)
     : originalPrice;
 
-  const installmentValue = finalPrice / maxInstallments;
-
   // Stock logic
   const isOutOfStock = product.inStock === false;
 
@@ -205,7 +203,7 @@ export function ProductCard({
                   }).format(finalPrice)}
                 </span>
                 <span className="text-[9px] md:text-[10px] text-muted-foreground">
-                  Em até {maxInstallments}x no Cartão
+                  À vista no Pix ou em até {maxInstallments}x no Cartão
                 </span>
               </div>
             </div>
@@ -311,7 +309,7 @@ export function ProductCard({
               }).format(finalPrice)}
             </span>
             <span className="text-[9px] md:text-[10px] text-muted-foreground">
-                Em até {maxInstallments}x no Cartão
+              À vista no Pix ou em até {maxInstallments}x no Cartão
             </span>
           </div>
 

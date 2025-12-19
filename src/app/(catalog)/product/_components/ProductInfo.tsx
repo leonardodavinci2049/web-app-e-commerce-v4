@@ -1,6 +1,7 @@
 import { Check } from "lucide-react";
 import { AddToCartButton } from "@/components/product/actions/AddToCartButton";
 import { QuantitySelector } from "@/components/product/actions/QuantitySelector";
+import { WhatsAppProductButton } from "@/components/product/actions/WhatsAppProductButton";
 import { WishlistButton } from "@/components/product/actions/WishlistButton";
 
 interface ProductInfoProps {
@@ -101,7 +102,11 @@ export function ProductInfo({ product }: ProductInfoProps) {
       <div className="space-y-2 text-sm">
         <div className="flex items-center gap-2 text-green-600">
           <Check className="w-4 h-4" />
-          <span>Entrega  a partir de R$ 15,00 - Região de Ribeirão Preto</span>
+          <span>À vista no Pix ou em até 10x no Cartão</span>
+        </div>
+        <div className="flex items-center gap-2 text-green-600">
+          <Check className="w-4 h-4" />
+          <span>Entrega a partir de R$ 15,00 - Região de Ribeirão Preto</span>
         </div>
         <div className="flex items-center gap-2 text-muted-foreground">
           <Check className="w-4 h-4" />
@@ -126,13 +131,12 @@ export function ProductInfo({ product }: ProductInfoProps) {
           category={product.category}
         />
 
-        <button
-          type="button"
-          disabled={!product.inStock}
-          className="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Comprar pelo WhatsApp
-        </button>
+        {/* WhatsApp - Client Island */}
+        <WhatsAppProductButton
+          productName={product.name}
+          price={product.price}
+          inStock={product.inStock}
+        />
 
         {/* Wishlist - Client Island */}
         <div className="w-full border border-border py-3 rounded-lg font-medium hover:bg-muted transition-colors flex items-center justify-center gap-2">
