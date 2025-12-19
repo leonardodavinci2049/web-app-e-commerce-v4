@@ -125,7 +125,7 @@ export function ProductCardHome({ product }: ProductCardProps) {
               }).format(finalPrice)}
             </span>
             <span className="text-[10px] text-muted-foreground">
-              Em até {maxInstallments}x no Cartão
+              No PIX ou em até {maxInstallments}x no Cartão
             </span>
           </div>
 

@@ -22,6 +22,7 @@ export function WhatsAppCheckoutButton() {
 
   const isDisabled = items.length === 0;
 
+  
   return (
     <button
       type="button"
