@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { unstable_noStore } from "next/cache";
 import { fetchCategoriesAction } from "@/app/actions/product";
 import { envs } from "@/core/config/envs";
 
@@ -6,6 +7,8 @@ import { envs } from "@/core/config/envs";
  * Sitemap for categories only (3 levels: family > group > subgroup)
  */
 export async function GET() {
+  unstable_noStore();
+
   const baseUrl =
     envs.NEXT_PUBLIC_BASE_URL_APP || "https://mundialmegastore.com.br";
   const currentDate = new Date().toISOString();

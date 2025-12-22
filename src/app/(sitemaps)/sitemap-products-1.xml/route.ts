@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { unstable_noStore } from "next/cache";
 import { fetchProductsAction } from "@/app/actions/product";
 import { envs } from "@/core/config/envs";
 
@@ -9,6 +10,8 @@ const SITEMAP_INDEX = 1;
  * Sitemap for products (batch 1 - products 501-1000)
  */
 export async function GET() {
+  unstable_noStore();
+
   const baseUrl =
     envs.NEXT_PUBLIC_BASE_URL_APP || "https://mundialmegastore.com.br";
   const currentDate = new Date().toISOString();
@@ -18,7 +21,7 @@ export async function GET() {
   try {
     const products = await fetchProductsAction({
       limit: PRODUCTS_PER_SITEMAP,
-      page: SITEMAP_INDEX + 1, // API uses 1-indexed pages
+      page: SITEMAP_INDEX + 1,
     });
 
     if (products && products.length > 0) {
