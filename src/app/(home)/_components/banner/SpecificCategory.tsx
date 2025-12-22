@@ -34,7 +34,7 @@ export function SpecificCategory({
           <div className="hidden lg:block lg:col-span-1 relative rounded-xl overflow-hidden group">
             <Image
               src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=500"
-              alt="Gamer"
+              alt="Mundo Gamer - Setup completo para jogos com periféricos e acessórios gamers"
               fill
               className="object-cover transition-transform duration-700 group-hover:scale-110"
             />

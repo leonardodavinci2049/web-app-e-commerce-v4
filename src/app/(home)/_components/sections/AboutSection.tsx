@@ -52,7 +52,7 @@ export function AboutSection({ className }: AboutSectionProps) {
             <div className="aspect-video rounded-xl overflow-hidden shadow-2xl relative">
               <Image
                 src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1000"
-                alt="Nossa Loja"
+                alt="Mundial Megastore - Loja física com atendimento especializado em eletrônicos e informática"
                 fill
                 className="object-cover"
               />

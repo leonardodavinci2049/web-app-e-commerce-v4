@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import { GoogleAnalytics } from "@/components/analytics";
 import { CartSidebar } from "@/components/cart/CartSidebar";
 import { SnowEffect } from "@/components/seasonal/SnowEffect";
+import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { CartProvider } from "@/contexts/CartContext";
 import { envs } from "@/core/config";
@@ -21,8 +22,43 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(envs.NEXT_PUBLIC_BASE_URL_APP),
-  title: `${envs.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN} - ${envs.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION}`,
-  description: `${envs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION}`,
+  title: `${envs.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN} | ${envs.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION}`,
+  description: envs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION,
+  keywords: [
+    "informática",
+    "eletrônicos",
+    "perfumes importados",
+    "notebooks",
+    "computadores",
+    "periféricos",
+    "hardware",
+    "software",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    url: envs.NEXT_PUBLIC_BASE_URL_APP,
+    siteName: envs.NEXT_PUBLIC_COMPANY_NAME,
+    title: `${envs.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN} | ${envs.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION}`,
+    description: envs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION,
+    images: [
+      {
+        url: "/images/logo/logo-horizontal-header.png",
+        width: 1200,
+        height: 630,
+        alt: envs.NEXT_PUBLIC_COMPANY_NAME,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${envs.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN} | ${envs.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION}`,
+    description: envs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION,
+    images: ["/images/logo/logo-horizontal-header.png"],
+  },
 };
 
 export default function RootLayout({
@@ -32,6 +68,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        <OrganizationJsonLd />
+        <WebSiteJsonLd />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

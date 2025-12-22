@@ -5,6 +5,7 @@ import {
   fetchProductsByTaxonomyAction,
 } from "@/app/actions/product";
 import { ProductGridSkeleton } from "@/components/skeletons";
+import { envs } from "@/core/config";
 import { Breadcrumbs } from "../_components/breadcrumbs";
 import { CategorySidebar } from "../_components/category-sidebar/category-sidebar";
 import { MobileCategoryNav } from "../_components/mobile-category/mobile-category-nav";
@@ -20,17 +21,68 @@ interface CategoryPageProps {
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: CategoryPageProps): Promise<Metadata> {
   const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
   const slugParts = resolvedParams.slug;
   const title = slugParts[slugParts.length - 1]
     .replace(/-/g, " ")
     .replace(/\b\w/g, (c) => c.toUpperCase());
 
-  return {
-    title: `${title} | Store Name`,
-    description: `Confira nossa seleção de ${title}. Os melhores produtos com os melhores preços.`,
+  // Verificar se há filtros ativos
+  const sortCol = typeof resolvedSearchParams.sort_col === "string";
+  const sortOrd = typeof resolvedSearchParams.sort_ord === "string";
+  const stockOnly = resolvedSearchParams.stock === "1";
+
+  // Contar filtros ativos
+  const filterCount = [sortCol, sortOrd, stockOnly].filter(Boolean).length;
+
+  // Estratégia: noindex se houver 2 ou mais filtros (evitar thin content)
+  const shouldNoindex = filterCount >= 2;
+
+  const categoryUrl = `/category/${slugParts.join("/")}`;
+  const fullUrl = `${envs.NEXT_PUBLIC_BASE_URL_APP}${categoryUrl}`;
+
+  const metadata: Metadata = {
+    title: `${title} | ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
+    description: `Confira nossa seleção de ${title}. Os melhores produtos com os melhores preços. Parcele em até ${envs.NEXT_PUBLIC_PAY_IN_UP_TO}x sem juros!`,
+    alternates: {
+      canonical: categoryUrl,
+    },
+    openGraph: {
+      type: "website",
+      locale: "pt_BR",
+      url: fullUrl,
+      siteName: envs.NEXT_PUBLIC_COMPANY_NAME,
+      title: `${title} | ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
+      description: `Confira nossa seleção de ${title}. Os melhores produtos com os melhores preços.`,
+      images: [
+        {
+          url: "/images/logo/logo-horizontal-header.png",
+          width: 1200,
+          height: 630,
+          alt: `${title} - ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} | ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
+      description: `Confira nossa seleção de ${title}. Os melhores produtos com os melhores preços.`,
+      images: ["/images/logo/logo-horizontal-header.png"],
+    },
   };
+
+  // Adicionar noindex se houver múltiplos filtros
+  if (shouldNoindex) {
+    metadata.robots = {
+      index: false,
+      follow: true,
+    };
+  }
+
+  return metadata;
 }
 
 // Componente interno para encapsular a lógica de dados
