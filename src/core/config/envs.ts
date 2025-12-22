@@ -8,7 +8,9 @@ const envsSchema = z.object({
     .string()
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().positive("PORT must be a positive number")),
-
+NEXT_PUBLIC_BASE_URL_APP: z
+    .string()
+    .url("NEXT_PUBLIC_BASE_URL_APP must be a valid URL"),
   // API Externa
   EXTERNAL_API_MAIN_URL: z
     .string()
@@ -241,6 +243,9 @@ let envVars: EnvVars;
 
 // Para prevenir problemas de hidratação, vamos criar um schema separado para variáveis públicas
 const publicEnvSchema = z.object({
+  NEXT_PUBLIC_BASE_URL_APP: z
+    .string()
+    .url("NEXT_PUBLIC_BASE_URL_APP must be a valid URL"),
   NEXT_PUBLIC_COMPANY_NAME: z
     .string()
     .min(1, "NEXT_PUBLIC_COMPANY_NAME is required"),
@@ -395,6 +400,7 @@ if (typeof window === "undefined") {
   const publicVars = publicValidationResult.success
     ? publicValidationResult.data
     : {
+        NEXT_PUBLIC_BASE_URL_APP: "",
         NEXT_PUBLIC_COMPANY_NAME: process.env.NEXT_PUBLIC_COMPANY_NAME || "",
         NEXT_PUBLIC_COMPANY_PHONE: process.env.NEXT_PUBLIC_COMPANY_PHONE || "",
         NEXT_PUBLIC_COMPANY_EMAIL: process.env.NEXT_PUBLIC_COMPANY_EMAIL || "",
@@ -509,6 +515,7 @@ if (typeof window === "undefined") {
 
 export const envs = {
   PORT: envVars.PORT,
+  NEXT_PUBLIC_BASE_URL_APP: envVars.NEXT_PUBLIC_BASE_URL_APP,
 
   // API Externa
   EXTERNAL_API_MAIN_URL: envVars.EXTERNAL_API_MAIN_URL,

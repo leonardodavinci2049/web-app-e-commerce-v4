@@ -19,8 +19,9 @@ export const dynamic = "force-dynamic";
  * @see https://nextjs.org/docs/app/api-reference/file-conventions/metadata/sitemap
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Base URL from environment (using BETTER_AUTH_URL as site URL)
-  const baseUrl = envs.BETTER_AUTH_URL || "https://mundialmegastore.com.br";
+  // Base URL from environment
+  const baseUrl =
+    envs.NEXT_PUBLIC_BASE_URL_APP || "https://mundialmegastore.com.br";
 
   // Current date for lastModified
   const currentDate = new Date();

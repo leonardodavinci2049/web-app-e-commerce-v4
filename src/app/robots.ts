@@ -8,8 +8,9 @@ import { envs } from "@/core/config/envs";
  * @see https://nextjs.org/docs/app/api-reference/file-conventions/metadata/robots
  */
 export default function robots(): MetadataRoute.Robots {
-  // Base URL from environment (using BETTER_AUTH_URL as site URL)
-  const baseUrl = envs.BETTER_AUTH_URL || "https://mundialmegastore.com.br";
+  // Base URL from environment
+  const baseUrl =
+    envs.NEXT_PUBLIC_BASE_URL_APP;
 
   return {
     rules: [
