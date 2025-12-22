@@ -7,6 +7,12 @@ import { envs } from "@/core/config/envs";
 import { generateSlug } from "@/lib/slug";
 
 /**
+ * Force dynamic generation at request time (not build time)
+ * This prevents API connection errors during build when external API is unavailable
+ */
+export const dynamic = "force-dynamic";
+
+/**
  * Generate dynamic sitemap for SEO
  * Includes: static pages, products, and categories (3 levels deep)
  *
@@ -58,8 +64,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.8,
       }));
     }
-  } catch (error) {
-    console.error("[Sitemap] Failed to fetch products:", error);
+  } catch {
+    // Silently handle API errors - sitemap will include only static pages
+    // This can happen during build when external API is unavailable
   }
 
   // ========================================
@@ -114,8 +121,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         return pages;
       });
     }
-  } catch (error) {
-    console.error("[Sitemap] Failed to fetch categories:", error);
+  } catch {
+    // Silently handle API errors - sitemap will include only static pages
+    // This can happen during build when external API is unavailable
   }
 
   // ========================================
