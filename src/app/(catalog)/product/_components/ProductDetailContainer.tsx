@@ -8,6 +8,7 @@ import {
 import { ProductGridSkeleton } from "@/components/skeletons";
 import { ProductImageGallery } from "./imagegallery/ProductImageGallery";
 import { ProductInfo } from "./ProductInfo";
+import { ProductJsonLd } from "./ProductJsonLd";
 import { ProductTabs } from "./ProductTabs";
 import { RelatedProducts } from "./RelatedProducts";
 
@@ -130,6 +131,23 @@ export async function ProductDetailContainer({
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* JSON-LD Structured Data para SEO */}
+      <ProductJsonLd
+        product={{
+          id: product.id,
+          name: product.name,
+          description: product.description,
+          price: product.price,
+          image: product.image,
+          inStock: product.inStock,
+          brand: product.brand,
+          sku: product.sku,
+          isNew: product.isNew,
+          category: productWithNames.category,
+          subcategory: productWithNames.subcategory,
+        }}
+      />
+
       {/* Breadcrumb */}
       <nav className="flex items-center text-sm text-muted-foreground mb-8 overflow-x-auto whitespace-nowrap">
         <a href="/" className="hover:text-primary transition-colors">

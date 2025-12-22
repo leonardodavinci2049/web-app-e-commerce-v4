@@ -21,7 +21,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(envs.NEXT_PUBLIC_BASE_URL_APP),
-  title: `${envs.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN} - ${envs.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION}`,
+  title: `${envs.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN} | ${envs.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION}`,
   description: `${envs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION}`,
 };
 
