@@ -222,6 +222,15 @@ const envsSchema = z.object({
   HOME_SECTION_8_TITLE: z.string().min(1, "HOME_SECTION_8_TITLE is required"),
   HOME_SECTION_9_TITLE: z.string().min(1, "HOME_SECTION_9_TITLE is required"),
   HOME_SECTION_10_TITLE: z.string().min(1, "HOME_SECTION_10_TITLE is required"),
+
+  // Google Analytics 4
+  NEXT_PUBLIC_GA_MEASUREMENT_ID: z
+    .string()
+    .regex(
+      /^G-[A-Z0-9]+$/,
+      "NEXT_PUBLIC_GA_MEASUREMENT_ID must be in format G-XXXXXXX",
+    )
+    .optional(),
 });
 
 // Inferir o tipo automaticamente a partir do schema
@@ -349,6 +358,15 @@ const publicEnvSchema = z.object({
   NEXT_PUBLIC_DEVELOPER_URL: z
     .string()
     .url("NEXT_PUBLIC_DEVELOPER_URL must be a valid URL"),
+
+  // Google Analytics 4
+  NEXT_PUBLIC_GA_MEASUREMENT_ID: z
+    .string()
+    .regex(
+      /^G-[A-Z0-9]+$/,
+      "NEXT_PUBLIC_GA_MEASUREMENT_ID must be in format G-XXXXXXX",
+    )
+    .optional(),
 });
 
 if (typeof window === "undefined") {
@@ -438,6 +456,8 @@ if (typeof window === "undefined") {
         NEXT_PUBLIC_DEVELOPER_NAME:
           process.env.NEXT_PUBLIC_DEVELOPER_NAME || "",
         NEXT_PUBLIC_DEVELOPER_URL: process.env.NEXT_PUBLIC_DEVELOPER_URL || "",
+        NEXT_PUBLIC_GA_MEASUREMENT_ID:
+          process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || undefined,
       };
 
   // Usar valores vazios ou default para variáveis privadas no cliente
@@ -483,6 +503,7 @@ if (typeof window === "undefined") {
     HOME_SECTION_8_TITLE: "",
     HOME_SECTION_9_TITLE: "",
     HOME_SECTION_10_TITLE: "",
+    NEXT_PUBLIC_GA_MEASUREMENT_ID: publicVars.NEXT_PUBLIC_GA_MEASUREMENT_ID,
   };
 }
 
@@ -593,4 +614,7 @@ export const envs = {
   HOME_SECTION_8_TITLE: envVars.HOME_SECTION_8_TITLE,
   HOME_SECTION_9_TITLE: envVars.HOME_SECTION_9_TITLE,
   HOME_SECTION_10_TITLE: envVars.HOME_SECTION_10_TITLE,
+
+  // Google Analytics 4
+  NEXT_PUBLIC_GA_MEASUREMENT_ID: envVars.NEXT_PUBLIC_GA_MEASUREMENT_ID,
 };

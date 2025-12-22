@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { GoogleAnalytics } from "@/components/analytics";
 import { CartSidebar } from "@/components/cart/CartSidebar";
 import { SnowEffect } from "@/components/seasonal/SnowEffect";
 import { ThemeProvider } from "@/components/theme/theme-provider";
@@ -33,6 +34,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <GoogleAnalytics />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
