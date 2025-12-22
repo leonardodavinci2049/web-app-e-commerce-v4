@@ -56,7 +56,12 @@ export async function getProducts(
     const products = ProductWebServiceApi.extractProductList(response);
     return transformProductList(products);
   } catch (error) {
-    logger.error("Failed to fetch products:", error);
+    // Warn instead of error - this may happen during build when API is unavailable
+    if (error instanceof Error && error.message.includes("Connection closed")) {
+      logger.warn("API unavailable - returning empty product list");
+    } else {
+      logger.error("Failed to fetch products:", error);
+    }
     return [];
   }
 }
