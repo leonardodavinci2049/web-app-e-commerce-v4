@@ -21,7 +21,7 @@ export function MainHeader() {
             <div className="relative w-40 h-8 sm:w-48 sm:h-10 lg:w-56 lg:h-12">
               <Image
                 src="/images/logo/logo-horizontal-header.png"
-                alt="Mundial Megastore"
+                alt="Mundial Megastore - Informática, Eletrônicos e Perfumes Importados"
                 fill
                 className="object-contain"
                 priority

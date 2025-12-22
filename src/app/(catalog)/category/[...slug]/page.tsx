@@ -21,17 +21,30 @@ interface CategoryPageProps {
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: CategoryPageProps): Promise<Metadata> {
   const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
   const slugParts = resolvedParams.slug;
   const title = slugParts[slugParts.length - 1]
     .replace(/-/g, " ")
     .replace(/\b\w/g, (c) => c.toUpperCase());
 
+  // Verificar se há filtros ativos
+  const sortCol = typeof resolvedSearchParams.sort_col === "string";
+  const sortOrd = typeof resolvedSearchParams.sort_ord === "string";
+  const stockOnly = resolvedSearchParams.stock === "1";
+
+  // Contar filtros ativos
+  const filterCount = [sortCol, sortOrd, stockOnly].filter(Boolean).length;
+
+  // Estratégia: noindex se houver 2 ou mais filtros (evitar thin content)
+  const shouldNoindex = filterCount >= 2;
+
   const categoryUrl = `/category/${slugParts.join("/")}`;
   const fullUrl = `${envs.NEXT_PUBLIC_BASE_URL_APP}${categoryUrl}`;
 
-  return {
+  const metadata: Metadata = {
     title: `${title} | ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
     description: `Confira nossa seleção de ${title}. Os melhores produtos com os melhores preços. Parcele em até ${envs.NEXT_PUBLIC_PAY_IN_UP_TO}x sem juros!`,
     alternates: {
@@ -60,6 +73,16 @@ export async function generateMetadata({
       images: ["/images/logo/logo-horizontal-header.png"],
     },
   };
+
+  // Adicionar noindex se houver múltiplos filtros
+  if (shouldNoindex) {
+    metadata.robots = {
+      index: false,
+      follow: true,
+    };
+  }
+
+  return metadata;
 }
 
 // Componente interno para encapsular a lógica de dados
