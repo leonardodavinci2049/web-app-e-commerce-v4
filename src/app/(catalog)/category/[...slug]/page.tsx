@@ -5,6 +5,7 @@ import {
   fetchProductsByTaxonomyAction,
 } from "@/app/actions/product";
 import { ProductGridSkeleton } from "@/components/skeletons";
+import { envs } from "@/core/config";
 import { Breadcrumbs } from "../_components/breadcrumbs";
 import { CategorySidebar } from "../_components/category-sidebar/category-sidebar";
 import { MobileCategoryNav } from "../_components/mobile-category/mobile-category-nav";
@@ -27,9 +28,37 @@ export async function generateMetadata({
     .replace(/-/g, " ")
     .replace(/\b\w/g, (c) => c.toUpperCase());
 
+  const categoryUrl = `/category/${slugParts.join("/")}`;
+  const fullUrl = `${envs.NEXT_PUBLIC_BASE_URL_APP}${categoryUrl}`;
+
   return {
-    title: `${title} | Store Name`,
-    description: `Confira nossa seleção de ${title}. Os melhores produtos com os melhores preços.`,
+    title: `${title} | ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
+    description: `Confira nossa seleção de ${title}. Os melhores produtos com os melhores preços. Parcele em até ${envs.NEXT_PUBLIC_PAY_IN_UP_TO}x sem juros!`,
+    alternates: {
+      canonical: categoryUrl,
+    },
+    openGraph: {
+      type: "website",
+      locale: "pt_BR",
+      url: fullUrl,
+      siteName: envs.NEXT_PUBLIC_COMPANY_NAME,
+      title: `${title} | ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
+      description: `Confira nossa seleção de ${title}. Os melhores produtos com os melhores preços.`,
+      images: [
+        {
+          url: "/images/logo/logo-horizontal-header.png",
+          width: 1200,
+          height: 630,
+          alt: `${title} - ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} | ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
+      description: `Confira nossa seleção de ${title}. Os melhores produtos com os melhores preços.`,
+      images: ["/images/logo/logo-horizontal-header.png"],
+    },
   };
 }
 
