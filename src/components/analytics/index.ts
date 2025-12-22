@@ -4,17 +4,17 @@
  * Exports Google Analytics 4 component and e-commerce event tracking functions.
  */
 
-export { GoogleAnalytics } from "./GoogleAnalytics";
 export {
-  trackViewItem,
-  trackAddToCart,
-  trackRemoveFromCart,
-  trackViewCart,
-  trackBeginCheckout,
-  trackPurchase,
-  trackViewItemList,
-  trackSelectItem,
-  trackSearch,
-  trackEvent,
   type GA4Item,
+  trackAddToCart,
+  trackBeginCheckout,
+  trackEvent,
+  trackPurchase,
+  trackRemoveFromCart,
+  trackSearch,
+  trackSelectItem,
+  trackViewCart,
+  trackViewItem,
+  trackViewItemList,
 } from "./events";
+export { GoogleAnalytics } from "./GoogleAnalytics";
