@@ -9,8 +9,7 @@ import { envs } from "@/core/config/envs";
  */
 export default function robots(): MetadataRoute.Robots {
   // Base URL from environment
-  const baseUrl =
-    envs.NEXT_PUBLIC_BASE_URL_APP;
+  const baseUrl = envs.NEXT_PUBLIC_BASE_URL_APP;
 
   return {
     rules: [

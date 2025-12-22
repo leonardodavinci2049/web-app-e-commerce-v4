@@ -8,7 +8,7 @@ const envsSchema = z.object({
     .string()
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().positive("PORT must be a positive number")),
-NEXT_PUBLIC_BASE_URL_APP: z
+  NEXT_PUBLIC_BASE_URL_APP: z
     .string()
     .url("NEXT_PUBLIC_BASE_URL_APP must be a valid URL"),
   // API Externa
