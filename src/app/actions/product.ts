@@ -15,6 +15,22 @@ import {
 const logger = createLogger("ProductActions");
 
 /**
+ * Check if error is a connection error (expected during build when API is unavailable)
+ */
+function isConnectionError(error: unknown): boolean {
+  if (error instanceof Error) {
+    const message = error.message.toLowerCase();
+    return (
+      message.includes("connection") ||
+      message.includes("econnrefused") ||
+      message.includes("fetch failed") ||
+      message.includes("network")
+    );
+  }
+  return false;
+}
+
+/**
  * Fetch all products (cached via 'use cache' in service)
  */
 export async function fetchProductsAction(
@@ -32,7 +48,10 @@ export async function fetchProductsAction(
   try {
     return await getProducts(params);
   } catch (error) {
-    logger.error("Failed to fetch products:", error);
+    // Don't log connection errors (expected during build when API is unavailable)
+    if (!isConnectionError(error)) {
+      logger.error("Failed to fetch products:", error);
+    }
     return [];
   }
 }
@@ -44,7 +63,9 @@ export async function fetchCategoriesAction() {
   try {
     return await getCategories();
   } catch (error) {
-    logger.error("Failed to fetch categories:", error);
+    if (!isConnectionError(error)) {
+      logger.error("Failed to fetch categories:", error);
+    }
     return [];
   }
 }
@@ -56,7 +77,9 @@ export async function fetchProductBySlugAction(slug: string[]) {
   try {
     return await getProductBySlug(slug);
   } catch (error) {
-    logger.error("Failed to fetch product by slug:", error);
+    if (!isConnectionError(error)) {
+      logger.error("Failed to fetch product by slug:", error);
+    }
     return undefined;
   }
 }
@@ -71,7 +94,9 @@ export async function fetchRelatedProductsAction(
   try {
     return await getRelatedProducts(productId, taxonomyId);
   } catch (error) {
-    logger.error("Failed to fetch related products:", error);
+    if (!isConnectionError(error)) {
+      logger.error("Failed to fetch related products:", error);
+    }
     return [];
   }
 }
@@ -86,7 +111,9 @@ export async function fetchCategoryBySlugAction(
   try {
     return await getCategoryBySlug(categorySlug, subcategorySlug);
   } catch (error) {
-    logger.error("Failed to fetch category by slug:", error);
+    if (!isConnectionError(error)) {
+      logger.error("Failed to fetch category by slug:", error);
+    }
     return null;
   }
 }
@@ -101,7 +128,9 @@ export async function fetchProductsByCategoryAction(
   try {
     return await getProductsByCategory(categoryId, subcategoryId);
   } catch (error) {
-    logger.error("Failed to fetch products by category:", error);
+    if (!isConnectionError(error)) {
+      logger.error("Failed to fetch products by category:", error);
+    }
     return [];
   }
 }
@@ -119,7 +148,9 @@ export async function fetchProductsBySlugAction(
   try {
     return await getProductsBySlug(slugTaxonomy, limit, page, sortCol, sortOrd);
   } catch (error) {
-    logger.error("Failed to fetch products by slug:", error);
+    if (!isConnectionError(error)) {
+      logger.error("Failed to fetch products by slug:", error);
+    }
     return [];
   }
 }
@@ -147,7 +178,9 @@ export async function fetchProductsByTaxonomyAction(
       stockOnly,
     );
   } catch (error) {
-    logger.error("Failed to fetch products by taxonomy:", error);
+    if (!isConnectionError(error)) {
+      logger.error("Failed to fetch products by taxonomy:", error);
+    }
     return [];
   }
 }
