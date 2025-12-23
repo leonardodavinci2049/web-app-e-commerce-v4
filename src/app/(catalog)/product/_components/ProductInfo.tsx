@@ -2,13 +2,12 @@ import { Check } from "lucide-react";
 import { AddToCartButton } from "@/components/product/actions/AddToCartButton";
 import { QuantitySelector } from "@/components/product/actions/QuantitySelector";
 import { WhatsAppProductButton } from "@/components/product/actions/WhatsAppProductButton";
-import { WishlistButton } from "@/components/product/actions/WishlistButton";
 
 interface ProductInfoProps {
   product: {
     id: string;
     name: string;
-    sku: string;
+    sku?: string;
     price: number;
     originalPrice?: number;
     discount?: number;
@@ -33,7 +32,9 @@ export function ProductInfo({ product }: ProductInfoProps) {
       </h1>
 
       {/* SKU */}
-      <div className="text-sm text-muted-foreground">SKU: {product.sku}</div>
+      <div className="text-sm text-muted-foreground">
+        SKU: {product.sku || "N/A"}
+      </div>
 
       {/* Avaliações */}
       <div className="flex items-center gap-2">
