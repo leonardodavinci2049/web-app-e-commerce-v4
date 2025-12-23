@@ -9,7 +9,9 @@ import {
   getProductsByCategory,
   getProductsBySlug,
   getProductsByTaxonomy,
+  getProductWithRelated,
   getRelatedProducts,
+  type ProductWithRelated,
 } from "@/services/api-main/product/product-web-cached-service";
 
 const logger = createLogger("ProductActions");
@@ -79,6 +81,23 @@ export async function fetchProductBySlugAction(slug: string[]) {
   } catch (error) {
     if (!isConnectionError(error)) {
       logger.error("Failed to fetch product by slug:", error);
+    }
+    return undefined;
+  }
+}
+
+/**
+ * Fetch a product by its slug along with related products
+ * Uses a single API call - related products come from data[2] of the API response
+ */
+export async function fetchProductWithRelatedAction(
+  slug: string[],
+): Promise<ProductWithRelated | undefined> {
+  try {
+    return await getProductWithRelated(slug);
+  } catch (error) {
+    if (!isConnectionError(error)) {
+      logger.error("Failed to fetch product with related:", error);
     }
     return undefined;
   }

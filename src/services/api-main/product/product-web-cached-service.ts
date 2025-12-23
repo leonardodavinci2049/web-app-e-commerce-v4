@@ -9,6 +9,7 @@ import {
   transformCategoryMenu,
   transformProductDetail,
   transformProductList,
+  transformRelatedProducts,
   type UICategory,
   type UIProduct,
 } from "@/lib/transformers";
@@ -130,6 +131,64 @@ export async function getProductBySlug(
     return transformProductDetail(product);
   } catch (error) {
     logger.error(`Failed to fetch product by slug:`, error);
+    return undefined;
+  }
+}
+
+/**
+ * Result type for getProductWithRelated
+ */
+export interface ProductWithRelated {
+  product: UIProduct;
+  relatedProducts: UIProduct[];
+}
+
+/**
+ * Fetch a product by slug along with related products (from API response data[2])
+ * Uses a single API call to get both product and related products
+ */
+export async function getProductWithRelated(
+  slug: string[],
+): Promise<ProductWithRelated | undefined> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(CACHE_TAGS.products);
+
+  try {
+    const fullSlug = slug.join("/");
+    // Extract ID from slug (format: product-name-123)
+    const parts = fullSlug.split("-");
+    const id = parts[parts.length - 1];
+
+    if (!id || Number.isNaN(Number.parseInt(id, 10))) {
+      logger.error(`Invalid product slug: ${fullSlug}`);
+      return undefined;
+    }
+
+    const response = await ProductWebServiceApi.findProductById({
+      pe_id_produto: Number.parseInt(id, 10),
+      pe_slug_produto: fullSlug,
+    });
+
+    const product = ProductWebServiceApi.extractProduct(response);
+    if (!product) {
+      return undefined;
+    }
+
+    // Extract related products from data[2] of the API response
+    const relatedRaw = ProductWebServiceApi.extractRelatedProducts(response);
+
+    // Transform and filter out current product from related products
+    const relatedProducts = transformRelatedProducts(relatedRaw).filter(
+      (p) => p.id !== String(product.ID_PRODUTO),
+    );
+
+    return {
+      product: transformProductDetail(product),
+      relatedProducts,
+    };
+  } catch (error) {
+    logger.error(`Failed to fetch product with related by slug:`, error);
     return undefined;
   }
 }
