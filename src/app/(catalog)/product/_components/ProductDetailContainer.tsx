@@ -2,8 +2,8 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import {
   fetchCategoriesAction,
-  fetchProductBySlugAction,
-  fetchRelatedProductsAction,
+  fetchProductGalleryAction,
+  fetchProductWithRelatedAction,
 } from "@/app/actions/product";
 import { ProductGridSkeleton } from "@/components/skeletons";
 import { ProductImageGallery } from "./imagegallery/ProductImageGallery";
@@ -51,14 +51,19 @@ export async function ProductDetailContainer({
 }: ProductDetailContainerProps) {
   const { slug } = await params;
 
-  const [product, categories] = await Promise.all([
-    fetchProductBySlugAction(slug),
+  const [productData, categories] = await Promise.all([
+    fetchProductWithRelatedAction(slug),
     fetchCategoriesAction(),
   ]);
 
-  if (!product) {
+  if (!productData) {
     notFound();
   }
+
+  const { product, relatedProducts } = productData;
+
+  // Fetch product gallery images
+  const galleryImages = await fetchProductGalleryAction(product.id);
 
   // resolve nomes de categoria / subcategoria a partir dos IDs
   const getCategoryName = (categoryId?: string) =>
@@ -76,12 +81,6 @@ export async function ProductDetailContainer({
     );
   };
 
-  // Buscar produtos relacionados
-  const relatedRaw = await fetchRelatedProductsAction(
-    product.id,
-    product.categoryId,
-  );
-
   // adiciona campos category/subcategory com nomes para compatibilidade
   const productWithNames = {
     ...product,
@@ -89,7 +88,7 @@ export async function ProductDetailContainer({
     subcategory: getSubcategoryName(product.categoryId, product.subcategoryId),
   };
 
-  const relatedWithNames = relatedRaw.map((p) => ({
+  const relatedWithNames = relatedProducts.map((p) => ({
     ...p,
     category: getCategoryName(p.categoryId),
     subcategory: getSubcategoryName(p.categoryId, p.subcategoryId),
@@ -165,7 +164,8 @@ export async function ProductDetailContainer({
         {/* Galeria de Imagens with Suspense */}
         <Suspense fallback={<GallerySkeleton />}>
           <ProductImageGallery
-            images={product.image ? [product.image] : []}
+            galleryImages={galleryImages}
+            fallbackImage={product.image}
             productName={product.name}
           />
         </Suspense>

@@ -1,6 +1,7 @@
 "use server";
 
 import { createLogger } from "@/core/logger";
+import { assetsApiService } from "@/services/api-assets/assets-api-service";
 import {
   getCategories,
   getCategoryBySlug,
@@ -9,8 +10,11 @@ import {
   getProductsByCategory,
   getProductsBySlug,
   getProductsByTaxonomy,
+  getProductWithRelated,
   getRelatedProducts,
+  type ProductWithRelated,
 } from "@/services/api-main/product/product-web-cached-service";
+import type { GalleryImage } from "@/types/api-assets";
 
 const logger = createLogger("ProductActions");
 
@@ -79,6 +83,23 @@ export async function fetchProductBySlugAction(slug: string[]) {
   } catch (error) {
     if (!isConnectionError(error)) {
       logger.error("Failed to fetch product by slug:", error);
+    }
+    return undefined;
+  }
+}
+
+/**
+ * Fetch a product by its slug along with related products
+ * Uses a single API call - related products come from data[2] of the API response
+ */
+export async function fetchProductWithRelatedAction(
+  slug: string[],
+): Promise<ProductWithRelated | undefined> {
+  try {
+    return await getProductWithRelated(slug);
+  } catch (error) {
+    if (!isConnectionError(error)) {
+      logger.error("Failed to fetch product with related:", error);
     }
     return undefined;
   }
@@ -180,6 +201,34 @@ export async function fetchProductsByTaxonomyAction(
   } catch (error) {
     if (!isConnectionError(error)) {
       logger.error("Failed to fetch products by taxonomy:", error);
+    }
+    return [];
+  }
+}
+
+/**
+ * Fetch product image gallery from Assets API
+ * Returns array of gallery images or empty array on error
+ */
+export async function fetchProductGalleryAction(
+  productId: string,
+): Promise<GalleryImage[]> {
+  try {
+    const response = await assetsApiService.getEntityGallery({
+      entityType: "PRODUCT",
+      entityId: productId,
+    });
+
+    // Check if response has images (successful response)
+    if ("images" in response && Array.isArray(response.images)) {
+      return response.images;
+    }
+
+    // Error response or no images
+    return [];
+  } catch (error) {
+    if (!isConnectionError(error)) {
+      logger.error("Failed to fetch product gallery:", error);
     }
     return [];
   }
