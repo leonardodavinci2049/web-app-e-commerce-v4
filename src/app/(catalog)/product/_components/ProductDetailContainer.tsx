@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import {
   fetchCategoriesAction,
+  fetchProductGalleryAction,
   fetchProductWithRelatedAction,
 } from "@/app/actions/product";
 import { ProductGridSkeleton } from "@/components/skeletons";
@@ -60,6 +61,9 @@ export async function ProductDetailContainer({
   }
 
   const { product, relatedProducts } = productData;
+
+  // Fetch product gallery images
+  const galleryImages = await fetchProductGalleryAction(product.id);
 
   // resolve nomes de categoria / subcategoria a partir dos IDs
   const getCategoryName = (categoryId?: string) =>
@@ -160,7 +164,8 @@ export async function ProductDetailContainer({
         {/* Galeria de Imagens with Suspense */}
         <Suspense fallback={<GallerySkeleton />}>
           <ProductImageGallery
-            images={product.image ? [product.image] : []}
+            galleryImages={galleryImages}
+            fallbackImage={product.image}
             productName={product.name}
           />
         </Suspense>
