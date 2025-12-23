@@ -55,26 +55,8 @@ export function ProductTabs({
         <div className="space-y-4">
           <h3 className="text-lg font-semibold mb-4">Informações de Entrega</h3>
           <div className="space-y-3 text-muted-foreground">
-            <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full bg-primary mt-2" />
-              <div>
-                <p className="font-medium text-foreground">Frete Grátis</p>
-                <p className="text-sm">
-                  Para compras acima de{" "}
-                  {new Intl.NumberFormat("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  }).format(shipping.freeShippingMinValue)}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full bg-primary mt-2" />
-              <div>
-                <p className="font-medium text-foreground">Prazo de Entrega</p>
-                <p className="text-sm">{shipping.estimatedDays}</p>
-              </div>
-            </div>
+ 
+          
             <div className="flex items-start gap-3">
               <div className="w-2 h-2 rounded-full bg-primary mt-2" />
               <div>

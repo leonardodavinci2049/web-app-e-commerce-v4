@@ -8,6 +8,7 @@ interface ProductInfoProps {
   product: {
     id: string;
     name: string;
+    sku: string;
     price: number;
     originalPrice?: number;
     discount?: number;
@@ -26,15 +27,13 @@ interface ProductInfoProps {
 export function ProductInfo({ product }: ProductInfoProps) {
   return (
     <div className="space-y-6">
-      {/* Categoria e Marca */}
-      <div className="text-sm text-muted-foreground">
-        {product.category} {product.brand && `• ${product.brand}`}
-      </div>
-
       {/* Título */}
       <h1 className="text-2xl md:text-3xl font-bold text-foreground">
         {product.name}
       </h1>
+
+      {/* SKU */}
+      <div className="text-sm text-muted-foreground">SKU: {product.sku}</div>
 
       {/* Avaliações */}
       <div className="flex items-center gap-2">
@@ -137,12 +136,6 @@ export function ProductInfo({ product }: ProductInfoProps) {
           price={product.price}
           inStock={product.inStock}
         />
-
-        {/* Wishlist - Client Island */}
-        <div className="w-full border border-border py-3 rounded-lg font-medium hover:bg-muted transition-colors flex items-center justify-center gap-2">
-          <WishlistButton productId={product.id} />
-          <span>Adicionar aos Favoritos</span>
-        </div>
       </div>
     </div>
   );
