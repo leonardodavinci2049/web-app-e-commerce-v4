@@ -144,7 +144,7 @@ export async function ProductDetailContainer({
       />
 
       {/* Breadcrumb */}
-      <nav className="flex items-center text-sm text-muted-foreground mb-8 overflow-x-auto whitespace-nowrap">
+      <nav className="hidden md:flex items-center text-sm text-muted-foreground mb-8 overflow-x-auto whitespace-nowrap">
         <a href="/" className="hover:text-primary transition-colors">
           Home
         </a>
