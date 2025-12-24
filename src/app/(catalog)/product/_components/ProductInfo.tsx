@@ -27,7 +27,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
   return (
     <div className="space-y-6">
       {/* Título */}
-      <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+      <h1 className="hidden lg:block text-2xl md:text-3xl font-bold text-foreground">
         {product.name}
       </h1>
 
