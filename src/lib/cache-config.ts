@@ -12,6 +12,7 @@
 export const CACHE_TAGS = {
   // Dynamic tag generators
   product: (id: string) => `product-${id}`,
+  productGallery: (id: string) => `product-gallery-${id}`,
   category: (id: string) => `category-${id}`,
 
   // Static tags

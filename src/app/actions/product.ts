@@ -1,7 +1,6 @@
 "use server";
 
 import { createLogger } from "@/core/logger";
-import { assetsApiService } from "@/services/api-assets/assets-api-service";
 import {
   getCategories,
   getCategoryBySlug,
@@ -207,29 +206,15 @@ export async function fetchProductsByTaxonomyAction(
 }
 
 /**
- * Fetch product image gallery from Assets API
- * Returns array of gallery images or empty array on error
+ * Fetch product image gallery from Assets API (with cache)
+ * Delegates to cached service for automatic caching and deduplication
  */
 export async function fetchProductGalleryAction(
   productId: string,
 ): Promise<GalleryImage[]> {
-  try {
-    const response = await assetsApiService.getEntityGallery({
-      entityType: "PRODUCT",
-      entityId: productId,
-    });
-
-    // Check if response has images (successful response)
-    if ("images" in response && Array.isArray(response.images)) {
-      return response.images;
-    }
-
-    // Error response or no images
-    return [];
-  } catch (error) {
-    if (!isConnectionError(error)) {
-      logger.error("Failed to fetch product gallery:", error);
-    }
-    return [];
-  }
+  // Import dynamically to avoid circular dependencies and keep server-only
+  const { getProductGallery } = await import(
+    "@/services/api-assets/gallery-cached-service"
+  );
+  return getProductGallery(productId);
 }
