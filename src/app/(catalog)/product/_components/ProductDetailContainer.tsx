@@ -144,7 +144,7 @@ export async function ProductDetailContainer({
       />
 
       {/* Breadcrumb */}
-      <nav className="flex items-center text-sm text-muted-foreground mb-8 overflow-x-auto whitespace-nowrap">
+      <nav className="hidden md:flex items-center text-sm text-muted-foreground mb-8 overflow-x-auto whitespace-nowrap">
         <a href="/" className="hover:text-primary transition-colors">
           Home
         </a>
@@ -155,6 +155,10 @@ export async function ProductDetailContainer({
         <span className="mx-2">/</span>
         <span className="text-foreground font-medium">{product.name}</span>
       </nav>
+
+      <div className="lg:hidden mb-6">
+        <h1 className="text-2xl font-bold text-foreground">{product.name}</h1>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16">
         {/* Galeria de Imagens with Streaming - fetch happens inside wrapper */}
