@@ -2,11 +2,10 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import {
   fetchCategoriesAction,
-  fetchProductGalleryAction,
   fetchProductWithRelatedAction,
 } from "@/app/actions/product";
 import { ProductGridSkeleton } from "@/components/skeletons";
-import { ProductImageGallery } from "./imagegallery/ProductImageGallery";
+import { ProductGalleryWrapper } from "./imagegallery/ProductGalleryWrapper";
 import { ProductInfo } from "./ProductInfo";
 import { ProductJsonLd } from "./ProductJsonLd";
 import { ProductTabs } from "./ProductTabs";
@@ -61,9 +60,6 @@ export async function ProductDetailContainer({
   }
 
   const { product, relatedProducts } = productData;
-
-  // Fetch product gallery images
-  const galleryImages = await fetchProductGalleryAction(product.id);
 
   // resolve nomes de categoria / subcategoria a partir dos IDs
   const getCategoryName = (categoryId?: string) =>
@@ -161,10 +157,10 @@ export async function ProductDetailContainer({
       </nav>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16">
-        {/* Galeria de Imagens with Suspense */}
+        {/* Galeria de Imagens with Streaming - fetch happens inside wrapper */}
         <Suspense fallback={<GallerySkeleton />}>
-          <ProductImageGallery
-            galleryImages={galleryImages}
+          <ProductGalleryWrapper
+            productId={product.id}
             fallbackImage={product.image}
             productName={product.name}
           />
