@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { unstable_noStore } from "next/cache";
 import { fetchProductsAction } from "@/app/actions/product";
 import { envs } from "@/core/config/envs";
+import { getProductPath } from "@/lib/slug";
 
 const PRODUCTS_PER_SITEMAP = 500;
 const SITEMAP_INDEX = 0;
@@ -28,7 +29,7 @@ export async function GET() {
       productPages = products
         .filter((product) => product.slug)
         .map((product) => ({
-          url: `${baseUrl}/product/${product.slug}`,
+          url: `${baseUrl}${getProductPath(product.name, product.id)}`,
           lastModified: currentDate,
           changeFrequency: "weekly" as const,
           priority: 0.8,
