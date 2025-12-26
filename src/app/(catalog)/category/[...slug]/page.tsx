@@ -58,7 +58,7 @@ export async function generateMetadata({
       description: `Confira nossa seleção de ${title}. Os melhores produtos com os melhores preços.`,
       images: [
         {
-          url: "/images/logo/logo-horizontal-header.png",
+          url: "/images/logo/logo-horizontal-header1.png",
           width: 1200,
           height: 630,
           alt: `${title} - ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
@@ -69,7 +69,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: `${title} | ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
       description: `Confira nossa seleção de ${title}. Os melhores produtos com os melhores preços.`,
-      images: ["/images/logo/logo-horizontal-header.png"],
+      images: ["/images/logo/logo-horizontal-header1.png"],
     },
   };
 

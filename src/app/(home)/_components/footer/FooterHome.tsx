@@ -45,7 +45,7 @@ export default function FooterHome() {
             <div className="flex items-center">
               <Link href="/" className="flex items-center">
                 <Image
-                  src="/images/logo/logo-horizontal-footer.png"
+                  src="/images/logo/logo-horizontal-footer1.png"
                   alt="Mundial Megastore - Informática, Eletrônicos e Perfumes Importados"
                   width={140}
                   height={44}
