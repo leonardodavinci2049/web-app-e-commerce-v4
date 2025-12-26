@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import {
@@ -17,16 +18,33 @@ interface ProductDetailContainerProps {
   }>;
 }
 
-// Skeleton for gallery section
-function GallerySkeleton() {
+// Skeleton for gallery section with optional placeholder image
+function GallerySkeleton({ placeholderImage }: { placeholderImage?: string }) {
   return (
-    <div className="space-y-4 animate-pulse">
-      <div className="aspect-square bg-muted rounded-lg" />
-      <div className="flex gap-2">
+    <div className="flex flex-row gap-2 md:gap-4">
+      {/* Thumbnail skeleton area */}
+      <div className="flex flex-col gap-2 w-16 md:w-20 shrink-0">
         {Array.from({ length: 4 }).map((_, i) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton that never reorders
-          <div key={`thumb-${i}`} className="w-20 h-20 bg-muted rounded" />
+          <div
+            // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton that never reorders
+            key={`thumb-${i}`}
+            className="aspect-square bg-muted rounded-lg animate-pulse"
+          />
         ))}
+      </div>
+      {/* Main image area - shows placeholder if available */}
+      <div className="relative flex-1 aspect-square bg-white rounded-lg border border-border overflow-hidden">
+        {placeholderImage ? (
+          <Image
+            src={placeholderImage}
+            alt="Carregando..."
+            fill
+            className="object-contain p-4 md:p-8"
+            unoptimized
+          />
+        ) : (
+          <div className="w-full h-full bg-muted animate-pulse" />
+        )}
       </div>
     </div>
   );
@@ -161,8 +179,10 @@ export async function ProductDetailContainer({
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16">
-        {/* Galeria de Imagens with Streaming - fetch happens inside wrapper */}
-        <Suspense fallback={<GallerySkeleton />}>
+        {/* Galeria de Imagens with Streaming - Progressive loading with placeholder */}
+        <Suspense
+          fallback={<GallerySkeleton placeholderImage={product.image} />}
+        >
           <ProductGalleryWrapper
             productId={product.id}
             fallbackImage={product.image}

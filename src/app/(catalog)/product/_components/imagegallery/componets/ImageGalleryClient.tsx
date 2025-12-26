@@ -1,9 +1,7 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { GalleryImageData } from "../ProductImageGallery";
 
@@ -26,14 +24,6 @@ export function ImageGalleryClient({
   // Obtém URL medium para miniaturas - boa qualidade para thumbnails
   const getThumbnailUrl = (img: GalleryImageData) => {
     return img.urls.medium || img.urls.preview || img.urls.original;
-  };
-
-  const handlePrevious = () => {
-    setSelectedImage((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  };
-
-  const handleNext = () => {
-    setSelectedImage((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
   return (
@@ -65,7 +55,7 @@ export function ImageGalleryClient({
       )}
 
       {/* Imagem Principal */}
-      <div className="relative flex-1 aspect-square bg-white rounded-lg border border-border overflow-hidden group">
+      <div className="relative flex-1 aspect-square bg-white rounded-lg border border-border overflow-hidden">
         <Image
           src={getMainImageUrl(images[selectedImage])}
           alt={productName}
@@ -74,44 +64,22 @@ export function ImageGalleryClient({
           priority
         />
 
-        {/* Setas de Navegação - Positioned at bottom to avoid blocking view */}
-        {images.length > 1 && (
-          <>
-            <Button
-              variant="secondary"
-              size="icon"
-              className="absolute left-2 bottom-8 opacity-80 hover:opacity-100 transition-opacity rounded-full shadow-md z-10"
-              onClick={handlePrevious}
-              aria-label="Imagem anterior"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </Button>
-            <Button
-              variant="secondary"
-              size="icon"
-              className="absolute right-2 bottom-8 opacity-80 hover:opacity-100 transition-opacity rounded-full shadow-md z-10"
-              onClick={handleNext}
-              aria-label="Próxima imagem"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </Button>
-          </>
-        )}
-
         {/* Paginação Mobile (Dots) */}
-        <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
-          {images.map((image, index) => (
-            <div
-              key={image.id}
-              className={cn(
-                "h-1.5 rounded-full transition-all shadow-sm",
-                selectedImage === index
-                  ? "w-4 bg-primary"
-                  : "w-1.5 bg-primary/30",
-              )}
-            />
-          ))}
-        </div>
+        {images.length > 1 && (
+          <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
+            {images.map((image, index) => (
+              <div
+                key={image.id}
+                className={cn(
+                  "h-1.5 rounded-full transition-all shadow-sm",
+                  selectedImage === index
+                    ? "w-4 bg-primary"
+                    : "w-1.5 bg-primary/30",
+                )}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
