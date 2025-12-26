@@ -31,7 +31,7 @@ export function MobileBottomMenu({ categories }: MobileBottomMenuProps) {
 
   const handleWhatsAppClick = () => {
     const message =
-      "Olá! estou no APP do Caixa Fechada, Gostaria de mais informações";
+      "Olá! Estou no APP do Mundial Megastore. Gostaria de mais informações.";
     // Remove caracteres especiais do número de WhatsApp: (XX) XXXXX XXXX -> XXXXXXXXXX
     const whatsappNumber = envs.NEXT_PUBLIC_COMPANY_WHATSAPP.replace(/\D/g, "");
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(

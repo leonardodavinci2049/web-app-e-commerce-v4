@@ -1,5 +1,5 @@
 import { fetchProductGalleryAction } from "@/app/actions/product";
-import { ProductImageGallery } from "./ProductImageGallery";
+import { ProgressiveGallery } from "./ProgressiveGallery";
 
 interface ProductGalleryWrapperProps {
   productId: string;
@@ -8,9 +8,14 @@ interface ProductGalleryWrapperProps {
 }
 
 /**
- * Async wrapper for ProductImageGallery that enables streaming.
- * This component fetches gallery data independently, allowing the rest of
- * the page to render while the gallery loads.
+ * Async wrapper for ProductImageGallery that enables streaming with progressive loading.
+ *
+ * Progressive Loading Strategy:
+ * 1. T0: Immediately shows fallbackImage (PATH_IMAGE) as placeholder
+ * 2. T1: Gallery API loads in background while user sees the main image
+ * 3. T2: When gallery loads, smoothly transitions to full gallery with thumbnails
+ *
+ * This improves perceived performance by showing content immediately.
  */
 export async function ProductGalleryWrapper({
   productId,
@@ -21,7 +26,7 @@ export async function ProductGalleryWrapper({
   const galleryImages = await fetchProductGalleryAction(productId);
 
   return (
-    <ProductImageGallery
+    <ProgressiveGallery
       galleryImages={galleryImages}
       fallbackImage={fallbackImage}
       productName={productName}
