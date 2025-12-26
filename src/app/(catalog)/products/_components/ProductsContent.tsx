@@ -35,16 +35,15 @@ export async function ProductsContent({ searchParams }: ProductsContentProps) {
         {/* Sidebar (Desktop) */}
         <CategorySidebar categories={categories} />
 
-        <div className="flex-1">
-          {/* Mobile Navigation */}
-          <MobileCategoryNav categories={categories} />
-
+        <div className="flex-1 ">
           {/* Título */}
           <div className="mb-6">
             <h1 className="text-3xl md:text-4xl font-bold text-foreground">
               {pageTitle}
             </h1>
           </div>
+          {/* Mobile Navigation */}
+          <MobileCategoryNav categories={categories} />
 
           <ProductListingContainer
             searchTerm={searchTerm}

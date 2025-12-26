@@ -37,7 +37,7 @@ export function ProductFilters({
                   : "bg-muted text-muted-foreground hover:bg-muted/80"
               }`}
             >
-              Todas
+              Todasxx
             </button>
             {categories.map((category) => (
               <button
