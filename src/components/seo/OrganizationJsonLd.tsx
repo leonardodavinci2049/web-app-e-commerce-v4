@@ -10,7 +10,7 @@ export function OrganizationJsonLd() {
     "@type": "Organization",
     name: envs.NEXT_PUBLIC_COMPANY_NAME,
     url: envs.NEXT_PUBLIC_BASE_URL_APP,
-    logo: `${envs.NEXT_PUBLIC_BASE_URL_APP}/images/logo/logo-horizontal-header.png`,
+    logo: `${envs.NEXT_PUBLIC_BASE_URL_APP}/images/logo/logo-horizontal-header1.png`,
     description: envs.NEXT_PUBLIC_COMPANY_ABOUT,
     contactPoint: {
       "@type": "ContactPoint",

@@ -16,7 +16,7 @@ const slides = [
     title: "Ofertas de Hardware",
     subtitle: "Os melhores componentes para o seu PC",
     cta: "Ver Ofertas",
-    image: "/slides/image2.png",
+    image: "/slides/image2a.png",
     bg: "bg-gradient-to-r from-slate-800 to-slate-900",
   },
 ];

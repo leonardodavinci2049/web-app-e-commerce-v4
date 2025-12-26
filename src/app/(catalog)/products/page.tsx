@@ -53,7 +53,7 @@ export async function generateMetadata({
       description,
       images: [
         {
-          url: "/images/logo/logo-horizontal-header.png",
+          url: "/images/logo/logo-horizontal-header1.png",
           width: 1200,
           height: 630,
           alt: `${envs.NEXT_PUBLIC_COMPANY_NAME}`,
@@ -64,7 +64,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: ["/images/logo/logo-horizontal-header.png"],
+      images: ["/images/logo/logo-horizontal-header1.png"],
     },
   };
 
