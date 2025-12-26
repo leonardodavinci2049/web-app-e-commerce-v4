@@ -5,6 +5,7 @@ import { useState } from "react";
 
 interface QuantitySelectorProps {
   initialQuantity?: number;
+  maxQuantity?: number;
   price: number;
   onQuantityChange?: (quantity: number) => void;
 }
@@ -15,12 +16,14 @@ interface QuantitySelectorProps {
  */
 export function QuantitySelector({
   initialQuantity = 1,
+  maxQuantity,
   price,
   onQuantityChange,
 }: QuantitySelectorProps) {
   const [quantity, setQuantity] = useState(initialQuantity);
 
   const handleIncrement = () => {
+    if (maxQuantity && quantity >= maxQuantity) return;
     const newQuantity = quantity + 1;
     setQuantity(newQuantity);
     onQuantityChange?.(newQuantity);
@@ -33,7 +36,10 @@ export function QuantitySelector({
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newQuantity = Math.max(1, Number.parseInt(e.target.value, 10) || 1);
+    let newQuantity = Math.max(1, Number.parseInt(e.target.value, 10) || 1);
+    if (maxQuantity) {
+      newQuantity = Math.min(newQuantity, maxQuantity);
+    }
     setQuantity(newQuantity);
     onQuantityChange?.(newQuantity);
   };
@@ -86,6 +92,11 @@ export function QuantitySelector({
           </span>
         )}
       </div>
+      {maxQuantity && quantity >= maxQuantity && (
+        <p className="text-xs text-red-600 font-medium">
+          Limite de {maxQuantity} unidades atingido
+        </p>
+      )}
     </div>
   );
 }
