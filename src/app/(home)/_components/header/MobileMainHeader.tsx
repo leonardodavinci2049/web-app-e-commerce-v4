@@ -1,49 +1,59 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 import { fetchCategoriesAction } from "@/app/actions/product";
-import { SearchInput } from "@/components/search/SearchInput";
 import ModeToggle from "@/components/theme/mode-toggle";
 import { MobileCategoryMenu } from "./components/MobileCategoryMenu";
+import {
+  MobileSearchButton,
+  MobileSearchContainer,
+  MobileSearchProvider,
+} from "./components/MobileSearchToggle";
 
 export async function MobileMainHeader() {
   const categories = await fetchCategoriesAction();
 
   return (
-    <header className="bg-card border-b border-border shadow-sm sticky top-0 z-50 md:hidden">
-      <div className="container mx-auto px-4 py-4 flex flex-col gap-4">
-        {/* Mobile menu + Logo + Theme */}
-        <div className="relative flex items-center justify-center w-full">
-          {/* Hamburger - esquerda */}
-          <div className="absolute left-0 flex items-center">
-            <MobileCategoryMenu categories={categories} />
-          </div>
+    <Suspense>
+      <MobileSearchProvider>
+        <header className="bg-card border-b border-border shadow-sm sticky top-0 z-50 md:hidden">
+          <div className="container mx-auto px-4 py-4">
+            {/* Mobile menu + Logo + Theme */}
+            <div className="relative flex items-center justify-center w-full">
+              {/* Hamburger - esquerda */}
+              <div className="absolute left-0 flex items-center">
+                <MobileCategoryMenu categories={categories} />
+              </div>
 
-          {/* Logo centralizada */}
-          <Link
-            href="/"
-            className="inline-flex items-center"
-            aria-label="Mundial Megastore - Página inicial"
-          >
-            <div className="relative w-40 h-8 xs:w-44 xs:h-9">
-              <Image
-                src="/images/logo/logo-header-mobile.png"
-                alt="Mundial Megastore - Informática, Eletrônicos e Perfumes Importados"
-                fill
-                className="object-contain"
-                priority
-              />
+              {/* Logo centralizada */}
+              <Link
+                href="/"
+                className="inline-flex items-center"
+                aria-label="Mundial Megastore - Página inicial"
+              >
+                <div className="relative w-40 h-8 xs:w-44 xs:h-9">
+                  <Image
+                    src="/images/logo/logo-header-mobile.png"
+                    alt="Mundial Megastore - Informática, Eletrônicos e Perfumes Importados"
+                    fill
+                    className="object-contain"
+                    priority
+                  />
+                </div>
+              </Link>
+
+              {/* Toggle de tema e pesquisa - direita */}
+              <div className="absolute right-0 flex items-center gap-1">
+                <MobileSearchButton />
+                <ModeToggle />
+              </div>
             </div>
-          </Link>
-
-          {/* Toggle de tema - direita */}
-          <div className="absolute right-0 flex items-center">
-            <ModeToggle />
           </div>
-        </div>
 
-        {/* Search Bar */}
-        <SearchInput />
-      </div>
-    </header>
+          {/* Search Input - aparece abaixo quando aberto */}
+          <MobileSearchContainer />
+        </header>
+      </MobileSearchProvider>
+    </Suspense>
   );
 }
