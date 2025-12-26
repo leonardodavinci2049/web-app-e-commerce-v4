@@ -25,16 +25,16 @@ interface ProductInfoProps {
  */
 export function ProductInfo({ product }: ProductInfoProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Título */}
       <h1 className="hidden lg:block text-2xl md:text-3xl font-bold text-foreground">
         {product.name}
       </h1>
 
       {/* SKU */}
-      <div className="text-sm text-muted-foreground">
+  {/*     <div className="text-sm text-muted-foreground">
         SKU: {product.sku || "N/A"}
-      </div>
+      </div> */}
 
       {/* Avaliações */}
       <div className="flex items-center gap-2">
@@ -108,14 +108,14 @@ export function ProductInfo({ product }: ProductInfoProps) {
           <Check className="w-4 h-4" />
           <span>Entrega a partir de R$ 15,00 - Região de Ribeirão Preto</span>
         </div>
-        <div className="flex items-center gap-2 text-muted-foreground">
+{/*         <div className="flex items-center gap-2 text-muted-foreground">
           <Check className="w-4 h-4" />
           <span>Garantia de 30 dias</span>
         </div>
         <div className="flex items-center gap-2 text-muted-foreground">
           <Check className="w-4 h-4" />
           <span>Devolução em até 10 dias úteis</span>
-        </div>
+        </div> */}
       </div>
 
       {/* Seletor de Quantidade - Client Island */}
