@@ -6,7 +6,7 @@ import { ProductGridSkeleton } from "./ProductGridSkeleton";
  */
 export function ProductDetailSkeleton() {
   return (
-    <div className="container mx-auto px-4 py-8 animate-pulse">
+    <div className="container mx-auto px-4 py-2 lg:py-8 animate-pulse">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 mb-8">
         <div className="h-4 bg-muted rounded w-12" />
@@ -40,15 +40,30 @@ export function ProductDetailSkeleton() {
 
 function ProductGallerySkeleton() {
   return (
-    <div className="space-y-4">
-      {/* Main image */}
-      <div className="aspect-square bg-muted rounded-lg" />
-      {/* Thumbnails */}
-      <div className="flex gap-2">
+    <div className="flex flex-row gap-2 md:gap-4">
+      {/* Thumbnail skeleton area - Left side vertical column */}
+      <div className="flex flex-col gap-2 w-16 md:w-20 shrink-0 h-[300px] md:h-[500px] overflow-y-auto">
         {Array.from({ length: 4 }).map((_, i) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton that never reorders
-          <div key={`thumb-${i}`} className="w-20 h-20 bg-muted rounded" />
+          <div
+            // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton that never reorders
+            key={`thumb-${i}`}
+            className="aspect-square bg-muted rounded-lg animate-pulse"
+          />
         ))}
+      </div>
+      {/* Main image area - Takes remaining space */}
+      <div className="relative flex-1 aspect-square bg-white rounded-lg border border-border overflow-hidden">
+        <div className="w-full h-full bg-muted animate-pulse" />
+        {/* Pagination dots skeleton (mobile) */}
+        <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div
+              // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton that never reorders
+              key={`dot-${i}`}
+              className="h-1.5 w-1.5 rounded-full bg-muted-foreground/30"
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
