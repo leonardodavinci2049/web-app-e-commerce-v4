@@ -34,6 +34,7 @@ export interface UIProduct {
   category?: string;
   subcategoryId?: string;
   inStock: boolean;
+  stock: number;
   brand?: string;
   isNew?: boolean;
   discount?: number;
@@ -100,6 +101,7 @@ export function transformProductListItem(item: ProductWebListItem): UIProduct {
     category: "", // Will be set from taxonomy context
     subcategoryId: undefined,
     inStock: item.ESTOQUE_LOJA > 0,
+    stock: item.ESTOQUE_LOJA,
     brand: item.MARCA ?? undefined,
     isNew: item.LANCAMENTO === 1,
     discount: item.PROMOCAO === 1 ? calculateDiscount(item) : undefined,
@@ -141,6 +143,7 @@ export function transformProductDetail(detail: ProductWebDetail): UIProduct {
     category: undefined,
     subcategoryId: detail.ID_GRUPO ? String(detail.ID_GRUPO) : undefined,
     inStock: detail.ESTOQUE_LOJA > 0,
+    stock: detail.ESTOQUE_LOJA,
     brand: detail.MARCA ?? undefined,
     isNew: detail.LANCAMENTO === 1,
     discount: detail.PROMOCAO === 1 ? undefined : undefined, // Calculate from price difference if needed
@@ -201,6 +204,7 @@ export function transformRelatedProduct(
     categoryId: item.ID_TAXONOMY ? String(item.ID_TAXONOMY) : "",
     category: "",
     inStock: (item.ESTOQUE_LOJA ?? 0) > 0,
+    stock: item.ESTOQUE_LOJA ?? 0,
     brand: undefined,
     isNew: item.LANCAMENTO === 1,
     discount: item.PROMOCAO === 1 ? undefined : undefined,

@@ -6,6 +6,7 @@ import {
   fetchProductWithRelatedAction,
 } from "@/app/actions/product";
 import { ProductGridSkeleton } from "@/components/skeletons";
+import { BackButton } from "./BackButton";
 import { ProductGalleryWrapper } from "./imagegallery/ProductGalleryWrapper";
 import { ProductInfo } from "./ProductInfo";
 import { ProductJsonLd } from "./ProductJsonLd";
@@ -160,7 +161,6 @@ export async function ProductDetailContainer({
           subcategory: productWithNames.subcategory,
         }}
       />
-
       {/* Breadcrumb */}
       <nav className="hidden md:flex items-center text-sm text-muted-foreground mb-8 overflow-x-auto whitespace-nowrap">
         <a href="/" className="hover:text-primary transition-colors">
@@ -173,12 +173,13 @@ export async function ProductDetailContainer({
         <span className="mx-2">/</span>
         <span className="text-foreground font-medium">{product.name}</span>
       </nav>
-
-      <div className="lg:hidden mb-6">
-        <h1 className="text-2xl font-bold text-foreground">{product.name}</h1>
+      <div className="flex items-start lg:hidden mb-4">
+        <BackButton />
+        <h1 className="text-xl font-bold text-foreground flex-1 pt-0.5">
+          {product.name}
+        </h1>
       </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-16">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-12 mb-16">
         {/* Galeria de Imagens with Streaming - Progressive loading with placeholder */}
         <Suspense
           fallback={<GallerySkeleton placeholderImage={product.image} />}
@@ -195,7 +196,6 @@ export async function ProductDetailContainer({
           <ProductInfo product={productWithNames} />
         </Suspense>
       </div>
-
       {/* Tabs de Informações */}
       <div className="mb-16">
         <ProductTabs
@@ -204,7 +204,6 @@ export async function ProductDetailContainer({
           shipping={productShipping}
         />
       </div>
-
       {/* Produtos Relacionados with Suspense */}
       <Suspense fallback={<ProductGridSkeleton count={4} />}>
         <RelatedProducts products={relatedWithNames} />

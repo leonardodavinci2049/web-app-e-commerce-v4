@@ -15,6 +15,7 @@ interface ProductInfoProps {
     subcategory: string;
     brand?: string;
     inStock: boolean;
+    stock: number;
   };
 }
 
@@ -25,9 +26,9 @@ interface ProductInfoProps {
  */
 export function ProductInfo({ product }: ProductInfoProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-2 lg:space-y-4">
       {/* Título */}
-      <h1 className="hidden lg:block text-2xl md:text-3xl font-bold text-foreground">
+      <h1 className="hidden lg:block text-xl md:text-3xl font-bold text-foreground">
         {product.name}
       </h1>
 
@@ -38,11 +39,11 @@ export function ProductInfo({ product }: ProductInfoProps) {
 
       {/* Avaliações */}
       <div className="flex items-center gap-2">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           {[1, 2, 3, 4, 5].map((starId, i) => (
             <svg
               key={starId}
-              className={`w-5 h-5 ${i < 4 ? "fill-yellow-400 text-yellow-400" : "fill-gray-300 text-gray-300"}`}
+              className={`w-4 h-4 ${i < 4 ? "fill-yellow-400 text-yellow-400" : "fill-gray-300 text-gray-300"}`}
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
             >
@@ -51,36 +52,26 @@ export function ProductInfo({ product }: ProductInfoProps) {
             </svg>
           ))}
         </div>
-        <span className="text-sm text-muted-foreground">(42 avaliações)</span>
+        <span className="text-xs text-muted-foreground">(42 avaliações)</span>
       </div>
 
-      {/* Status de Estoque */}
-      {product.inStock ? (
-        <div className="flex items-center gap-2 text-green-600">
-          <Check className="w-5 h-5" />
-          <span className="font-medium">Em estoque</span>
-        </div>
-      ) : (
-        <div className="text-red-600 font-medium">Produto indisponível</div>
-      )}
-
       {/* Preço */}
-      <div className="space-y-2">
+      <div className="space-y-0.5">
         {product.discount && product.originalPrice && (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground line-through">
+            <span className="text-xs text-muted-foreground line-through">
               De:{" "}
               {new Intl.NumberFormat("pt-BR", {
                 style: "currency",
                 currency: "BRL",
               }).format(product.originalPrice)}
             </span>
-            <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+            <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
               -{product.discount}%
             </span>
           </div>
         )}
-        <div className="text-3xl md:text-4xl font-bold text-primary">
+        <div className="text-2xl md:text-4xl font-bold text-primary">
           Por:{" "}
           {new Intl.NumberFormat("pt-BR", {
             style: "currency",
@@ -88,7 +79,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
           }).format(product.price)}
         </div>
         {product.discount && (
-          <div className="text-sm text-green-600 font-medium">
+          <div className="text-xs text-green-600 font-medium">
             Economize{" "}
             {new Intl.NumberFormat("pt-BR", {
               style: "currency",
@@ -99,30 +90,36 @@ export function ProductInfo({ product }: ProductInfoProps) {
       </div>
 
       {/* Benefícios */}
-      <div className="space-y-2 text-sm">
+      <div className="space-y-1 text-xs">
         <div className="flex items-center gap-2 text-green-600">
-          <Check className="w-4 h-4" />
+          <Check className="w-3.5 h-3.5" />
           <span>À vista no Pix e em até 10x no Cartão</span>
         </div>
         <div className="flex items-center gap-2 text-green-600">
-          <Check className="w-4 h-4" />
+          <Check className="w-3.5 h-3.5" />
           <span>Entrega a partir de R$ 15,00 - Região de Ribeirão Preto</span>
         </div>
-        {/*         <div className="flex items-center gap-2 text-muted-foreground">
-          <Check className="w-4 h-4" />
-          <span>Garantia de 30 dias</span>
-        </div>
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <Check className="w-4 h-4" />
-          <span>Devolução em até 10 dias úteis</span>
-        </div> */}
       </div>
 
-      {/* Seletor de Quantidade - Client Island */}
-      <QuantitySelector price={product.price} />
+      {/* Seletor de Quantidade e Status de Estoque */}
+      <div className="flex items-center justify-between">
+        <QuantitySelector price={product.price} maxQuantity={product.stock} />
+
+        {/* Status de Estoque */}
+        {product.inStock ? (
+          <div className="flex items-center gap-1.5 text-green-600">
+            <Check className="w-4 h-4" />
+            <span className="text-sm font-medium">Em estoque</span>
+          </div>
+        ) : (
+          <div className="text-red-600 text-sm font-medium">
+            Produto indisponível
+          </div>
+        )}
+      </div>
 
       {/* Botões de Ação */}
-      <div className="space-y-3">
+      <div className="space-y-2">
         {/* Add to Cart - Client Island */}
         <AddToCartButton
           productId={product.id}
