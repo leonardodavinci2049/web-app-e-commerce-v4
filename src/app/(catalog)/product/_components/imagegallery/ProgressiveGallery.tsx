@@ -15,9 +15,14 @@ interface ProgressiveGalleryProps {
  * ProgressiveGallery - Handles progressive image loading for product gallery
  *
  * Loading States:
- * - T0 (Initial): Shows fallbackImage immediately as placeholder
+ * - T0 (Initial): Shows fallbackImage with 4 temporary thumbnails to prevent layout shift
  * - T1 (Transition): Gallery data arrives, prepares for smooth transition
- * - T2 (Complete): Full gallery with thumbnails and navigation
+ * - T2 (Complete): Full gallery with real thumbnails and navigation
+ *
+ * Layout Shift Prevention:
+ * - Creates temporary thumbnails using the fallback image
+ * - Ensures consistent layout between initial load and full gallery
+ * - Prevents jarring resize when real images load
  *
  * This component ensures users see content immediately while the full
  * gallery loads in the background.
@@ -29,36 +34,33 @@ export function ProgressiveGallery({
 }: ProgressiveGalleryProps) {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [displayImages, setDisplayImages] = useState<GalleryImageData[]>(() => {
-    // Initial state: show fallback image immediately (T0)
+    // Initial state: show fallback image with temporary thumbnails (T0)
+    // Creates 4 temporary thumbnails to prevent layout shift when real images load
     if (fallbackImage) {
-      return [
-        {
-          id: "fallback-initial",
-          originalName: "product-image",
-          urls: {
-            original: fallbackImage,
-            preview: fallbackImage,
-            medium: fallbackImage,
-            thumbnail: fallbackImage,
-          },
-          isPrimary: true,
-        },
-      ];
-    }
-    // No fallback available, show placeholder
-    return [
-      {
-        id: "placeholder",
-        originalName: "no-image",
+      return Array.from({ length: 4 }, (_, index) => ({
+        id: `fallback-temp-${index}`,
+        originalName: "product-image",
         urls: {
-          original: "/images/product/no-image.jpeg",
-          preview: "/images/product/no-image.jpeg",
-          medium: "/images/product/no-image.jpeg",
-          thumbnail: "/images/product/no-image.jpeg",
+          original: fallbackImage,
+          preview: fallbackImage,
+          medium: fallbackImage,
+          thumbnail: fallbackImage,
         },
-        isPrimary: true,
+        isPrimary: index === 0,
+      }));
+    }
+    // No fallback available, show placeholder with temporary thumbnails
+    return Array.from({ length: 4 }, (_, index) => ({
+      id: `placeholder-temp-${index}`,
+      originalName: "no-image",
+      urls: {
+        original: "/images/product/no-image.jpeg",
+        preview: "/images/product/no-image.jpeg",
+        medium: "/images/product/no-image.jpeg",
+        thumbnail: "/images/product/no-image.jpeg",
       },
-    ];
+      isPrimary: index === 0,
+    }));
   });
 
   useEffect(() => {
@@ -86,11 +88,11 @@ export function ProgressiveGallery({
       return () => clearTimeout(timer);
     }
 
-    // Gallery is empty but we have fallback - keep showing fallback
+    // Gallery is empty but we have fallback - keep showing fallback with temporary thumbnails
     if (galleryImages.length === 0 && fallbackImage) {
-      setDisplayImages([
-        {
-          id: "fallback",
+      setDisplayImages(
+        Array.from({ length: 4 }, (_, index) => ({
+          id: `fallback-${index}`,
           originalName: "product-image",
           urls: {
             original: fallbackImage,
@@ -98,9 +100,9 @@ export function ProgressiveGallery({
             medium: fallbackImage,
             thumbnail: fallbackImage,
           },
-          isPrimary: true,
-        },
-      ]);
+          isPrimary: index === 0,
+        })),
+      );
     }
   }, [galleryImages, fallbackImage]);
 
