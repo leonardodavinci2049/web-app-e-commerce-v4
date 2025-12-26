@@ -4,7 +4,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { GoogleAnalytics } from "@/components/analytics";
 import { CartSidebar } from "@/components/cart/CartSidebar";
-import { SnowEffect } from "@/components/seasonal/SnowEffect";
+
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { CartProvider } from "@/contexts/CartContext";
@@ -86,7 +86,7 @@ export default function RootLayout({
             {children}
             <CartSidebar />
           </CartProvider>
-          <SnowEffect />
+
           <Toaster />
         </ThemeProvider>
       </body>
