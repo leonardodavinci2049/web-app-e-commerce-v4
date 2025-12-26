@@ -6,7 +6,6 @@ import {
 } from "@/app/actions/product";
 import { ProductGridSkeleton } from "@/components/skeletons";
 import { envs } from "@/core/config";
-import { Breadcrumbs } from "../_components/breadcrumbs";
 import { CategorySidebar } from "../_components/category-sidebar/category-sidebar";
 import { MobileCategoryNav } from "../_components/mobile-category/mobile-category-nav";
 
@@ -165,15 +164,6 @@ async function CategoryContent({
     stockOnly,
   );
 
-  // Construir breadcrumbs a partir dos slugs
-  const breadcrumbs = slugParts.map((slug, index) => {
-    const label = slug
-      .replace(/-/g, " ")
-      .replace(/\b\w/g, (c) => c.toUpperCase());
-    const href = `/category/${slugParts.slice(0, index + 1).join("/")}`;
-    return { label, href };
-  });
-
   // Título da página - usar nome da categoria se encontrado, senão formatar o slug
   const pageTitle =
     taxonomyInfo.name ||
@@ -182,25 +172,27 @@ async function CategoryContent({
       .replace(/\b\w/g, (c) => c.toUpperCase());
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-2">
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Sidebar (Desktop) */}
         <CategorySidebar categories={categories} />
 
         <div className="flex-1">
-          {/* Mobile Navigation */}
-          <MobileCategoryNav categories={categories} />
           {/* Breadcrumbs */}
-          <Breadcrumbs items={breadcrumbs} />
+          {/*       <Breadcrumbs items={breadcrumbs} /> */}
           {/* Header */}
           <div className="mb-2">
-            <h1 className="text-3xl font-bold tracking-tight mb-2">
+            {/* Mobile: centralizado com fundo */}
+            <h1 className="lg:hidden text-xl font-bold tracking-tight py-3 -mx-4 px-4 text-center bg-primary text-primary-foreground">
               {pageTitle}
             </h1>
-            {/* <p className="text-muted-foreground">
-              {products.length} produtos encontrados
-            </p> OLD LOCATION */}
+            {/* Desktop: estilo original */}
+            <h1 className="hidden lg:block text-3xl font-bold tracking-tight mb-2">
+              {pageTitle}
+            </h1>
           </div>
+          {/* Mobile Navigation */}
+          <MobileCategoryNav categories={categories} />
           {/* Product Listing with Toggle */}
           <CategoryProductListing
             products={products}
