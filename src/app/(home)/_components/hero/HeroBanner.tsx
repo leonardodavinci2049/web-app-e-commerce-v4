@@ -8,7 +8,7 @@ const slides = [
     title: "Compre online e retire na loja!",
     subtitle: "Mais comodidade para o seu dia a dia",
     cta: "Conheça a promoção",
-    image: "/slides/image2.png",
+    image: "/slides/image1.png",
     bg: "bg-gradient-to-r from-primary to-blue-600",
   },
   {
@@ -16,7 +16,7 @@ const slides = [
     title: "Ofertas de Hardware",
     subtitle: "Os melhores componentes para o seu PC",
     cta: "Ver Ofertas",
-    image: "/slides/image1.jpg",
+    image: "/slides/image2.png",
     bg: "bg-gradient-to-r from-slate-800 to-slate-900",
   },
 ];
