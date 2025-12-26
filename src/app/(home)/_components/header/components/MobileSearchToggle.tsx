@@ -4,10 +4,10 @@ import { Search, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import {
   createContext,
+  type ReactNode,
   useContext,
   useEffect,
   useState,
-  type ReactNode,
 } from "react";
 import { SearchInput } from "@/components/search/SearchInput";
 import { Button } from "@/components/ui/button";

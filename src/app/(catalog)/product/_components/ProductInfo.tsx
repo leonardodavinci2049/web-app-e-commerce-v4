@@ -32,7 +32,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       </h1>
 
       {/* SKU */}
-  {/*     <div className="text-sm text-muted-foreground">
+      {/*     <div className="text-sm text-muted-foreground">
         SKU: {product.sku || "N/A"}
       </div> */}
 
@@ -108,7 +108,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
           <Check className="w-4 h-4" />
           <span>Entrega a partir de R$ 15,00 - Região de Ribeirão Preto</span>
         </div>
-{/*         <div className="flex items-center gap-2 text-muted-foreground">
+        {/*         <div className="flex items-center gap-2 text-muted-foreground">
           <Check className="w-4 h-4" />
           <span>Garantia de 30 dias</span>
         </div>
