@@ -31,13 +31,14 @@ export async function MobileMainHeader() {
                 className="inline-flex items-center"
                 aria-label="Mundial Megastore - Página inicial"
               >
-                <div className="relative w-40 h-8 xs:w-44 xs:h-9">
+                <div className="relative w-48 h-10 xs:w-56 xs:h-12">
                   <Image
                     src="/images/logo/logo-header-mobile.png"
                     alt="Mundial Megastore - Informática, Eletrônicos e Perfumes Importados"
                     fill
-                    className="object-contain"
+                    className="object-contain drop-shadow-sm"
                     priority
+                    quality={100}
                   />
                 </div>
               </Link>
