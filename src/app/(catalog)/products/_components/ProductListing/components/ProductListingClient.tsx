@@ -4,7 +4,8 @@ import { useState } from "react";
 import type { CategoryMap, TransformedProduct } from "@/types/product";
 import { LoadMoreButton } from "../../LoadMoreButton";
 import { ProductGrid } from "../../ProductGrid";
-import { ProductFilters } from "./ProductFilters";
+
+//import { ProductFilters } from "./ProductFilters";
 
 const PRODUCTS_PER_PAGE = 20;
 
@@ -27,23 +28,23 @@ export function ProductListingClient({
   categoryMap,
   searchTerm,
 }: ProductListingClientProps) {
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedSubcategory, setSelectedSubcategory] = useState("");
+  /*   const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSubcategory, setSelectedSubcategory] = useState(""); */
   const [displayCount, setDisplayCount] = useState(PRODUCTS_PER_PAGE);
   const [loading, setLoading] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  const handleCategoryChange = (category: string) => {
+  /*   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
     setSelectedSubcategory("");
     setDisplayCount(PRODUCTS_PER_PAGE);
   };
-
-  const handleSubcategoryChange = (subcategory: string) => {
+ */
+  /*   const handleSubcategoryChange = (subcategory: string) => {
     setSelectedSubcategory(subcategory);
     setDisplayCount(PRODUCTS_PER_PAGE);
   };
-
+ */
   const loadMore = () => {
     setLoading(true);
     setTimeout(() => {
@@ -53,14 +54,14 @@ export function ProductListingClient({
   };
 
   // Subcategorias baseadas na categoria selecionada
-  const subcategories = selectedCategory
+  /*   const subcategories = selectedCategory
     ? categoryMap[selectedCategory] || []
     : [];
-
+ */
   // Filtrar produtos por categoria e subcategoria
-  let filteredProducts = products;
+  const filteredProducts = products;
 
-  if (selectedCategory) {
+  /*   if (selectedCategory) {
     filteredProducts = filteredProducts.filter(
       (p) => p.category === selectedCategory,
     );
@@ -70,7 +71,7 @@ export function ProductListingClient({
     filteredProducts = filteredProducts.filter(
       (p) => p.subcategory === selectedSubcategory,
     );
-  }
+  } */
 
   // Produtos a exibir (com paginação)
   const displayedProducts = filteredProducts.slice(0, displayCount);
@@ -81,14 +82,14 @@ export function ProductListingClient({
   return (
     <>
       {/* Filtros */}
-      <ProductFilters
+      {/*       <ProductFilters
         categories={categories}
         subcategories={subcategories}
         selectedCategory={selectedCategory}
         selectedSubcategory={selectedSubcategory}
         onCategoryChange={handleCategoryChange}
         onSubcategoryChange={handleSubcategoryChange}
-      />
+      /> */}
 
       {/* Contador de Produtos e Toggle de Visualização */}
       <section className="bg-background py-4 border-b border-border">
