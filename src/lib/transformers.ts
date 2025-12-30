@@ -136,7 +136,11 @@ export function transformProductDetail(detail: ProductWebDetail): UIProduct {
     sku: detail.SKU ? String(detail.SKU) : undefined,
     slug: detail.SLUG ?? undefined,
     name: detail.PRODUTO,
-    description: detail.DESCRICAO_TAB ?? detail.DESCRICAO_VENDA ?? null,
+    description:
+      detail.ANOTACOES ??
+      detail.DESCRICAO_TAB ??
+      detail.DESCRICAO_VENDA ??
+      null,
     price: parsePrice(detail.VL_VAREJO),
     image: getImagePath(detail.PATH_IMAGEM),
     categoryId: detail.ID_FAMILIA ? String(detail.ID_FAMILIA) : "",
