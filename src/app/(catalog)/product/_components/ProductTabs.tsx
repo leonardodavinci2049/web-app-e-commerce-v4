@@ -1,3 +1,6 @@
+"use client";
+
+import DOMPurify from "isomorphic-dompurify";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface ProductTabsProps {
@@ -10,11 +13,60 @@ interface ProductTabsProps {
   };
 }
 
+/**
+ * Sanitizes HTML content to prevent XSS attacks
+ */
+function sanitizeHtml(html: string): string {
+  return DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: [
+      "p",
+      "br",
+      "strong",
+      "b",
+      "i",
+      "em",
+      "u",
+      "s",
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5",
+      "h6",
+      "ul",
+      "ol",
+      "li",
+      "a",
+      "span",
+      "div",
+      "table",
+      "thead",
+      "tbody",
+      "tr",
+      "th",
+      "td",
+    ],
+    ALLOWED_ATTR: ["href", "target", "rel", "class", "style"],
+  });
+}
+
+/**
+ * Checks if the content contains HTML tags
+ */
+function containsHtml(content: string): boolean {
+  return /<[a-z][\s\S]*>/i.test(content);
+}
+
 export function ProductTabs({
   description,
   specifications,
   shipping,
 }: ProductTabsProps) {
+  const isHtmlContent = containsHtml(description);
+  const sanitizedDescription = isHtmlContent
+    ? sanitizeHtml(description)
+    : description;
+
   return (
     <Tabs defaultValue="description" className="w-full">
       <TabsList className="grid w-full grid-cols-3">
@@ -24,11 +76,38 @@ export function ProductTabs({
       </TabsList>
 
       <TabsContent value="description" className="mt-6">
-        <div className="prose prose-sm max-w-none">
+        <div className="prose prose-sm max-w-none dark:prose-invert">
           <h3 className="text-lg font-semibold mb-4">Sobre o Produto</h3>
-          <p className="text-muted-foreground whitespace-pre-line">
-            {description}
-          </p>
+          {isHtmlContent ? (
+            <div
+              className="
+                text-muted-foreground
+                [&>p]:mb-4 [&>p]:leading-relaxed
+                [&>br]:block [&>br]:content-[''] [&>br]:mb-2
+                [&>div]:mb-4
+                [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:mb-4 [&>ul]:space-y-1
+                [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:mb-4 [&>ol]:space-y-1
+                [&_li]:mb-1
+                [&>h1]:text-xl [&>h1]:font-bold [&>h1]:mb-3 [&>h1]:mt-4
+                [&>h2]:text-lg [&>h2]:font-bold [&>h2]:mb-3 [&>h2]:mt-4
+                [&>h3]:text-base [&>h3]:font-semibold [&>h3]:mb-2 [&>h3]:mt-3
+                [&>h4]:text-sm [&>h4]:font-semibold [&>h4]:mb-2 [&>h4]:mt-3
+                [&>a]:text-primary [&>a]:underline [&>a]:hover:opacity-80
+                [&>strong]:font-semibold [&>b]:font-semibold
+                [&>em]:italic [&>i]:italic
+                [&>table]:w-full [&>table]:border-collapse [&>table]:mb-4
+                [&_th]:border [&_th]:border-border [&_th]:px-3 [&_th]:py-2 [&_th]:bg-muted [&_th]:text-left
+                [&_td]:border [&_td]:border-border [&_td]:px-3 [&_td]:py-2
+                leading-relaxed
+              "
+              // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML is sanitized via DOMPurify
+              dangerouslySetInnerHTML={{ __html: sanitizedDescription }}
+            />
+          ) : (
+            <p className="text-muted-foreground whitespace-pre-line leading-relaxed">
+              {description}
+            </p>
+          )}
         </div>
       </TabsContent>
 
