@@ -203,7 +203,7 @@ export function ProductCard({
                   }).format(finalPrice)}
                 </span>
                 <span className="text-[9px] md:text-[10px] text-muted-foreground">
-                  À vista no Pix e em até {maxInstallments}x no Cartão
+                  A Vista no Pix ou Consulte em {maxInstallments}x no Cartão
                 </span>
               </div>
             </div>
@@ -309,7 +309,7 @@ export function ProductCard({
               }).format(finalPrice)}
             </span>
             <span className="text-[9px] md:text-[10px] text-muted-foreground">
-              À vista no Pix e em até {maxInstallments}x no Cartão
+              À vista no Pix ou Consulte em {maxInstallments}x no Cartão
             </span>
           </div>
 

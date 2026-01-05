@@ -123,7 +123,7 @@ export function ProductCardHome({ product }: ProductCardProps) {
               }).format(finalPrice)}
             </span>
             <span className="text-[10px] text-muted-foreground">
-              À vista no Pix e em até {maxInstallments}x no Cartão
+              A Vista no Pix ou Consulte em {maxInstallments}x no Cartão
             </span>
           </div>
 
