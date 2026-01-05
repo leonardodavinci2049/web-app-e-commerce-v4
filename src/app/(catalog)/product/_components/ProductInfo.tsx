@@ -2,6 +2,7 @@ import { Check } from "lucide-react";
 import { AddToCartButton } from "@/components/product/actions/AddToCartButton";
 import { QuantitySelector } from "@/components/product/actions/QuantitySelector";
 import { WhatsAppProductButton } from "@/components/product/actions/WhatsAppProductButton";
+import { envs } from "@/core/config";
 
 interface ProductInfoProps {
   product: {
@@ -25,6 +26,7 @@ interface ProductInfoProps {
  * are imported as islands for interactive functionality
  */
 export function ProductInfo({ product }: ProductInfoProps) {
+   const maxInstallments = envs.NEXT_PUBLIC_PAY_IN_UP_TO;
   return (
     <div className="space-y-2 lg:space-y-4">
       {/* Título */}
@@ -93,7 +95,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       <div className="space-y-1 text-xs">
         <div className="flex items-center gap-2 text-green-600">
           <Check className="w-3.5 h-3.5" />
-          <span>À vista no Pix e em até 10x no Cartão</span>
+          <span>A Vista no Pix ou Consulte em  {maxInstallments}x no Cartão</span>
         </div>
         <div className="flex items-center gap-2 text-green-600">
           <Check className="w-3.5 h-3.5" />
