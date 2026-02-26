@@ -1,8 +1,4 @@
-import {
-  extractCategoryMap,
-  extractUniqueCategories,
-  transformProducts,
-} from "@/lib/product-utils";
+import { transformProducts } from "@/lib/product-utils";
 import type { Category, RawProduct } from "@/types/product";
 import { ProductListingClient } from "./components/ProductListingClient";
 
@@ -19,14 +15,10 @@ export function ProductListing({
 }: ProductListingProps) {
   // Transformação de dados no servidor
   const transformedProducts = transformProducts(initialProducts, categories);
-  const uniqueCategories = extractUniqueCategories(initialProducts, categories);
-  const categoryMap = extractCategoryMap(initialProducts, categories);
 
   return (
     <ProductListingClient
       products={transformedProducts}
-      categories={uniqueCategories}
-      categoryMap={categoryMap}
       searchTerm={searchTerm}
     />
   );
