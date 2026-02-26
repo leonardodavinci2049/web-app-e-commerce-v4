@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { CategoryMap, TransformedProduct } from "@/types/product";
+import type { TransformedProduct } from "@/types/product";
 import { LoadMoreButton } from "../../LoadMoreButton";
 import { ProductGrid } from "../../ProductGrid";
 
@@ -15,8 +15,6 @@ import { ViewToggle } from "@/components/product/ViewToggle";
 
 interface ProductListingClientProps {
   products: TransformedProduct[];
-  categories: string[];
-  categoryMap: CategoryMap;
   searchTerm?: string;
 }
 
@@ -24,8 +22,6 @@ interface ProductListingClientProps {
 
 export function ProductListingClient({
   products,
-  categories,
-  categoryMap,
   searchTerm,
 }: ProductListingClientProps) {
   /*   const [selectedCategory, setSelectedCategory] = useState("");
