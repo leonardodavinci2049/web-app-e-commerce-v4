@@ -61,7 +61,7 @@ export function MobileSearchButton() {
 // Container do SearchInput
 export function MobileSearchContainer() {
   const context = useContext(SearchContext);
-  if (!context || !context.isOpen) return null;
+  if (!context?.isOpen) return null;
 
   return (
     <div className="px-4 py-3 bg-card border-t border-border">
