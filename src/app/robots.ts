@@ -15,15 +15,15 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/products", "/product/", "/category/", "/lancamentos"],
+        allow: ["/", "/products", "/product/", "/category/"],
         disallow: [
           "/api/",
           "/cart",
           "/checkout",
           "/minha-conta",
           "/auth/",
-          "/_next/",
           "/private/",
+          "/lancamentos",
         ],
       },
     ],

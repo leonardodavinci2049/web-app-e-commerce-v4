@@ -89,42 +89,10 @@ export default function FooterHome() {
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="/catalog"
+                  href="/products"
                   className="text-sm text-gray-400 transition-colors hover:text-white cursor-pointer"
                 >
                   Catálogo de Produtos
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
-                  className="text-sm text-gray-400 transition-colors hover:text-white"
-                >
-                  Quem Somos
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="text-sm text-gray-400 transition-colors hover:text-white"
-                >
-                  Fale Conosco
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/return"
-                  className="text-sm text-gray-400 transition-colors hover:text-white"
-                >
-                  Política de Devolução
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/account"
-                  className="text-sm text-gray-400 transition-colors hover:text-white"
-                >
-                  Área do Cliente
                 </Link>
               </li>
             </ul>

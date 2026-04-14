@@ -5,6 +5,7 @@ import { WishlistButton } from "@/components/product/actions/WishlistButton";
 import { ProductRating } from "@/components/product/ProductRating";
 import { envs } from "@/core/config";
 import { getProductPath } from "@/lib/slug";
+import { toTitleCase } from "@/lib/text-utils";
 
 interface ProductCardProps {
   product: {
@@ -140,7 +141,7 @@ export function ProductCard({
           <div className="relative w-full h-full">
             <Image
               src={product.image}
-              alt={product.name}
+              alt={toTitleCase(product.name)}
               fill
               sizes="(min-width: 768px) 192px, 112px"
               className={`object-contain transition-transform duration-500 ${
@@ -157,9 +158,9 @@ export function ProductCard({
               <Link
                 href={productUrl}
                 className="font-medium text-foreground text-sm md:text-lg mb-1 block hover:text-primary transition-colors line-clamp-2 md:line-clamp-none"
-                title={product.name}
+                title={toTitleCase(product.name)}
               >
-                {product.name}
+                {toTitleCase(product.name)}
               </Link>
               {/* Wishlist Button - Client Island */}
               <div className="z-10 opacity-0 group-hover:opacity-100 transition-opacity ml-2 shrink-0 hidden md:block">
@@ -255,7 +256,7 @@ export function ProductCard({
         <div className="relative w-full h-full">
           <Image
             src={product.image}
-            alt={product.name}
+            alt={toTitleCase(product.name)}
             fill
             sizes="(min-width: 768px) 25vw, (min-width: 640px) 50vw, 100vw"
             className={`object-contain transition-transform duration-500 ${
@@ -271,9 +272,9 @@ export function ProductCard({
           <Link
             href={productUrl}
             className="font-medium text-foreground line-clamp-2 hover:text-primary transition-colors text-xs md:text-sm mb-1"
-            title={product.name}
+            title={toTitleCase(product.name)}
           >
-            {product.name}
+            {toTitleCase(product.name)}
           </Link>
 
           {/* Product Rating */}

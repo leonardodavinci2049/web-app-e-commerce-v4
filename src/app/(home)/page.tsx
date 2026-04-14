@@ -49,6 +49,11 @@ export default async function HomePage() {
       <NavigationMenu />
 
       <main className="grow">
+        <h1 className="sr-only">
+          {envs.NEXT_PUBLIC_COMPANY_NAME} —{" "}
+          {envs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION}
+        </h1>
+
         {/* Hero Banner with Suspense */}
         <Suspense fallback={<HeroBannerSkeleton />}>
           <HeroBanner />
@@ -92,7 +97,7 @@ export default async function HomePage() {
         {/* Product Category Sections5*/}
         <Suspense
           fallback={renderLoadingSection(
-            "home-produtos-categoria-3",
+            "home-produtos-categoria-4",
             envs.HOME_SECTION_7_TITLE,
           )}
         >
@@ -102,8 +107,8 @@ export default async function HomePage() {
         {/* Product Category Sections 5*/}
         <Suspense
           fallback={renderLoadingSection(
-            "home-produtos-categoria-3",
-            envs.HOME_SECTION_4_TITLE,
+            "home-produtos-categoria-5",
+            envs.HOME_SECTION_8_TITLE,
           )}
         >
           <ProductSectionCat05 />
