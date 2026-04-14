@@ -1,17 +1,17 @@
 "use client";
 
 import {
+  AtSign,
+  Camera,
   Clock,
   CreditCard,
-  Facebook,
-  Instagram,
+  Globe,
   Mail,
   MapPin,
   Phone,
   Send,
   Shield,
   Truck,
-  Twitter,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -64,21 +64,21 @@ export default function FooterHome() {
                 className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
                 aria-label="Facebook"
               >
-                <Facebook className="h-5 w-5" />
+                <Globe className="h-5 w-5" />
               </Link>
               <Link
                 href="#"
                 className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
                 aria-label="Instagram"
               >
-                <Instagram className="h-5 w-5" />
+                <Camera className="h-5 w-5" />
               </Link>
               <Link
                 href="#"
                 className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
                 aria-label="Twitter"
               >
-                <Twitter className="h-5 w-5" />
+                <AtSign className="h-5 w-5" />
               </Link>
             </div>
           </div>
@@ -135,7 +135,7 @@ export default function FooterHome() {
             <h3 className="text-lg font-semibold text-white">Contato</h3>
             <div className="space-y-3">
               <div className="flex items-start space-x-3">
-                <MapPin className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-400" />
+                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-blue-400" />
                 <div className="text-sm">
                   <p className="text-gray-400">
                     {envs.NEXT_PUBLIC_COMPANY_ADDRESS}
@@ -147,7 +147,7 @@ export default function FooterHome() {
               </div>
 
               <div className="flex items-center space-x-3">
-                <Phone className="h-5 w-5 flex-shrink-0 text-blue-400" />
+                <Phone className="h-5 w-5 shrink-0 text-blue-400" />
                 <a
                   href={`tel:${process.env.NEXT_PUBLIC_COMPANY_PHONE}`}
                   className="text-sm text-gray-400 transition-colors hover:text-white"
@@ -157,7 +157,7 @@ export default function FooterHome() {
               </div>
 
               <div className="flex items-center space-x-3">
-                <Mail className="h-5 w-5 flex-shrink-0 text-blue-400" />
+                <Mail className="h-5 w-5 shrink-0 text-blue-400" />
                 <a
                   href={`mailto:${process.env.NEXT_PUBLIC_COMPANY_EMAIL}`}
                   className="text-sm text-gray-400 transition-colors hover:text-white"
@@ -167,7 +167,7 @@ export default function FooterHome() {
               </div>
 
               <div className="flex items-center space-x-3">
-                <Clock className="h-5 w-5 flex-shrink-0 text-blue-400" />
+                <Clock className="h-5 w-5 shrink-0 text-blue-400" />
                 <div className="text-sm">
                   <p className="text-gray-400">
                     Seg - Sex: {envs.NEXT_PUBLIC_COMPANY_OPENING_HOURS}
