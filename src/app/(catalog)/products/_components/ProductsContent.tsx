@@ -16,6 +16,8 @@ export async function ProductsContent({ searchParams }: ProductsContentProps) {
   const sortOrd =
     typeof params.sort_ord === "string" ? Number(params.sort_ord) : undefined;
   const stockOnly = params.stock === "1";
+  const page =
+    typeof params.page === "string" ? Math.max(1, Number(params.page)) : 1;
 
   // Fetch categories for sidebar
   const categories = await fetchCategoriesAction();
@@ -50,6 +52,7 @@ export async function ProductsContent({ searchParams }: ProductsContentProps) {
             sortCol={sortCol}
             sortOrd={sortOrd}
             stockOnly={stockOnly}
+            page={page}
           />
         </div>
       </div>

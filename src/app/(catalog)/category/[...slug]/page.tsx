@@ -4,6 +4,7 @@ import {
   fetchCategoriesAction,
   fetchProductsByTaxonomyAction,
 } from "@/app/actions/product";
+import { PaginationNav } from "@/components/product/PaginationNav";
 import { BreadcrumbJsonLd, ItemListJsonLd } from "@/components/seo";
 import { ProductGridSkeleton } from "@/components/skeletons";
 import { envs } from "@/core/config";
@@ -53,6 +54,10 @@ export async function generateMetadata({
   const resolvedSearchParams = await searchParams;
   const slugParts = resolvedParams.slug;
   const taxonomySlug = slugParts[slugParts.length - 1];
+  const page =
+    typeof resolvedSearchParams.page === "string"
+      ? Math.max(1, Number(resolvedSearchParams.page))
+      : 1;
 
   // Buscar nome real da categoria via API
   const categories = await fetchCategoriesAction();
@@ -74,7 +79,9 @@ export async function generateMetadata({
   const shouldNoindex = filterCount >= 2;
 
   const categoryUrl = `/category/${slugParts.join("/")}`;
-  const fullUrl = `${envs.NEXT_PUBLIC_BASE_URL_APP}${categoryUrl}`;
+  // Canonical aponta para si mesma (cada página paginada é canônica)
+  const canonicalUrl = page > 1 ? `${categoryUrl}?page=${page}` : categoryUrl;
+  const fullUrl = `${envs.NEXT_PUBLIC_BASE_URL_APP}${canonicalUrl}`;
 
   const pageTitle = `${title} | Compre na ${envs.NEXT_PUBLIC_COMPANY_NAME}`;
   const pageDescription = `Encontre os melhores ${title} na ${envs.NEXT_PUBLIC_COMPANY_NAME}. Preços imbatíveis, parcele em até ${envs.NEXT_PUBLIC_PAY_IN_UP_TO}x sem juros. Entrega para todo o Brasil!`;
@@ -83,7 +90,7 @@ export async function generateMetadata({
     title: pageTitle,
     description: pageDescription,
     alternates: {
-      canonical: categoryUrl,
+      canonical: canonicalUrl,
     },
     openGraph: {
       type: "website",
@@ -139,7 +146,12 @@ async function CategoryContent({
       ? Number(resolvedSearchParams.sort_ord)
       : undefined;
   const stockOnly = resolvedSearchParams.stock === "1";
+  const page =
+    typeof resolvedSearchParams.page === "string"
+      ? Math.max(1, Number(resolvedSearchParams.page))
+      : 1;
 
+  const ITEMS_PER_PAGE = 30;
   const slugParts = resolvedParams.slug;
 
   // Usar o último segmento do slug para filtrar produtos
@@ -211,16 +223,21 @@ async function CategoryContent({
   const effectiveSlug = taxonomyInfo.slug || taxonomySlug;
   const taxonomyId = taxonomyInfo.id;
 
-  // Buscar produtos por slug ou ID
-  const products = await fetchProductsByTaxonomyAction(
+  // Buscar produtos por slug ou ID (com paginação)
+  const productsRaw = await fetchProductsByTaxonomyAction(
     effectiveSlug,
     taxonomyId,
-    undefined, // limit
-    undefined, // page
+    ITEMS_PER_PAGE + 1, // limit: +1 para detectar se há próxima página
+    page, // page
     sortCol,
     sortOrd,
     stockOnly,
   );
+
+  const hasNextPage = productsRaw.length > ITEMS_PER_PAGE;
+  const products = hasNextPage
+    ? productsRaw.slice(0, ITEMS_PER_PAGE)
+    : productsRaw;
 
   // Título da página - usar nome da categoria se encontrado, senão formatar o slug
   const pageTitle = toTitleCase(
@@ -260,7 +277,7 @@ async function CategoryContent({
           items={products.slice(0, 30).map((p, i) => ({
             name: toTitleCase(p.name),
             url: getProductPath(p.name, p.id),
-            position: i + 1,
+            position: (page - 1) * ITEMS_PER_PAGE + i + 1,
           }))}
         />
       )}
@@ -288,6 +305,21 @@ async function CategoryContent({
             sortCol={sortCol}
             sortOrd={sortOrd}
             stockOnly={stockOnly}
+          />
+          {/* Pagination Nav for crawlability */}
+          <PaginationNav
+            currentPage={page}
+            hasNextPage={hasNextPage}
+            basePath={`/category/${slugParts.join("/")}`}
+            params={{
+              ...(sortCol !== undefined && {
+                sort_col: String(sortCol),
+              }),
+              ...(sortOrd !== undefined && {
+                sort_ord: String(sortOrd),
+              }),
+              ...(stockOnly && { stock: "1" }),
+            }}
           />
         </div>
       </div>

@@ -2,16 +2,20 @@ import {
   fetchCategoriesAction,
   fetchProductsAction,
 } from "@/app/actions/product";
+import { PaginationNav } from "@/components/product/PaginationNav";
 import { BreadcrumbJsonLd, ItemListJsonLd } from "@/components/seo";
 import { getProductPath } from "@/lib/slug";
 import { toTitleCase } from "@/lib/text-utils";
 import { ProductListing } from "./ProductListing/ProductListing";
+
+const PRODUCTS_PER_PAGE = 30;
 
 interface ProductListingContainerProps {
   searchTerm?: string;
   sortCol?: number;
   sortOrd?: number;
   stockOnly?: boolean;
+  page?: number;
 }
 
 export async function ProductListingContainer({
@@ -19,11 +23,31 @@ export async function ProductListingContainer({
   sortCol,
   sortOrd,
   stockOnly,
+  page = 1,
 }: ProductListingContainerProps) {
-  const [products, categories] = await Promise.all([
-    fetchProductsAction({ searchTerm, sortCol, sortOrd, stockOnly }),
+  const [productsRaw, categories] = await Promise.all([
+    fetchProductsAction({
+      searchTerm,
+      sortCol,
+      sortOrd,
+      stockOnly,
+      limit: PRODUCTS_PER_PAGE + 1,
+      page,
+    }),
     fetchCategoriesAction(),
   ]);
+
+  const hasNextPage = productsRaw.length > PRODUCTS_PER_PAGE;
+  const products = hasNextPage
+    ? productsRaw.slice(0, PRODUCTS_PER_PAGE)
+    : productsRaw;
+
+  // Build params to preserve in pagination URLs
+  const paginationParams: Record<string, string | undefined> = {};
+  if (searchTerm) paginationParams.q = searchTerm;
+  if (sortCol !== undefined) paginationParams.sort_col = String(sortCol);
+  if (sortOrd !== undefined) paginationParams.sort_ord = String(sortOrd);
+  if (stockOnly) paginationParams.stock = "1";
 
   return (
     <>
@@ -41,7 +65,7 @@ export async function ProductListingContainer({
           items={products.slice(0, 30).map((p, i) => ({
             name: toTitleCase(p.name),
             url: getProductPath(p.name, p.id),
-            position: i + 1,
+            position: (page - 1) * PRODUCTS_PER_PAGE + i + 1,
           }))}
         />
       )}
@@ -49,6 +73,12 @@ export async function ProductListingContainer({
         initialProducts={products}
         categories={categories}
         searchTerm={searchTerm}
+      />
+      <PaginationNav
+        currentPage={page}
+        hasNextPage={hasNextPage}
+        basePath="/products"
+        params={paginationParams}
       />
     </>
   );

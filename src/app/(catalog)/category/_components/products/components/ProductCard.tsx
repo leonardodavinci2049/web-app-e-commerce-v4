@@ -19,6 +19,7 @@ interface ProductCardProps {
     brand?: string;
     inStock?: boolean;
   };
+  priority?: boolean;
 }
 
 /**
@@ -29,6 +30,7 @@ interface ProductCardProps {
 export function ProductCard({
   product,
   variant = "grid",
+  priority = false,
 }: ProductCardProps & { variant?: "grid" | "list" }) {
   const productUrl = getProductPath(product.name, product.id);
   const maxInstallments = envs.NEXT_PUBLIC_PAY_IN_UP_TO;
@@ -143,6 +145,8 @@ export function ProductCard({
               alt={toTitleCase(product.name)}
               fill
               sizes="(min-width: 768px) 192px, 112px"
+              priority={priority}
+              loading={priority ? "eager" : "lazy"}
               className={`object-contain transition-transform duration-500 ${
                 isOutOfStock ? "grayscale opacity-70" : "group-hover:scale-110"
               }`}
@@ -255,6 +259,8 @@ export function ProductCard({
             alt={toTitleCase(product.name)}
             fill
             sizes="(min-width: 768px) 25vw, (min-width: 640px) 50vw, 100vw"
+            priority={priority}
+            loading={priority ? "eager" : "lazy"}
             className={`object-contain transition-transform duration-500 ${
               isOutOfStock ? "grayscale opacity-70" : "group-hover:scale-110"
             }`}

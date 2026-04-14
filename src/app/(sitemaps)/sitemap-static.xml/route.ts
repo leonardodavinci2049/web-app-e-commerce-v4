@@ -7,18 +7,17 @@ import { envs } from "@/core/config/envs";
 export async function GET() {
   const baseUrl =
     envs.NEXT_PUBLIC_BASE_URL_APP || "https://mundialmegastore.com.br";
-  const currentDate = new Date().toISOString();
 
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
-      lastModified: currentDate,
+      lastModified: "2025-10-15",
       changeFrequency: "daily",
       priority: 1.0,
     },
     {
       url: `${baseUrl}/products`,
-      lastModified: currentDate,
+      lastModified: "2025-10-15",
       changeFrequency: "daily",
       priority: 0.9,
     },

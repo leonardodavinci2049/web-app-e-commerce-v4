@@ -16,6 +16,8 @@ export async function generateMetadata({
   const sortCol = typeof params.sort_col === "string";
   const sortOrd = typeof params.sort_ord === "string";
   const stockOnly = params.stock === "1";
+  const page =
+    typeof params.page === "string" ? Math.max(1, Number(params.page)) : 1;
 
   // Contar quantos filtros estão ativos (exceto busca)
   const filterCount = [sortCol, sortOrd, stockOnly].filter(Boolean).length;
@@ -26,8 +28,8 @@ export async function generateMetadata({
   // - Página com 2+ filtros: noindex (evitar thin content)
   const shouldNoindex = !!searchTerm || filterCount >= 2;
 
-  // Canonical sempre aponta para URL limpa
-  const canonicalUrl = "/products";
+  // Canonical aponta para si mesma (cada página paginada é canônica)
+  const canonicalUrl = page > 1 ? `/products?page=${page}` : "/products";
 
   // Título dinâmico baseado na busca
   const title = searchTerm

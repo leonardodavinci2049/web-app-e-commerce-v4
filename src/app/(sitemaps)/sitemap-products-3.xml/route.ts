@@ -15,7 +15,6 @@ export async function GET() {
 
   const baseUrl =
     envs.NEXT_PUBLIC_BASE_URL_APP || "https://mundialmegastore.com.br";
-  const currentDate = new Date().toISOString();
 
   let productPages: MetadataRoute.Sitemap = [];
 
@@ -30,7 +29,6 @@ export async function GET() {
         .filter((product) => product.slug)
         .map((product) => ({
           url: `${baseUrl}${getProductPath(product.name, product.id)}`,
-          lastModified: currentDate,
           changeFrequency: "weekly" as const,
           priority: 0.8,
         }));
@@ -45,7 +43,6 @@ ${productPages
   .map(
     (item) => `  <url>
     <loc>${item.url}</loc>
-    <lastmod>${item.lastModified}</lastmod>
     <changefreq>${item.changeFrequency}</changefreq>
     <priority>${item.priority}</priority>
   </url>`,

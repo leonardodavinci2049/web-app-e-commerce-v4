@@ -15,7 +15,7 @@ export function ProductGrid({ products, viewMode = "grid" }: ProductGridProps) {
           : "flex flex-col gap-4"
       }
     >
-      {products.map((product) => (
+      {products.map((product, index) => (
         <ProductCard
           key={product.id}
           product={{
@@ -31,6 +31,7 @@ export function ProductGrid({ products, viewMode = "grid" }: ProductGridProps) {
             inStock: product.inStock,
           }}
           variant={viewMode}
+          priority={index < 4}
         />
       ))}
     </div>
