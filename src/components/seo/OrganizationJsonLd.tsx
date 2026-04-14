@@ -28,11 +28,10 @@ export function OrganizationJsonLd() {
     email: envs.NEXT_PUBLIC_COMPANY_EMAIL,
     telephone: envs.NEXT_PUBLIC_COMPANY_PHONE,
     foundingDate: envs.NEXT_PUBLIC_COMPANY_YEAR_FOUNDATION,
-    // Redes sociais - adicionar se disponível
-    // sameAs: [
-    //   "https://www.facebook.com/mundialmegas",
-    //   "https://www.instagram.com/mundialmegas",
-    // ],
+    sameAs: [
+      "https://www.facebook.com/mundialmegas",
+      "https://www.instagram.com/mundialmegas",
+    ],
   };
 
   return (

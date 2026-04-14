@@ -4,12 +4,14 @@ import {
   fetchCategoriesAction,
   fetchProductsByTaxonomyAction,
 } from "@/app/actions/product";
+import { BreadcrumbJsonLd, ItemListJsonLd } from "@/components/seo";
 import { ProductGridSkeleton } from "@/components/skeletons";
 import { envs } from "@/core/config";
+import { getProductPath } from "@/lib/slug";
 import { toTitleCase } from "@/lib/text-utils";
+import { Breadcrumbs } from "../_components/breadcrumbs";
 import { CategorySidebar } from "../_components/category-sidebar/category-sidebar";
 import { MobileCategoryNav } from "../_components/mobile-category/mobile-category-nav";
-
 import { CategoryProductListing } from "../_components/products/CategoryProductListing";
 
 interface CategoryPageProps {
@@ -151,17 +153,31 @@ async function CategoryContent({
     id: number | undefined;
     slug: string | undefined;
     name: string | undefined;
+    parentName: string | undefined;
+    parentSlug: string | undefined;
   } => {
     for (const cat of categories) {
       // Level 1 - Família
       if (cat.slug === taxonomySlug || cat.id === taxonomySlug) {
-        return { id: Number(cat.id), slug: cat.slug, name: cat.name };
+        return {
+          id: Number(cat.id),
+          slug: cat.slug,
+          name: cat.name,
+          parentName: undefined,
+          parentSlug: undefined,
+        };
       }
       if (cat.subcategories) {
         for (const sub of cat.subcategories) {
           // Level 2 - Grupo
           if (sub.slug === taxonomySlug || sub.id === taxonomySlug) {
-            return { id: Number(sub.id), slug: sub.slug, name: sub.name };
+            return {
+              id: Number(sub.id),
+              slug: sub.slug,
+              name: sub.name,
+              parentName: cat.name,
+              parentSlug: cat.slug,
+            };
           }
           // Level 3 - Subgrupo
           if (sub.children) {
@@ -171,6 +187,8 @@ async function CategoryContent({
                   id: Number(child.id),
                   slug: child.slug,
                   name: child.name,
+                  parentName: sub.name,
+                  parentSlug: sub.slug,
                 };
               }
             }
@@ -178,7 +196,13 @@ async function CategoryContent({
         }
       }
     }
-    return { id: undefined, slug: undefined, name: undefined };
+    return {
+      id: undefined,
+      slug: undefined,
+      name: undefined,
+      parentName: undefined,
+      parentSlug: undefined,
+    };
   };
 
   const taxonomyInfo = findTaxonomyInfo();
@@ -206,15 +230,48 @@ async function CategoryContent({
         .replace(/\b\w/g, (c) => c.toUpperCase()),
   );
 
+  // Construir breadcrumbs com hierarquia
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    ...(taxonomyInfo.parentName && taxonomyInfo.parentSlug
+      ? [
+          {
+            label: toTitleCase(taxonomyInfo.parentName),
+            href: `/category/${taxonomyInfo.parentSlug}`,
+          },
+        ]
+      : []),
+    { label: pageTitle, href: `/category/${effectiveSlug}` },
+  ];
+
+  const breadcrumbJsonLdItems = breadcrumbItems.map((item) => ({
+    name: item.label,
+    url: item.href,
+  }));
+
   return (
     <div className="container mx-auto px-4 py-2">
+      {/* Breadcrumb JSON-LD para rich results */}
+      <BreadcrumbJsonLd items={breadcrumbJsonLdItems} />
+      {/* ItemList JSON-LD para rich results de listagem */}
+      {products.length > 0 && (
+        <ItemListJsonLd
+          name={pageTitle}
+          items={products.slice(0, 30).map((p, i) => ({
+            name: toTitleCase(p.name),
+            url: getProductPath(p.name, p.id),
+            position: i + 1,
+          }))}
+        />
+      )}
+
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Sidebar (Desktop) */}
         <CategorySidebar categories={categories} />
 
         <div className="flex-1">
           {/* Breadcrumbs */}
-          {/*       <Breadcrumbs items={breadcrumbs} /> */}
+          <Breadcrumbs items={breadcrumbItems} />
           {/* Header */}
           <div className="mb-2">
             <h1 className="text-xl lg:text-3xl font-bold tracking-tight py-3 lg:py-0 -mx-4 lg:mx-0 px-4 lg:px-0 text-center lg:text-left bg-primary lg:bg-transparent text-primary-foreground lg:text-foreground lg:mb-2">

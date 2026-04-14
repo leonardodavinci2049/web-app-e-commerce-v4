@@ -40,24 +40,6 @@ export function ProductInfo({ product }: ProductInfoProps) {
         SKU: {product.sku || "N/A"}
       </div> */}
 
-      {/* Avaliações */}
-      <div className="flex items-center gap-2">
-        <div className="flex items-center gap-0.5">
-          {[1, 2, 3, 4, 5].map((starId, i) => (
-            <svg
-              key={starId}
-              className={`w-4 h-4 ${i < 4 ? "fill-yellow-400 text-yellow-400" : "fill-gray-300 text-gray-300"}`}
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-            >
-              <title>{i < 4 ? "Estrela preenchida" : "Estrela vazia"}</title>
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-            </svg>
-          ))}
-        </div>
-        <span className="text-xs text-muted-foreground">(42 avaliações)</span>
-      </div>
-
       {/* Preço */}
       <div className="space-y-0.5">
         {product.discount && product.originalPrice && (

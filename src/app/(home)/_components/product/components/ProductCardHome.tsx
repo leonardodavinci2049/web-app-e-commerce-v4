@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { AddToCartButton } from "@/components/product/actions/AddToCartButton";
 import { WishlistButton } from "@/components/product/actions/WishlistButton";
-import { ProductRating } from "@/components/product/ProductRating";
 import { envs } from "@/core/config";
 import { getProductPath } from "@/lib/slug";
 import { toTitleCase } from "@/lib/text-utils";
@@ -88,9 +87,6 @@ export function ProductCardHome({ product }: ProductCardProps) {
           >
             {toTitleCase(product.name)}
           </Link>
-
-          {/* Product Rating */}
-          <ProductRating productId={product.id} className="mb-1" />
 
           {/* Brand and SKU below name */}
           <div className="flex flex-col gap-0.5">

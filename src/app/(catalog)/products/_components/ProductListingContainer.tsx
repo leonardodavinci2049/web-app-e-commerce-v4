@@ -2,6 +2,9 @@ import {
   fetchCategoriesAction,
   fetchProductsAction,
 } from "@/app/actions/product";
+import { BreadcrumbJsonLd, ItemListJsonLd } from "@/components/seo";
+import { getProductPath } from "@/lib/slug";
+import { toTitleCase } from "@/lib/text-utils";
 import { ProductListing } from "./ProductListing/ProductListing";
 
 interface ProductListingContainerProps {
@@ -23,10 +26,30 @@ export async function ProductListingContainer({
   ]);
 
   return (
-    <ProductListing
-      initialProducts={products}
-      categories={categories}
-      searchTerm={searchTerm}
-    />
+    <>
+      {/* Breadcrumb JSON-LD para rich results */}
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: "/" },
+          { name: "Todos os Produtos", url: "/products" },
+        ]}
+      />
+      {/* ItemList JSON-LD para rich results de listagem */}
+      {products.length > 0 && (
+        <ItemListJsonLd
+          name="Todos os Produtos"
+          items={products.slice(0, 30).map((p, i) => ({
+            name: toTitleCase(p.name),
+            url: getProductPath(p.name, p.id),
+            position: i + 1,
+          }))}
+        />
+      )}
+      <ProductListing
+        initialProducts={products}
+        categories={categories}
+        searchTerm={searchTerm}
+      />
+    </>
   );
 }
