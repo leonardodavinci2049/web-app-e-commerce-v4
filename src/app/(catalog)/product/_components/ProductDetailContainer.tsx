@@ -6,6 +6,7 @@ import {
   fetchProductWithRelatedAction,
 } from "@/app/actions/product";
 import { ProductGridSkeleton } from "@/components/skeletons";
+import { toTitleCase } from "@/lib/text-utils";
 import { BackButton } from "./BackButton";
 import { ProductGalleryWrapper } from "./imagegallery/ProductGalleryWrapper";
 import { ProductInfo } from "./ProductInfo";
@@ -172,12 +173,14 @@ export async function ProductDetailContainer({
           Produtos
         </a>
         <span className="mx-2">/</span>
-        <span className="text-foreground font-medium">{product.name}</span>
+        <span className="text-foreground font-medium">
+          {toTitleCase(product.name)}
+        </span>
       </nav>
       <div className="flex items-start lg:hidden mb-4">
         <BackButton />
-        <h1 className="text-xl font-bold text-foreground flex-1 pt-0.5">
-          {product.name}
+        <h1 className="text-xl lg:text-3xl font-bold text-foreground flex-1 pt-0.5">
+          {toTitleCase(product.name)}
         </h1>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-12 mb-16">

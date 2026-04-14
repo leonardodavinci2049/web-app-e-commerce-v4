@@ -22,12 +22,6 @@ export async function GET() {
       changeFrequency: "daily",
       priority: 0.9,
     },
-    {
-      url: `${baseUrl}/lancamentos`,
-      lastModified: currentDate,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

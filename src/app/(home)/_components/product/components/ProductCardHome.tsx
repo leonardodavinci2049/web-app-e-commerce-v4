@@ -5,6 +5,7 @@ import { WishlistButton } from "@/components/product/actions/WishlistButton";
 import { ProductRating } from "@/components/product/ProductRating";
 import { envs } from "@/core/config";
 import { getProductPath } from "@/lib/slug";
+import { toTitleCase } from "@/lib/text-utils";
 
 interface ProductCardProps {
   product: {
@@ -67,7 +68,7 @@ export function ProductCardHome({ product }: ProductCardProps) {
         <div className="relative w-full h-full">
           <Image
             src={product.image}
-            alt={product.name}
+            alt={toTitleCase(product.name)}
             fill
             sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
             className={`object-contain transition-transform duration-500 ${
@@ -83,9 +84,9 @@ export function ProductCardHome({ product }: ProductCardProps) {
           <Link
             href={productUrl}
             className="font-medium text-foreground line-clamp-2 hover:text-primary transition-colors text-sm mb-1"
-            title={product.name}
+            title={toTitleCase(product.name)}
           >
-            {product.name}
+            {toTitleCase(product.name)}
           </Link>
 
           {/* Product Rating */}

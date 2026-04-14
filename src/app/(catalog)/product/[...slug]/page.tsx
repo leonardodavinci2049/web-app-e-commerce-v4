@@ -7,6 +7,7 @@ import {
 import { ProductDetailSkeleton } from "@/components/skeletons";
 import { envs } from "@/core/config";
 import { generateSlug } from "@/lib/slug";
+import { toTitleCase } from "@/lib/text-utils";
 import { ProductDetailContainer } from "../_components/ProductDetailContainer";
 
 interface ProductDetailPageProps {
@@ -49,13 +50,19 @@ export async function generateMetadata({
   }
 
   // Construir título otimizado para SEO
+  const productName = toTitleCase(product.name);
   const brandSuffix = product.brand ? ` ${product.brand}` : "";
-  const pageTitle = `${product.name}${brandSuffix} | ${envs.NEXT_PUBLIC_COMPANY_NAME}`;
+  const pageTitle = `${productName}${brandSuffix} | Compre na ${envs.NEXT_PUBLIC_COMPANY_NAME}`;
 
   // Descrição otimizada (≤160 chars para melhor exibição no Google)
+  const formattedPrice = new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(product.price);
+
   const rawDescription =
     product.description ||
-    `Compre ${product.name} na ${envs.NEXT_PUBLIC_COMPANY_NAME}. Confira preços e condições especiais.`;
+    `${productName} por ${formattedPrice}. Compre na ${envs.NEXT_PUBLIC_COMPANY_NAME}. Parcele em até ${envs.NEXT_PUBLIC_PAY_IN_UP_TO}x. Frete grátis acima de R$ ${envs.NEXT_PUBLIC_FREE_SHIPPING_OVER}.`;
   const metaDescription = truncateText(rawDescription, 157);
 
   // URL canônica do produto (sem parâmetros)
@@ -63,15 +70,12 @@ export async function generateMetadata({
   const canonicalUrl = `${envs.NEXT_PUBLIC_BASE_URL_APP}/product/${productSlug}`;
 
   // Preço formatado para exibição
-  const formattedPrice = new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  }).format(product.price);
+  // (já calculado acima para descrição)
 
   // Descrição para Open Graph (pode ser um pouco mais longa)
   const ogDescription = truncateText(
     product.description ||
-      `${product.name} por apenas ${formattedPrice}. Compre agora na ${envs.NEXT_PUBLIC_COMPANY_NAME}!`,
+      `${productName} por apenas ${formattedPrice}. Compre agora na ${envs.NEXT_PUBLIC_COMPANY_NAME}!`,
     200,
   );
 
@@ -96,12 +100,12 @@ export async function generateMetadata({
               url: product.image,
               width: 800,
               height: 800,
-              alt: product.name,
+              alt: productName,
             },
           ]
         : [],
       locale: "pt_BR",
-      type: "website",
+      type: "article",
     },
 
     // Twitter Card para compartilhamentos no Twitter/X

@@ -6,6 +6,7 @@ import {
 } from "@/app/actions/product";
 import { ProductGridSkeleton } from "@/components/skeletons";
 import { envs } from "@/core/config";
+import { toTitleCase } from "@/lib/text-utils";
 import { CategorySidebar } from "../_components/category-sidebar/category-sidebar";
 import { MobileCategoryNav } from "../_components/mobile-category/mobile-category-nav";
 
@@ -18,6 +19,30 @@ interface CategoryPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
+/**
+ * Busca o nome real da categoria na API pela slug.
+ * Percorre até 3 níveis de hierarquia (família, grupo, subgrupo).
+ */
+function findCategoryName(
+  categories: Awaited<ReturnType<typeof fetchCategoriesAction>>,
+  taxonomySlug: string,
+): string | undefined {
+  for (const cat of categories) {
+    if (cat.slug === taxonomySlug) return cat.name;
+    if (cat.subcategories) {
+      for (const sub of cat.subcategories) {
+        if (sub.slug === taxonomySlug) return sub.name;
+        if (sub.children) {
+          for (const child of sub.children) {
+            if (child.slug === taxonomySlug) return child.name;
+          }
+        }
+      }
+    }
+  }
+  return undefined;
+}
+
 export async function generateMetadata({
   params,
   searchParams,
@@ -25,9 +50,15 @@ export async function generateMetadata({
   const resolvedParams = await params;
   const resolvedSearchParams = await searchParams;
   const slugParts = resolvedParams.slug;
-  const title = slugParts[slugParts.length - 1]
-    .replace(/-/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+  const taxonomySlug = slugParts[slugParts.length - 1];
+
+  // Buscar nome real da categoria via API
+  const categories = await fetchCategoriesAction();
+  const rawName = findCategoryName(categories, taxonomySlug);
+  const title = toTitleCase(
+    rawName ||
+      taxonomySlug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
+  );
 
   // Verificar se há filtros ativos
   const sortCol = typeof resolvedSearchParams.sort_col === "string";
@@ -43,9 +74,12 @@ export async function generateMetadata({
   const categoryUrl = `/category/${slugParts.join("/")}`;
   const fullUrl = `${envs.NEXT_PUBLIC_BASE_URL_APP}${categoryUrl}`;
 
+  const pageTitle = `${title} | Compre na ${envs.NEXT_PUBLIC_COMPANY_NAME}`;
+  const pageDescription = `Encontre os melhores ${title} na ${envs.NEXT_PUBLIC_COMPANY_NAME}. Preços imbatíveis, parcele em até ${envs.NEXT_PUBLIC_PAY_IN_UP_TO}x sem juros. Entrega para todo o Brasil!`;
+
   const metadata: Metadata = {
-    title: `${title} | ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
-    description: `Confira nossa seleção de ${title}. Os melhores produtos com os melhores preços. Parcele em até ${envs.NEXT_PUBLIC_PAY_IN_UP_TO}x sem juros!`,
+    title: pageTitle,
+    description: pageDescription,
     alternates: {
       canonical: categoryUrl,
     },
@@ -54,8 +88,8 @@ export async function generateMetadata({
       locale: "pt_BR",
       url: fullUrl,
       siteName: envs.NEXT_PUBLIC_COMPANY_NAME,
-      title: `${title} | ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
-      description: `Confira nossa seleção de ${title}. Os melhores produtos com os melhores preços.`,
+      title: pageTitle,
+      description: pageDescription,
       images: [
         {
           url: "/images/logo/logo-horizontal-header1.png",
@@ -67,8 +101,8 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: `${title} | ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
-      description: `Confira nossa seleção de ${title}. Os melhores produtos com os melhores preços.`,
+      title: pageTitle,
+      description: pageDescription,
       images: ["/images/logo/logo-horizontal-header1.png"],
     },
   };
@@ -165,11 +199,12 @@ async function CategoryContent({
   );
 
   // Título da página - usar nome da categoria se encontrado, senão formatar o slug
-  const pageTitle =
+  const pageTitle = toTitleCase(
     taxonomyInfo.name ||
-    slugParts[slugParts.length - 1]
-      .replace(/-/g, " ")
-      .replace(/\b\w/g, (c) => c.toUpperCase());
+      slugParts[slugParts.length - 1]
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase()),
+  );
 
   return (
     <div className="container mx-auto px-4 py-2">
@@ -182,12 +217,7 @@ async function CategoryContent({
           {/*       <Breadcrumbs items={breadcrumbs} /> */}
           {/* Header */}
           <div className="mb-2">
-            {/* Mobile: centralizado com fundo */}
-            <h1 className="lg:hidden text-xl font-bold tracking-tight py-3 -mx-4 px-4 text-center bg-primary text-primary-foreground">
-              {pageTitle}
-            </h1>
-            {/* Desktop: estilo original */}
-            <h1 className="hidden lg:block text-3xl font-bold tracking-tight mb-2">
+            <h1 className="text-xl lg:text-3xl font-bold tracking-tight py-3 lg:py-0 -mx-4 lg:mx-0 px-4 lg:px-0 text-center lg:text-left bg-primary lg:bg-transparent text-primary-foreground lg:text-foreground lg:mb-2">
               {pageTitle}
             </h1>
           </div>
