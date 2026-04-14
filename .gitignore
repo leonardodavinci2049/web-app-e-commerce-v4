@@ -50,5 +50,6 @@ ecosystem.config.js
 /.kiro
 /scripts
 /plan
+AGENTS.md
 
 
