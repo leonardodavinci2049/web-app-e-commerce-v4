@@ -69,12 +69,16 @@ export function ProductGrid({
             : "flex flex-col gap-4"
         }
       >
-        {allProducts.map((product) => (
+        {allProducts.map((product, index) => (
           <div
             key={product.id}
             className={viewMode === "list" ? "h-auto" : "h-full"}
           >
-            <ProductCard product={product} variant={viewMode} />
+            <ProductCard
+              product={product}
+              variant={viewMode}
+              priority={index < 4}
+            />
           </div>
         ))}
       </div>

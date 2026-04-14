@@ -7,7 +7,6 @@ import { envs } from "@/core/config/envs";
 export async function GET() {
   const baseUrl =
     envs.NEXT_PUBLIC_BASE_URL_APP || "https://mundialmegastore.com.br";
-  const currentDate = new Date().toISOString();
 
   // List of all sitemap files
   const sitemaps = [
@@ -25,7 +24,6 @@ ${sitemaps
   .map(
     (sitemap) => `  <sitemap>
     <loc>${sitemap}</loc>
-    <lastmod>${currentDate}</lastmod>
   </sitemap>`,
   )
   .join("\n")}

@@ -11,7 +11,6 @@ export async function GET() {
 
   const baseUrl =
     envs.NEXT_PUBLIC_BASE_URL_APP || "https://mundialmegastore.com.br";
-  const currentDate = new Date().toISOString();
 
   let categoryPages: MetadataRoute.Sitemap = [];
 
@@ -26,7 +25,6 @@ export async function GET() {
         if (category.slug) {
           pages.push({
             url: `${baseUrl}/category/${category.slug}`,
-            lastModified: currentDate,
             changeFrequency: "weekly",
             priority: 0.7,
           });
@@ -38,7 +36,6 @@ export async function GET() {
             if (subcategory.slug) {
               pages.push({
                 url: `${baseUrl}/category/${category.slug}/${subcategory.slug}`,
-                lastModified: currentDate,
                 changeFrequency: "weekly",
                 priority: 0.6,
               });
@@ -50,7 +47,6 @@ export async function GET() {
                 if (subgroup.slug) {
                   pages.push({
                     url: `${baseUrl}/category/${category.slug}/${subcategory.slug}/${subgroup.slug}`,
-                    lastModified: currentDate,
                     changeFrequency: "weekly",
                     priority: 0.5,
                   });
@@ -73,7 +69,6 @@ ${categoryPages
   .map(
     (item) => `  <url>
     <loc>${item.url}</loc>
-    <lastmod>${item.lastModified}</lastmod>
     <changefreq>${item.changeFrequency}</changefreq>
     <priority>${item.priority}</priority>
   </url>`,
