@@ -55,7 +55,9 @@ export function HeroBanner() {
                     src={slide.image}
                     alt={slide.title}
                     fill
+                    sizes="(min-width: 768px) 50vw, 0px"
                     className="object-contain drop-shadow-2xl"
+                    priority
                   />
                 </div>
               </div>

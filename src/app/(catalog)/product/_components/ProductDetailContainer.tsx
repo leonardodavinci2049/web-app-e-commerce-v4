@@ -40,6 +40,7 @@ function GallerySkeleton({ placeholderImage }: { placeholderImage?: string }) {
             src={placeholderImage}
             alt="Carregando..."
             fill
+            sizes="(min-width: 768px) 50vw, 100vw"
             className="object-contain p-4 md:p-8"
             unoptimized
           />

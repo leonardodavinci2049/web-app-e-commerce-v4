@@ -47,6 +47,7 @@ export function ImageGalleryClient({
                 src={getThumbnailUrl(image)}
                 alt={`${productName} - Imagem ${index + 1}`}
                 fill
+                sizes="80px"
                 className="object-contain p-1"
               />
             </button>
@@ -60,6 +61,7 @@ export function ImageGalleryClient({
           src={getMainImageUrl(images[selectedImage])}
           alt={productName}
           fill
+          sizes="(min-width: 768px) 50vw, 100vw"
           className="object-contain p-4 md:p-8"
           priority
         />

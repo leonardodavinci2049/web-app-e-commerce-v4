@@ -36,6 +36,7 @@ export async function MobileMainHeader() {
                     src="/images/logo/logo-header-mobile1.png"
                     alt="Mundial Megastore - Informática, Eletrônicos e Perfumes Importados"
                     fill
+                    sizes="224px"
                     className="object-contain drop-shadow-sm"
                     priority
                     quality={100}

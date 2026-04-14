@@ -46,6 +46,7 @@ export function PromoBannersGrid({ className }: PromoBannersGridProps) {
                 src={banner.image}
                 alt={banner.title}
                 fill
+                sizes="(min-width: 768px) 33vw, 100vw"
                 className="object-cover opacity-50 group-hover:scale-110 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent"></div>
