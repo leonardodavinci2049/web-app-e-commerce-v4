@@ -22,9 +22,9 @@ export async function generateMetadata({
 
   // Estratégia de indexação:
   // - Página base sem filtros: indexar normalmente
-  // - Página com busca (q=): indexar com canonical para /products
+  // - Página com busca (q=): noindex (thin content / canibalização)
   // - Página com 2+ filtros: noindex (evitar thin content)
-  const shouldNoindex = filterCount >= 2;
+  const shouldNoindex = !!searchTerm || filterCount >= 2;
 
   // Canonical sempre aponta para URL limpa
   const canonicalUrl = "/products";

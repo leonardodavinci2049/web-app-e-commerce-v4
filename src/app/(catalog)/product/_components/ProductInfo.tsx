@@ -3,6 +3,7 @@ import { AddToCartButton } from "@/components/product/actions/AddToCartButton";
 import { QuantitySelector } from "@/components/product/actions/QuantitySelector";
 import { WhatsAppProductButton } from "@/components/product/actions/WhatsAppProductButton";
 import { envs } from "@/core/config";
+import { toTitleCase } from "@/lib/text-utils";
 
 interface ProductInfoProps {
   product: {
@@ -29,10 +30,10 @@ export function ProductInfo({ product }: ProductInfoProps) {
   const maxInstallments = envs.NEXT_PUBLIC_PAY_IN_UP_TO;
   return (
     <div className="space-y-2 lg:space-y-4">
-      {/* Título */}
-      <h1 className="hidden lg:block text-xl md:text-3xl font-bold text-foreground">
-        {product.name}
-      </h1>
+      {/* Título (desktop) — usa <p> pois o <h1> único fica no ProductDetailContainer */}
+      <p className="hidden lg:block text-xl md:text-3xl font-bold text-foreground">
+        {toTitleCase(product.name)}
+      </p>
 
       {/* SKU */}
       {/*     <div className="text-sm text-muted-foreground">
