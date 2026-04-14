@@ -241,139 +241,6 @@ type EnvVars = z.infer<typeof envsSchema>;
 // ✅ Só executar validação no servidor, nunca no cliente
 let envVars: EnvVars;
 
-// Para prevenir problemas de hidratação, vamos criar um schema separado para variáveis públicas
-const publicEnvSchema = z.object({
-  NEXT_PUBLIC_BASE_URL_APP: z
-    .string()
-    .url("NEXT_PUBLIC_BASE_URL_APP must be a valid URL"),
-  NEXT_PUBLIC_COMPANY_NAME: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_NAME is required"),
-  NEXT_PUBLIC_COMPANY_PHONE: z
-    .string()
-    .regex(
-      /^\(\d{2}\) \d{5} \d{4}$/,
-      "NEXT_PUBLIC_COMPANY_PHONE must be in format (XX) XXXXX XXXX",
-    ),
-  NEXT_PUBLIC_COMPANY_EMAIL: z
-    .string()
-    .email("NEXT_PUBLIC_COMPANY_EMAIL must be a valid email"),
-  NEXT_PUBLIC_COMPANY_WHATSAPP: z
-    .string()
-    .regex(
-      /^\(\d{2}\) \d{5} \d{4}$/,
-      "NEXT_PUBLIC_COMPANY_WHATSAPP must be in format (XX) XXXXX XXXX",
-    ),
-  NEXT_PUBLIC_COMPANY_ADDRESS: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_ADDRESS is required"),
-  NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION is required"),
-  NEXT_PUBLIC_COMPANY_OPENING_HOURS: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_OPENING_HOURS is required"),
-  NEXT_PUBLIC_COMPANY_OPENING_SATURDAY: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_OPENING_SATURDAY is required"),
-  NEXT_PUBLIC_COMPANY_ABOUT: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_ABOUT is required"),
-  NEXT_PUBLIC_COMPANY_CNPJ: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_CNPJ is required"),
-  NEXT_PUBLIC_COMPANY_INVITATION: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_INVITATION is required"),
-  NEXT_PUBLIC_COMPANY_YEAR_FOUNDATION: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_YEAR_FOUNDATION is required"),
-  NEXT_PUBLIC_COMPANY_QT_PRODUCTS: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_QT_PRODUCTS is required"),
-  NEXT_PUBLIC_COMPANY_MAPS_URL: z
-    .string()
-    .url("NEXT_PUBLIC_COMPANY_MAPS_URL must be a valid URL"),
-  NEXT_PUBLIC_COMPANY_SLOGAN1: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_SLOGAN1 is required"),
-  NEXT_PUBLIC_COMPANY_SLOGAN2: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_SLOGAN2 is required"),
-  NEXT_PUBLIC_COMPANY_SLOGAN3: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_SLOGAN3 is required"),
-  NEXT_PUBLIC_COMPANY_SLOGAN4: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_SLOGAN4 is required"),
-  NEXT_PUBLIC_COMPANY_SLOGAN5: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_SLOGAN5 is required"),
-  NEXT_PUBLIC_COMPANY_CALLTO_ACTION1: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_CALLTO_ACTION1 is required"),
-  NEXT_PUBLIC_COMPANY_CALLTO_ACTION2: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_CALLTO_ACTION2 is required"),
-  NEXT_PUBLIC_COMPANY_CALLTO_ACTION3: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_CALLTO_ACTION3 is required"),
-  NEXT_PUBLIC_COMPANY_CALLTO_ACTION4: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_CALLTO_ACTION4 is required"),
-  NEXT_PUBLIC_COMPANY_CALLTO_ACTION5: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_CALLTO_ACTION5 is required"),
-  NEXT_PUBLIC_COMPANY_META_TITLE_MAIN: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_META_TITLE_MAIN is required"),
-  NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION is required"),
-  NEXT_PUBLIC_COMPANY_META_DESCRIPTION: z
-    .string()
-    .min(1, "NEXT_PUBLIC_COMPANY_META_DESCRIPTION is required"),
-
-  // Payment & Shipping
-  NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT: z
-    .string()
-    .transform((val) => parseInt(val, 10))
-    .pipe(
-      z
-        .number()
-        .min(0, "NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT must be a positive number"),
-    ),
-  NEXT_PUBLIC_PAY_IN_UP_TO: z
-    .string()
-    .transform((val) => parseInt(val, 10))
-    .pipe(
-      z.number().positive("NEXT_PUBLIC_PAY_IN_UP_TO must be a positive number"),
-    ),
-  NEXT_PUBLIC_FREE_SHIPPING_OVER: z
-    .string()
-    .transform((val) => parseFloat(val))
-    .pipe(
-      z
-        .number()
-        .min(0, "NEXT_PUBLIC_FREE_SHIPPING_OVER must be a positive number"),
-    ),
-  NEXT_PUBLIC_DEVELOPER_NAME: z
-    .string()
-    .min(1, "NEXT_PUBLIC_DEVELOPER_NAME is required"),
-  NEXT_PUBLIC_DEVELOPER_URL: z
-    .string()
-    .url("NEXT_PUBLIC_DEVELOPER_URL must be a valid URL"),
-
-  // Google Analytics 4
-  NEXT_PUBLIC_GA_MEASUREMENT_ID: z
-    .string()
-    .regex(
-      /^G-[A-Z0-9]+$/,
-      "NEXT_PUBLIC_GA_MEASUREMENT_ID must be in format G-XXXXXXX",
-    )
-    .optional(),
-});
-
 if (typeof window === "undefined") {
   // Estamos no servidor - fazer validação completa
   const validationResult = envsSchema.safeParse(process.env);
@@ -387,144 +254,12 @@ if (typeof window === "undefined") {
 
   envVars = validationResult.data;
 } else {
-  // Estamos no cliente - validar apenas variáveis públicas para garantir consistência
-  // IMPORTANTE: Precisamos referenciar cada process.env.NEXT_PUBLIC_* individualmente
-  // porque o Next.js faz substituição estática no build. Passar process.env direto
-  // não funciona no client — o bundler não consegue resolver as propriedades.
-  const clientPublicEnv = {
-    NEXT_PUBLIC_BASE_URL_APP: process.env.NEXT_PUBLIC_BASE_URL_APP,
-    NEXT_PUBLIC_COMPANY_NAME: process.env.NEXT_PUBLIC_COMPANY_NAME,
-    NEXT_PUBLIC_COMPANY_PHONE: process.env.NEXT_PUBLIC_COMPANY_PHONE,
-    NEXT_PUBLIC_COMPANY_EMAIL: process.env.NEXT_PUBLIC_COMPANY_EMAIL,
-    NEXT_PUBLIC_COMPANY_WHATSAPP: process.env.NEXT_PUBLIC_COMPANY_WHATSAPP,
-    NEXT_PUBLIC_COMPANY_ADDRESS: process.env.NEXT_PUBLIC_COMPANY_ADDRESS,
-    NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION:
-      process.env.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION,
-    NEXT_PUBLIC_COMPANY_OPENING_HOURS:
-      process.env.NEXT_PUBLIC_COMPANY_OPENING_HOURS,
-    NEXT_PUBLIC_COMPANY_OPENING_SATURDAY:
-      process.env.NEXT_PUBLIC_COMPANY_OPENING_SATURDAY,
-    NEXT_PUBLIC_COMPANY_ABOUT: process.env.NEXT_PUBLIC_COMPANY_ABOUT,
-    NEXT_PUBLIC_COMPANY_CNPJ: process.env.NEXT_PUBLIC_COMPANY_CNPJ,
-    NEXT_PUBLIC_COMPANY_INVITATION:
-      process.env.NEXT_PUBLIC_COMPANY_INVITATION,
-    NEXT_PUBLIC_COMPANY_YEAR_FOUNDATION:
-      process.env.NEXT_PUBLIC_COMPANY_YEAR_FOUNDATION,
-    NEXT_PUBLIC_COMPANY_QT_PRODUCTS:
-      process.env.NEXT_PUBLIC_COMPANY_QT_PRODUCTS,
-    NEXT_PUBLIC_COMPANY_MAPS_URL: process.env.NEXT_PUBLIC_COMPANY_MAPS_URL,
-    NEXT_PUBLIC_COMPANY_SLOGAN1: process.env.NEXT_PUBLIC_COMPANY_SLOGAN1,
-    NEXT_PUBLIC_COMPANY_SLOGAN2: process.env.NEXT_PUBLIC_COMPANY_SLOGAN2,
-    NEXT_PUBLIC_COMPANY_SLOGAN3: process.env.NEXT_PUBLIC_COMPANY_SLOGAN3,
-    NEXT_PUBLIC_COMPANY_SLOGAN4: process.env.NEXT_PUBLIC_COMPANY_SLOGAN4,
-    NEXT_PUBLIC_COMPANY_SLOGAN5: process.env.NEXT_PUBLIC_COMPANY_SLOGAN5,
-    NEXT_PUBLIC_COMPANY_CALLTO_ACTION1:
-      process.env.NEXT_PUBLIC_COMPANY_CALLTO_ACTION1,
-    NEXT_PUBLIC_COMPANY_CALLTO_ACTION2:
-      process.env.NEXT_PUBLIC_COMPANY_CALLTO_ACTION2,
-    NEXT_PUBLIC_COMPANY_CALLTO_ACTION3:
-      process.env.NEXT_PUBLIC_COMPANY_CALLTO_ACTION3,
-    NEXT_PUBLIC_COMPANY_CALLTO_ACTION4:
-      process.env.NEXT_PUBLIC_COMPANY_CALLTO_ACTION4,
-    NEXT_PUBLIC_COMPANY_CALLTO_ACTION5:
-      process.env.NEXT_PUBLIC_COMPANY_CALLTO_ACTION5,
-    NEXT_PUBLIC_COMPANY_META_TITLE_MAIN:
-      process.env.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN,
-    NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION:
-      process.env.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION,
-    NEXT_PUBLIC_COMPANY_META_DESCRIPTION:
-      process.env.NEXT_PUBLIC_COMPANY_META_DESCRIPTION,
-    NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT:
-      process.env.NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT,
-    NEXT_PUBLIC_PAY_IN_UP_TO: process.env.NEXT_PUBLIC_PAY_IN_UP_TO,
-    NEXT_PUBLIC_FREE_SHIPPING_OVER:
-      process.env.NEXT_PUBLIC_FREE_SHIPPING_OVER,
-    NEXT_PUBLIC_DEVELOPER_NAME: process.env.NEXT_PUBLIC_DEVELOPER_NAME,
-    NEXT_PUBLIC_DEVELOPER_URL: process.env.NEXT_PUBLIC_DEVELOPER_URL,
-    NEXT_PUBLIC_GA_MEASUREMENT_ID:
-      process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID,
-  };
-
-  const publicValidationResult = publicEnvSchema.safeParse(clientPublicEnv);
-
-  if (!publicValidationResult.success) {
-    console.warn(
-      "⚠️ Some public environment variables are missing on client:",
-      publicValidationResult.error.issues.map((issue) => issue.path.join(".")),
-    );
-  }
-
-  const publicVars = publicValidationResult.success
-    ? publicValidationResult.data
-    : {
-        NEXT_PUBLIC_BASE_URL_APP: "",
-        NEXT_PUBLIC_COMPANY_NAME: process.env.NEXT_PUBLIC_COMPANY_NAME || "",
-        NEXT_PUBLIC_COMPANY_PHONE: process.env.NEXT_PUBLIC_COMPANY_PHONE || "",
-        NEXT_PUBLIC_COMPANY_EMAIL: process.env.NEXT_PUBLIC_COMPANY_EMAIL || "",
-        NEXT_PUBLIC_COMPANY_WHATSAPP:
-          process.env.NEXT_PUBLIC_COMPANY_WHATSAPP || "",
-        NEXT_PUBLIC_COMPANY_ADDRESS:
-          process.env.NEXT_PUBLIC_COMPANY_ADDRESS || "",
-        NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION:
-          process.env.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION || "",
-        NEXT_PUBLIC_COMPANY_OPENING_HOURS:
-          process.env.NEXT_PUBLIC_COMPANY_OPENING_HOURS || "",
-        NEXT_PUBLIC_COMPANY_OPENING_SATURDAY:
-          process.env.NEXT_PUBLIC_COMPANY_OPENING_SATURDAY || "",
-        NEXT_PUBLIC_COMPANY_ABOUT: process.env.NEXT_PUBLIC_COMPANY_ABOUT || "",
-        NEXT_PUBLIC_COMPANY_CNPJ: process.env.NEXT_PUBLIC_COMPANY_CNPJ || "",
-        NEXT_PUBLIC_COMPANY_INVITATION:
-          process.env.NEXT_PUBLIC_COMPANY_INVITATION || "",
-        NEXT_PUBLIC_COMPANY_YEAR_FOUNDATION:
-          process.env.NEXT_PUBLIC_COMPANY_YEAR_FOUNDATION || "",
-        NEXT_PUBLIC_COMPANY_QT_PRODUCTS:
-          process.env.NEXT_PUBLIC_COMPANY_QT_PRODUCTS || "",
-        NEXT_PUBLIC_COMPANY_MAPS_URL:
-          process.env.NEXT_PUBLIC_COMPANY_MAPS_URL || "",
-
-        NEXT_PUBLIC_COMPANY_SLOGAN1:
-          process.env.NEXT_PUBLIC_COMPANY_SLOGAN1 || "",
-        NEXT_PUBLIC_COMPANY_SLOGAN2:
-          process.env.NEXT_PUBLIC_COMPANY_SLOGAN2 || "",
-        NEXT_PUBLIC_COMPANY_SLOGAN3:
-          process.env.NEXT_PUBLIC_COMPANY_SLOGAN3 || "",
-        NEXT_PUBLIC_COMPANY_SLOGAN4:
-          process.env.NEXT_PUBLIC_COMPANY_SLOGAN4 || "",
-        NEXT_PUBLIC_COMPANY_SLOGAN5:
-          process.env.NEXT_PUBLIC_COMPANY_SLOGAN5 || "",
-
-        NEXT_PUBLIC_COMPANY_CALLTO_ACTION1:
-          process.env.NEXT_PUBLIC_COMPANY_CALLTO_ACTION1 || "",
-        NEXT_PUBLIC_COMPANY_CALLTO_ACTION2:
-          process.env.NEXT_PUBLIC_COMPANY_CALLTO_ACTION2 || "",
-        NEXT_PUBLIC_COMPANY_CALLTO_ACTION3:
-          process.env.NEXT_PUBLIC_COMPANY_CALLTO_ACTION3 || "",
-        NEXT_PUBLIC_COMPANY_CALLTO_ACTION4:
-          process.env.NEXT_PUBLIC_COMPANY_CALLTO_ACTION4 || "",
-        NEXT_PUBLIC_COMPANY_CALLTO_ACTION5:
-          process.env.NEXT_PUBLIC_COMPANY_CALLTO_ACTION5 || "",
-
-        NEXT_PUBLIC_COMPANY_META_TITLE_MAIN:
-          process.env.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN || "",
-        NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION:
-          process.env.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION || "",
-        NEXT_PUBLIC_COMPANY_META_DESCRIPTION:
-          process.env.NEXT_PUBLIC_COMPANY_META_DESCRIPTION || "",
-        NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT:
-          Number(process.env.NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT) || 0,
-        NEXT_PUBLIC_PAY_IN_UP_TO:
-          Number(process.env.NEXT_PUBLIC_PAY_IN_UP_TO) || 0,
-        NEXT_PUBLIC_FREE_SHIPPING_OVER:
-          Number(process.env.NEXT_PUBLIC_FREE_SHIPPING_OVER) || 0,
-        NEXT_PUBLIC_DEVELOPER_NAME:
-          process.env.NEXT_PUBLIC_DEVELOPER_NAME || "",
-        NEXT_PUBLIC_DEVELOPER_URL: process.env.NEXT_PUBLIC_DEVELOPER_URL || "",
-        NEXT_PUBLIC_GA_MEASUREMENT_ID:
-          process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || undefined,
-      };
-
-  // Usar valores vazios ou default para variáveis privadas no cliente
+  // Estamos no cliente - NÃO validar com Zod aqui.
+  // No Next.js 16 (Turbopack), process.env.NEXT_PUBLIC_* é substituído estaticamente
+  // no build e a validação com Zod pode falhar por diferenças de timing.
+  // A validação completa já acontece no servidor — no client apenas lemos os valores.
   envVars = {
+    // Variáveis privadas: valores vazios/default no cliente (nunca expostas)
     PORT: 0,
     EXTERNAL_API_MAIN_URL: "",
     EXTERNAL_API_ASSETS_URL: "",
@@ -537,8 +272,60 @@ if (typeof window === "undefined") {
     PERSON_ID: 0,
     TYPE_BUSINESS: 0,
 
-    // Usar as variáveis públicas validadas
-    ...publicVars,
+    // Variáveis públicas: lidas diretamente do process.env (inline pelo bundler)
+    NEXT_PUBLIC_BASE_URL_APP: process.env.NEXT_PUBLIC_BASE_URL_APP || "",
+    NEXT_PUBLIC_COMPANY_NAME: process.env.NEXT_PUBLIC_COMPANY_NAME || "",
+    NEXT_PUBLIC_COMPANY_PHONE: process.env.NEXT_PUBLIC_COMPANY_PHONE || "",
+    NEXT_PUBLIC_COMPANY_EMAIL: process.env.NEXT_PUBLIC_COMPANY_EMAIL || "",
+    NEXT_PUBLIC_COMPANY_WHATSAPP:
+      process.env.NEXT_PUBLIC_COMPANY_WHATSAPP || "",
+    NEXT_PUBLIC_COMPANY_ADDRESS: process.env.NEXT_PUBLIC_COMPANY_ADDRESS || "",
+    NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION:
+      process.env.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION || "",
+    NEXT_PUBLIC_COMPANY_OPENING_HOURS:
+      process.env.NEXT_PUBLIC_COMPANY_OPENING_HOURS || "",
+    NEXT_PUBLIC_COMPANY_OPENING_SATURDAY:
+      process.env.NEXT_PUBLIC_COMPANY_OPENING_SATURDAY || "",
+    NEXT_PUBLIC_COMPANY_ABOUT: process.env.NEXT_PUBLIC_COMPANY_ABOUT || "",
+    NEXT_PUBLIC_COMPANY_CNPJ: process.env.NEXT_PUBLIC_COMPANY_CNPJ || "",
+    NEXT_PUBLIC_COMPANY_INVITATION:
+      process.env.NEXT_PUBLIC_COMPANY_INVITATION || "",
+    NEXT_PUBLIC_COMPANY_YEAR_FOUNDATION:
+      process.env.NEXT_PUBLIC_COMPANY_YEAR_FOUNDATION || "",
+    NEXT_PUBLIC_COMPANY_QT_PRODUCTS:
+      process.env.NEXT_PUBLIC_COMPANY_QT_PRODUCTS || "",
+    NEXT_PUBLIC_COMPANY_MAPS_URL:
+      process.env.NEXT_PUBLIC_COMPANY_MAPS_URL || "",
+    NEXT_PUBLIC_COMPANY_SLOGAN1: process.env.NEXT_PUBLIC_COMPANY_SLOGAN1 || "",
+    NEXT_PUBLIC_COMPANY_SLOGAN2: process.env.NEXT_PUBLIC_COMPANY_SLOGAN2 || "",
+    NEXT_PUBLIC_COMPANY_SLOGAN3: process.env.NEXT_PUBLIC_COMPANY_SLOGAN3 || "",
+    NEXT_PUBLIC_COMPANY_SLOGAN4: process.env.NEXT_PUBLIC_COMPANY_SLOGAN4 || "",
+    NEXT_PUBLIC_COMPANY_SLOGAN5: process.env.NEXT_PUBLIC_COMPANY_SLOGAN5 || "",
+    NEXT_PUBLIC_COMPANY_CALLTO_ACTION1:
+      process.env.NEXT_PUBLIC_COMPANY_CALLTO_ACTION1 || "",
+    NEXT_PUBLIC_COMPANY_CALLTO_ACTION2:
+      process.env.NEXT_PUBLIC_COMPANY_CALLTO_ACTION2 || "",
+    NEXT_PUBLIC_COMPANY_CALLTO_ACTION3:
+      process.env.NEXT_PUBLIC_COMPANY_CALLTO_ACTION3 || "",
+    NEXT_PUBLIC_COMPANY_CALLTO_ACTION4:
+      process.env.NEXT_PUBLIC_COMPANY_CALLTO_ACTION4 || "",
+    NEXT_PUBLIC_COMPANY_CALLTO_ACTION5:
+      process.env.NEXT_PUBLIC_COMPANY_CALLTO_ACTION5 || "",
+    NEXT_PUBLIC_COMPANY_META_TITLE_MAIN:
+      process.env.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN || "",
+    NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION:
+      process.env.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION || "",
+    NEXT_PUBLIC_COMPANY_META_DESCRIPTION:
+      process.env.NEXT_PUBLIC_COMPANY_META_DESCRIPTION || "",
+    NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT:
+      Number(process.env.NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT) || 0,
+    NEXT_PUBLIC_PAY_IN_UP_TO: Number(process.env.NEXT_PUBLIC_PAY_IN_UP_TO) || 0,
+    NEXT_PUBLIC_FREE_SHIPPING_OVER:
+      Number(process.env.NEXT_PUBLIC_FREE_SHIPPING_OVER) || 0,
+    NEXT_PUBLIC_DEVELOPER_NAME: process.env.NEXT_PUBLIC_DEVELOPER_NAME || "",
+    NEXT_PUBLIC_DEVELOPER_URL: process.env.NEXT_PUBLIC_DEVELOPER_URL || "",
+    NEXT_PUBLIC_GA_MEASUREMENT_ID:
+      process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || undefined,
 
     EMAIL_SENDER_NAME: "",
     EMAIL_SENDER_ADDRESS: "",
@@ -555,7 +342,6 @@ if (typeof window === "undefined") {
     HOME_CATEGORY4_ID: 0,
     HOME_CATEGORY5_ID: 0,
     HOME_CATEGORY6_ID: 0,
-
     HOME_SECTION_1_TITLE: "",
     HOME_SECTION_2_TITLE: "",
     HOME_SECTION_3_TITLE: "",
@@ -566,7 +352,6 @@ if (typeof window === "undefined") {
     HOME_SECTION_8_TITLE: "",
     HOME_SECTION_9_TITLE: "",
     HOME_SECTION_10_TITLE: "",
-    NEXT_PUBLIC_GA_MEASUREMENT_ID: publicVars.NEXT_PUBLIC_GA_MEASUREMENT_ID,
   };
 }
 
