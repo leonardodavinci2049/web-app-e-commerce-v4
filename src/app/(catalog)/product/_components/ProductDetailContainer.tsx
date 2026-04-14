@@ -86,7 +86,7 @@ export async function ProductDetailContainer({
 
   const getSubcategoryName = (categoryId?: string, subId?: string) => {
     const cat = categories.find((c) => c.id === categoryId);
-    if (!cat || !cat.subcategories) return "—";
+    if (!cat?.subcategories) return "—";
     return (
       cat.subcategories.find(
         (s) =>
