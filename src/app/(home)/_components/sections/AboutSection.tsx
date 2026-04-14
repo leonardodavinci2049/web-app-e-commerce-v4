@@ -54,6 +54,7 @@ export function AboutSection({ className }: AboutSectionProps) {
                 src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1000"
                 alt="Mundial Megastore - Loja física com atendimento especializado em eletrônicos e informática"
                 fill
+                sizes="(min-width: 768px) 50vw, 100vw"
                 className="object-cover"
               />
             </div>

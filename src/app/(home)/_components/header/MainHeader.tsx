@@ -23,6 +23,7 @@ export function MainHeader() {
                 src="/images/logo/logo-horizontal-header1.png"
                 alt="Mundial Megastore - Informática, Eletrônicos e Perfumes Importados"
                 fill
+                sizes="(min-width: 1024px) 224px, (min-width: 640px) 192px, 160px"
                 className="object-contain"
                 priority
               />

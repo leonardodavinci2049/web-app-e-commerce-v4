@@ -36,6 +36,7 @@ export function SpecificCategory({
               src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=500"
               alt="Mundo Gamer - Setup completo para jogos com periféricos e acessórios gamers"
               fill
+              sizes="(min-width: 1024px) 25vw, 0px"
               className="object-cover transition-transform duration-700 group-hover:scale-110"
             />
             <div className="absolute inset-0 bg-black/50 group-hover:bg-black/40 transition-colors"></div>

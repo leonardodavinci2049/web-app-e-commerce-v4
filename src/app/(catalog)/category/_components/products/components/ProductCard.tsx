@@ -142,6 +142,7 @@ export function ProductCard({
               src={product.image}
               alt={product.name}
               fill
+              sizes="(min-width: 768px) 192px, 112px"
               className={`object-contain transition-transform duration-500 ${
                 isOutOfStock ? "grayscale opacity-70" : "group-hover:scale-110"
               }`}
@@ -256,6 +257,7 @@ export function ProductCard({
             src={product.image}
             alt={product.name}
             fill
+            sizes="(min-width: 768px) 25vw, (min-width: 640px) 50vw, 100vw"
             className={`object-contain transition-transform duration-500 ${
               isOutOfStock ? "grayscale opacity-70" : "group-hover:scale-110"
             }`}
