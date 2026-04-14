@@ -1,3 +1,5 @@
+"use client";
+
 import { envs } from "@/core/config";
 import { generateSlug } from "@/lib/slug";
 
@@ -38,6 +40,11 @@ export function ProductJsonLd({
 }: ProductJsonLdProps) {
   const productUrl = `${envs.NEXT_PUBLIC_BASE_URL_APP}/product/${generateSlug(product.name, product.id)}`;
 
+  // Calcula priceValidUntil como +30 dias se não fornecido (Google exige para rich results)
+  const effectivePriceValidUntil =
+    priceValidUntil ||
+    new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+
   // Schema.org availability values
   const availability = product.inStock
     ? "https://schema.org/InStock"
@@ -66,7 +73,7 @@ export function ProductJsonLd({
       url: productUrl,
       priceCurrency: "BRL",
       price: product.price.toFixed(2),
-      ...(priceValidUntil && { priceValidUntil }),
+      priceValidUntil: effectivePriceValidUntil,
       availability,
       itemCondition,
       seller: {

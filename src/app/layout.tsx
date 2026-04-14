@@ -5,7 +5,11 @@ import { Toaster } from "sonner";
 import { GoogleAnalytics } from "@/components/analytics";
 import { CartSidebar } from "@/components/cart/CartSidebar";
 
-import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo";
+import {
+  LocalBusinessJsonLd,
+  OrganizationJsonLd,
+  WebSiteJsonLd,
+} from "@/components/seo";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { CartProvider } from "@/contexts/CartContext";
 import { envs } from "@/core/config";
@@ -71,6 +75,7 @@ export default function RootLayout({
       <head>
         <OrganizationJsonLd />
         <WebSiteJsonLd />
+        <LocalBusinessJsonLd />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

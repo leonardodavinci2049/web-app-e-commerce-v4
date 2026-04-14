@@ -5,7 +5,9 @@ import {
   fetchCategoriesAction,
   fetchProductWithRelatedAction,
 } from "@/app/actions/product";
+import { BreadcrumbJsonLd } from "@/components/seo";
 import { ProductGridSkeleton } from "@/components/skeletons";
+import { generateSlug } from "@/lib/slug";
 import { toTitleCase } from "@/lib/text-utils";
 import { BackButton } from "./BackButton";
 import { ProductGalleryWrapper } from "./imagegallery/ProductGalleryWrapper";
@@ -162,6 +164,17 @@ export async function ProductDetailContainer({
           category: productWithNames.category,
           subcategory: productWithNames.subcategory,
         }}
+      />
+      {/* Breadcrumb JSON-LD para rich results */}
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: "/" },
+          { name: "Produtos", url: "/products" },
+          {
+            name: toTitleCase(product.name),
+            url: `/product/${generateSlug(product.name, product.id)}`,
+          },
+        ]}
       />
       {/* Breadcrumb */}
       <nav className="hidden md:flex items-center text-sm text-muted-foreground mb-8 overflow-x-auto whitespace-nowrap">
