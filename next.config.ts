@@ -4,11 +4,11 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   cacheComponents: true,
   cacheLife: {
-    // Perfil para dados que mudam com pouca frequência (1 hora)
+    // Perfil para produtos e listagens (10 minutos)
     hours: {
-      stale: 3600, // 1 hora - serve do cache
-      revalidate: 900, // 15 min - revalida em background
-      expire: 3600, // 1 hora - expira completamente
+      stale: 600, // 10 min - serve do cache
+      revalidate: 120, // 2 min - revalida em background
+      expire: 600, // 10 min - expira completamente
     },
     // Perfil para menu de categorias (15 minutos)
     quarter: {
