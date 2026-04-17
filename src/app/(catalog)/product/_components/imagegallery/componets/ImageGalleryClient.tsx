@@ -21,17 +21,26 @@ export function ImageGalleryClient({
     return img.urls.preview || img.urls.original;
   };
 
-  // Obtém URL medium para miniaturas - boa qualidade para thumbnails
+  // Obtém URL thumbnail para miniaturas - tamanho adequado para exibição pequena
   const getThumbnailUrl = (img: GalleryImageData) => {
-    return img.urls.medium || img.urls.preview || img.urls.original;
+    return (
+      img.urls.thumbnail ||
+      img.urls.medium ||
+      img.urls.preview ||
+      img.urls.original
+    );
   };
+
+  // Limita thumbnails a no máximo 5
+  const MAX_THUMBNAILS = 5;
+  const visibleThumbnails = images.slice(0, MAX_THUMBNAILS);
 
   return (
     <div className="flex flex-row gap-2 md:gap-4">
       {/* Miniaturas - Visible on Left for both Mobile and Desktop */}
       {images.length > 1 && (
         <div className="flex flex-col gap-2 w-16 md:w-20 shrink-0 h-[300px] md:h-[500px] overflow-y-auto no-scrollbar scroll-smooth">
-          {images.map((image, index) => (
+          {visibleThumbnails.map((image, index) => (
             <button
               key={image.id}
               type="button"
@@ -49,7 +58,7 @@ export function ImageGalleryClient({
                 fill
                 sizes="80px"
                 className="object-contain p-1"
-                unoptimized
+                loading="eager"
               />
             </button>
           ))}
@@ -69,9 +78,9 @@ export function ImageGalleryClient({
         />
 
         {/* Paginação Mobile (Dots) */}
-        {images.length > 1 && (
+        {visibleThumbnails.length > 1 && (
           <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
-            {images.map((image, index) => (
+            {visibleThumbnails.map((image, index) => (
               <div
                 key={image.id}
                 className={cn(

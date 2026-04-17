@@ -5,6 +5,7 @@ import { WishlistButton } from "@/components/product/actions/WishlistButton";
 import { envs } from "@/core/config";
 import { getProductPath } from "@/lib/slug";
 import { toTitleCase } from "@/lib/text-utils";
+import { getImageVariantUrl } from "@/lib/utils";
 
 interface ProductCardProps {
   product: {
@@ -36,6 +37,7 @@ export function ProductCard({
 }: ProductCardProps & { variant?: "grid" | "list" }) {
   const productUrl = getProductPath(product.name, product.id);
   const maxInstallments = envs.NEXT_PUBLIC_PAY_IN_UP_TO;
+  const cardImage = getImageVariantUrl(product.image, "medium");
 
   // Logic check:
   // PRODUTO WEB FIND returns VL_VAREJO. transformer maps it to price.
@@ -143,7 +145,7 @@ export function ProductCard({
         >
           <div className="relative w-full h-full">
             <Image
-              src={product.image}
+              src={cardImage}
               alt={toTitleCase(product.name)}
               fill
               sizes="(min-width: 768px) 192px, 112px"
@@ -258,7 +260,7 @@ export function ProductCard({
       >
         <div className="relative w-full h-full">
           <Image
-            src={product.image}
+            src={cardImage}
             alt={toTitleCase(product.name)}
             fill
             sizes="(min-width: 768px) 25vw, (min-width: 640px) 50vw, 100vw"

@@ -5,6 +5,7 @@ import { WishlistButton } from "@/components/product/actions/WishlistButton";
 import { envs } from "@/core/config";
 import { getProductPath } from "@/lib/slug";
 import { toTitleCase } from "@/lib/text-utils";
+import { getImageVariantUrl } from "@/lib/utils";
 
 interface ProductCardProps {
   product: {
@@ -29,6 +30,7 @@ interface ProductCardProps {
 export function ProductCardHome({ product }: ProductCardProps) {
   const productUrl = getProductPath(product.name, product.id);
   const maxInstallments = envs.NEXT_PUBLIC_PAY_IN_UP_TO;
+  const cardImage = getImageVariantUrl(product.image, "medium");
 
   const originalPrice = product.price;
   const finalPrice = product.discount
@@ -66,7 +68,7 @@ export function ProductCardHome({ product }: ProductCardProps) {
       >
         <div className="relative w-full h-full">
           <Image
-            src={product.image}
+            src={cardImage}
             alt={toTitleCase(product.name)}
             fill
             sizes="(min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
