@@ -17,7 +17,7 @@ export function SearchInput({
   const router = useRouter();
 
   const isValidSearchTerm = (term: string): boolean => {
-    return term.trim().length > 0;
+    return term.trim().length > 2;
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
