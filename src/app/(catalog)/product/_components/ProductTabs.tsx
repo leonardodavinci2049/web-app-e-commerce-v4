@@ -13,6 +13,62 @@ interface ProductTabsProps {
   };
 }
 
+const DESCRIPTION_HTML_CLASS_NAME = [
+  "text-muted-foreground",
+  "[&>p]:mb-4",
+  "[&>p]:leading-relaxed",
+  "[&>br]:block",
+  "[&>br]:content-['']",
+  "[&>br]:mb-2",
+  "[&>div]:mb-4",
+  "[&>ul]:list-disc",
+  "[&>ul]:pl-6",
+  "[&>ul]:mb-4",
+  "[&>ul]:space-y-1",
+  "[&>ol]:list-decimal",
+  "[&>ol]:pl-6",
+  "[&>ol]:mb-4",
+  "[&>ol]:space-y-1",
+  "[&_li]:mb-1",
+  "[&>h1]:text-xl",
+  "[&>h1]:font-bold",
+  "[&>h1]:mb-3",
+  "[&>h1]:mt-4",
+  "[&>h2]:text-lg",
+  "[&>h2]:font-bold",
+  "[&>h2]:mb-3",
+  "[&>h2]:mt-4",
+  "[&>h3]:text-base",
+  "[&>h3]:font-semibold",
+  "[&>h3]:mb-2",
+  "[&>h3]:mt-3",
+  "[&>h4]:text-sm",
+  "[&>h4]:font-semibold",
+  "[&>h4]:mb-2",
+  "[&>h4]:mt-3",
+  "[&>a]:text-primary",
+  "[&>a]:underline",
+  "[&>a]:hover:opacity-80",
+  "[&>strong]:font-semibold",
+  "[&>b]:font-semibold",
+  "[&>em]:italic",
+  "[&>i]:italic",
+  "[&>table]:w-full",
+  "[&>table]:border-collapse",
+  "[&>table]:mb-4",
+  "[&_th]:border",
+  "[&_th]:border-border",
+  "[&_th]:px-3",
+  "[&_th]:py-2",
+  "[&_th]:bg-muted",
+  "[&_th]:text-left",
+  "[&_td]:border",
+  "[&_td]:border-border",
+  "[&_td]:px-3",
+  "[&_td]:py-2",
+  "leading-relaxed",
+].join(" ");
+
 /**
  * Sanitizes HTML content to prevent XSS attacks
  */
@@ -80,26 +136,7 @@ export function ProductTabs({
           <h3 className="text-lg font-semibold mb-4">Sobre o Produto</h3>
           {isHtmlContent ? (
             <div
-              className="
-                text-muted-foreground
-                [&>p]:mb-4 [&>p]:leading-relaxed
-                [&>br]:block [&>br]:content-[''] [&>br]:mb-2
-                [&>div]:mb-4
-                [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:mb-4 [&>ul]:space-y-1
-                [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:mb-4 [&>ol]:space-y-1
-                [&_li]:mb-1
-                [&>h1]:text-xl [&>h1]:font-bold [&>h1]:mb-3 [&>h1]:mt-4
-                [&>h2]:text-lg [&>h2]:font-bold [&>h2]:mb-3 [&>h2]:mt-4
-                [&>h3]:text-base [&>h3]:font-semibold [&>h3]:mb-2 [&>h3]:mt-3
-                [&>h4]:text-sm [&>h4]:font-semibold [&>h4]:mb-2 [&>h4]:mt-3
-                [&>a]:text-primary [&>a]:underline [&>a]:hover:opacity-80
-                [&>strong]:font-semibold [&>b]:font-semibold
-                [&>em]:italic [&>i]:italic
-                [&>table]:w-full [&>table]:border-collapse [&>table]:mb-4
-                [&_th]:border [&_th]:border-border [&_th]:px-3 [&_th]:py-2 [&_th]:bg-muted [&_th]:text-left
-                [&_td]:border [&_td]:border-border [&_td]:px-3 [&_td]:py-2
-                leading-relaxed
-              "
+              className={DESCRIPTION_HTML_CLASS_NAME}
               // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML is sanitized via DOMPurify
               dangerouslySetInnerHTML={{ __html: sanitizedDescription }}
             />

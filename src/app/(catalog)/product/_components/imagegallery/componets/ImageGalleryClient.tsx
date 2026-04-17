@@ -49,6 +49,7 @@ export function ImageGalleryClient({
                 fill
                 sizes="80px"
                 className="object-contain p-1"
+                unoptimized
               />
             </button>
           ))}
@@ -64,6 +65,7 @@ export function ImageGalleryClient({
           sizes="(min-width: 768px) 50vw, 100vw"
           className="object-contain p-4 md:p-8"
           priority
+          unoptimized
         />
 
         {/* Paginação Mobile (Dots) */}
