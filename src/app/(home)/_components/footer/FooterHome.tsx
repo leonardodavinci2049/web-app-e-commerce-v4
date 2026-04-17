@@ -230,7 +230,7 @@ export default function FooterHome() {
           <div className="flex flex-col items-center justify-between space-y-2 md:flex-row md:space-y-0">
             <p className="text-sm text-gray-400">
               &copy; {currentYear} {process.env.NEXT_PUBLIC_COMPANY_NAME}. Todos
-              os direitos reservados - CNPJ: {envs.NEXT_PUBLIC_COMPANY_CNPJ}
+              os direitos reservados - CNPJ: {envs.NEXT_PUBLIC_COMPANY_CNPJ} - Build: 14041304
             </p>
             <div className="flex space-x-6 text-sm">
               <Link
