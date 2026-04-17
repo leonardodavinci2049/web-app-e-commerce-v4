@@ -31,6 +31,7 @@ const nextConfig: NextConfig = {
   },
   images: {
     qualities: [75, 100],
+    minimumCacheTTL: 86400, // Cache de imagens otimizadas por 24h (reduz re-fetches do servidor de assets)
     remotePatterns: [
       {
         protocol: "https",
