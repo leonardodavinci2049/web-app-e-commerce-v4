@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import {
-  fetchProductBySlugAction,
-  fetchProductsAction,
-} from "@/app/actions/product";
+import { fetchProductBySlugAction } from "@/app/actions/product";
 import { ProductDetailSkeleton } from "@/components/skeletons";
 import { envs } from "@/core/config";
 import { generateSlug } from "@/lib/slug";
@@ -128,32 +125,6 @@ export async function generateMetadata({
       },
     },
   };
-}
-
-/**
- * Generate static params for all product pages
- * Pre-renders product detail pages at build time for cache warming
- * Returns empty array if API is unavailable (pages will be generated on-demand)
- */
-export async function generateStaticParams() {
-  try {
-    const products = await fetchProductsAction();
-
-    // If no products, return empty array - pages will be generated on-demand
-    if (!products || products.length === 0) {
-      return [];
-    }
-
-    return products.map((product) => ({
-      slug: [generateSlug(product.name, product.id)],
-    }));
-  } catch (_error) {
-    // Return empty array on error - pages will be generated on-demand at runtime
-    console.warn(
-      "[generateStaticParams] Skipping pre-render - API unavailable during build",
-    );
-    return [];
-  }
 }
 
 /**

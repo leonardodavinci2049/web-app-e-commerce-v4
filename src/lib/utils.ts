@@ -15,6 +15,19 @@ export function slugify(value: string): string {
     .replace(/^-|-$/g, "");
 }
 
+/**
+ * Derives a smaller variant URL from an assets API image URL.
+ * Replaces `-original.jpg` suffix with the requested variant (e.g. `-medium.jpg`).
+ * Returns the original URL unchanged if the pattern doesn't match.
+ */
+export function getImageVariantUrl(
+  imageUrl: string,
+  variant: "medium" | "thumbnail",
+): string {
+  if (!imageUrl) return imageUrl;
+  return imageUrl.replace(/-original\.(jpg|jpeg|png|webp)$/i, `-${variant}.$1`);
+}
+
 export function formatCurrencyBRL(
   value: number,
   options?: { withSymbol?: boolean },

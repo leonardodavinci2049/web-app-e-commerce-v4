@@ -28,7 +28,7 @@ function GallerySkeleton({ placeholderImage }: { placeholderImage?: string }) {
     <div className="flex flex-row gap-2 md:gap-4">
       {/* Thumbnail skeleton area */}
       <div className="flex flex-col gap-2 w-16 md:w-20 shrink-0">
-        {Array.from({ length: 4 }).map((_, i) => (
+        {Array.from({ length: 5 }).map((_, i) => (
           <div
             // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton that never reorders
             key={`thumb-${i}`}

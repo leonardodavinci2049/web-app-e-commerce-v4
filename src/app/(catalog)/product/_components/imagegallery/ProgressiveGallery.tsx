@@ -35,9 +35,9 @@ export function ProgressiveGallery({
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [displayImages, setDisplayImages] = useState<GalleryImageData[]>(() => {
     // Initial state: show fallback image with temporary thumbnails (T0)
-    // Creates 4 temporary thumbnails to prevent layout shift when real images load
+    // Creates 5 temporary thumbnails to prevent layout shift when real images load
     if (fallbackImage) {
-      return Array.from({ length: 4 }, (_, index) => ({
+      return Array.from({ length: 5 }, (_, index) => ({
         id: `fallback-temp-${index}`,
         originalName: "product-image",
         urls: {
@@ -50,7 +50,7 @@ export function ProgressiveGallery({
       }));
     }
     // No fallback available, show placeholder with temporary thumbnails
-    return Array.from({ length: 4 }, (_, index) => ({
+    return Array.from({ length: 5 }, (_, index) => ({
       id: `placeholder-temp-${index}`,
       originalName: "no-image",
       urls: {
@@ -91,7 +91,7 @@ export function ProgressiveGallery({
     // Gallery is empty but we have fallback - keep showing fallback with temporary thumbnails
     if (galleryImages.length === 0 && fallbackImage) {
       setDisplayImages(
-        Array.from({ length: 4 }, (_, index) => ({
+        Array.from({ length: 5 }, (_, index) => ({
           id: `fallback-${index}`,
           originalName: "product-image",
           urls: {

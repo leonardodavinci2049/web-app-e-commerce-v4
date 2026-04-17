@@ -32,7 +32,6 @@ export function RelatedProducts({ products }: RelatedProductsProps) {
           {displayProducts.map((product) => (
             <ProductCard
               key={product.id}
-              unoptimizedImage
               product={{
                 id: product.id,
                 sku: product.sku,
