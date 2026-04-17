@@ -47,7 +47,7 @@ export async function getProducts(
       pe_id_taxonomy: params.taxonomyId ?? 0,
       pe_id_marca: params.brandId ?? 0,
       pe_qt_registros: params.limit ?? 100,
-      pe_pagina_id: params.page ?? 0,
+      pe_pagina_id: Math.max(0, (params.page ?? 1) - 1),
       pe_produto: params.searchTerm ?? "",
       pe_coluna_id: params.sortCol ?? 1,
       pe_ordem_id: params.sortOrd ?? 1,
@@ -272,7 +272,7 @@ export async function getProductsByCategory(
 export async function getProductsBySlug(
   slugTaxonomy: string,
   limit = 30,
-  page = 0,
+  page = 1,
   sortCol = 1,
   sortOrd = 1,
 ): Promise<UIProduct[]> {
@@ -284,7 +284,7 @@ export async function getProductsBySlug(
     const response = await ProductWebServiceApi.findProducts({
       pe_slug_taxonomy: slugTaxonomy,
       pe_qt_registros: limit,
-      pe_pagina_id: page,
+      pe_pagina_id: Math.max(0, page - 1),
       pe_coluna_id: sortCol,
       pe_ordem_id: sortOrd,
     });
@@ -307,7 +307,7 @@ export async function getProductsByTaxonomy(
   slugOrId: string,
   taxonomyId?: number,
   limit = 30,
-  page = 0,
+  page = 1,
   sortCol = 1,
   sortOrd = 1,
   stockOnly?: boolean,
@@ -325,7 +325,7 @@ export async function getProductsByTaxonomy(
       pe_id_taxonomy: taxonomyId && taxonomyId > 0 ? taxonomyId : 0,
       pe_slug_taxonomy: slugOrId,
       pe_qt_registros: limit,
-      pe_pagina_id: page,
+      pe_pagina_id: Math.max(0, page - 1),
       pe_coluna_id: sortCol,
       pe_ordem_id: sortOrd,
       pe_flag_estoque: stockFlag,
