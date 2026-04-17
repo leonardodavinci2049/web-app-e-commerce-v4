@@ -73,6 +73,8 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <head>
+        <link rel="preconnect" href="https://assents01.comsuporte.com.br" />
+        <link rel="dns-prefetch" href="https://assents01.comsuporte.com.br" />
         <OrganizationJsonLd />
         <WebSiteJsonLd />
         <LocalBusinessJsonLd />
