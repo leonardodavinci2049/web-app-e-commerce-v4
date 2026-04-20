@@ -253,6 +253,38 @@ if (typeof window === "undefined") {
   }
 
   envVars = validationResult.data;
+
+  // SEO: Validar que títulos de seção da homepage são únicos (renderizados como H2)
+  const sectionTitlesUsedAsH2 = [
+    { key: "HOME_SECTION_1_TITLE", value: envVars.HOME_SECTION_1_TITLE },
+    { key: "HOME_SECTION_3_TITLE", value: envVars.HOME_SECTION_3_TITLE },
+    { key: "HOME_SECTION_4_TITLE", value: envVars.HOME_SECTION_4_TITLE },
+    { key: "HOME_SECTION_5_TITLE", value: envVars.HOME_SECTION_5_TITLE },
+    { key: "HOME_SECTION_6_TITLE", value: envVars.HOME_SECTION_6_TITLE },
+    { key: "HOME_SECTION_7_TITLE", value: envVars.HOME_SECTION_7_TITLE },
+    { key: "HOME_SECTION_8_TITLE", value: envVars.HOME_SECTION_8_TITLE },
+    { key: "HOME_SECTION_9_TITLE", value: envVars.HOME_SECTION_9_TITLE },
+  ];
+  const seenTitles = new Map<string, string>();
+  const duplicateTitles: string[] = [];
+  for (const { key, value } of sectionTitlesUsedAsH2) {
+    const normalized = value.toLowerCase().trim();
+    const existingKey = seenTitles.get(normalized);
+    if (existingKey) {
+      duplicateTitles.push(
+        `  "${key}" e "${existingKey}" têm o mesmo valor "${value}"`,
+      );
+    }
+    seenTitles.set(normalized, key);
+  }
+  if (duplicateTitles.length > 0) {
+    throw new Error(
+      `❌ SEO: Títulos de seção da homepage (HOME_SECTION_*_TITLE) devem ser únicos.\n` +
+        `Cada título é renderizado como <h2> — duplicatas prejudicam o ranking no Google.\n` +
+        `Duplicatas encontradas:\n${duplicateTitles.join("\n")}\n` +
+        `Corrija os valores no arquivo .env.`,
+    );
+  }
 } else {
   // Estamos no cliente - NÃO validar com Zod aqui.
   // No Next.js 16 (Turbopack), process.env.NEXT_PUBLIC_* é substituído estaticamente

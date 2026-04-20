@@ -38,6 +38,7 @@ export interface UIProduct {
   brand?: string;
   isNew?: boolean;
   discount?: number;
+  ean?: string;
   specifications?: Record<string, unknown>;
   shipping?: Record<string, unknown>;
 }
@@ -151,6 +152,7 @@ export function transformProductDetail(detail: ProductWebDetail): UIProduct {
     brand: detail.MARCA ?? undefined,
     isNew: detail.LANCAMENTO === 1,
     discount: detail.PROMOCAO === 1 ? undefined : undefined, // Calculate from price difference if needed
+    ean: detail.EAN ? String(detail.EAN) : undefined,
     specifications: buildSpecifications(detail),
     shipping: buildShippingInfo(detail),
   };

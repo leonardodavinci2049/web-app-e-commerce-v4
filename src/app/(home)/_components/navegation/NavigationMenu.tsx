@@ -158,7 +158,7 @@ export async function NavigationMenu() {
                 label: "Celulares",
                 href:
                   categories.find((c) => c.slug === "linha-celular")?.href ||
-                  "/category/linha-celular",
+                  "/category/celular-1764953141",
                 icon: Smartphone,
               },
               {

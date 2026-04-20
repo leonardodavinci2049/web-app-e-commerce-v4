@@ -16,6 +16,8 @@ interface ProductJsonLdProps {
     isNew?: boolean;
     category?: string;
     subcategory?: string;
+    gtin?: string;
+    mpn?: string;
   };
   /** Rating médio (1-5) - opcional */
   rating?: {
@@ -94,6 +96,16 @@ export function ProductJsonLd({
   // Adicionar SKU se disponível
   if (product.sku) {
     jsonLd.sku = product.sku;
+  }
+
+  // Adicionar GTIN (EAN) se disponível — melhora elegibilidade para Google Shopping
+  if (product.gtin) {
+    jsonLd.gtin = product.gtin;
+  }
+
+  // Adicionar MPN (código do fabricante) se disponível
+  if (product.mpn) {
+    jsonLd.mpn = product.mpn;
   }
 
   // Adicionar categoria como categoria do produto
