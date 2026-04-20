@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { fetchProductBySlugAction } from "@/app/actions/product";
 import { ProductDetailSkeleton } from "@/components/skeletons";
 import { envs } from "@/core/config";
 import { generateSlug } from "@/lib/slug";
 import { toTitleCase } from "@/lib/text-utils";
 import { ProductDetailContainer } from "../_components/ProductDetailContainer";
+import { getProductData } from "./get-product-data";
 
 interface ProductDetailPageProps {
   params: Promise<{
@@ -36,7 +36,8 @@ export async function generateMetadata({
   params,
 }: ProductDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = await fetchProductBySlugAction(slug);
+  const data = await getProductData(slug.join("/"));
+  const product = data?.product;
 
   // Fallback se o produto não for encontrado
   if (!product) {

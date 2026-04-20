@@ -1,10 +1,12 @@
 "use client";
 
-import DOMPurify from "isomorphic-dompurify";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface ProductTabsProps {
+  /** Pre-sanitized description HTML (sanitized on the server) */
   description: string;
+  /** Whether the description contains HTML tags */
+  isHtmlContent: boolean;
   specifications: Record<string, string>;
   shipping: {
     freeShippingMinValue: number;
@@ -69,60 +71,12 @@ const DESCRIPTION_HTML_CLASS_NAME = [
   "leading-relaxed",
 ].join(" ");
 
-/**
- * Sanitizes HTML content to prevent XSS attacks
- */
-function sanitizeHtml(html: string): string {
-  return DOMPurify.sanitize(html, {
-    ALLOWED_TAGS: [
-      "p",
-      "br",
-      "strong",
-      "b",
-      "i",
-      "em",
-      "u",
-      "s",
-      "h1",
-      "h2",
-      "h3",
-      "h4",
-      "h5",
-      "h6",
-      "ul",
-      "ol",
-      "li",
-      "a",
-      "span",
-      "div",
-      "table",
-      "thead",
-      "tbody",
-      "tr",
-      "th",
-      "td",
-    ],
-    ALLOWED_ATTR: ["href", "target", "rel", "class", "style"],
-  });
-}
-
-/**
- * Checks if the content contains HTML tags
- */
-function containsHtml(content: string): boolean {
-  return /<[a-z][\s\S]*>/i.test(content);
-}
-
 export function ProductTabs({
   description,
+  isHtmlContent,
   specifications,
   shipping,
 }: ProductTabsProps) {
-  const isHtmlContent = containsHtml(description);
-  const sanitizedDescription = isHtmlContent
-    ? sanitizeHtml(description)
-    : description;
-
   return (
     <Tabs defaultValue="description" className="w-full">
       <TabsList className="grid w-full grid-cols-3">
@@ -137,8 +91,8 @@ export function ProductTabs({
           {isHtmlContent ? (
             <div
               className={DESCRIPTION_HTML_CLASS_NAME}
-              // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML is sanitized via DOMPurify
-              dangerouslySetInnerHTML={{ __html: sanitizedDescription }}
+              // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML is sanitized server-side via DOMPurify
+              dangerouslySetInnerHTML={{ __html: description }}
             />
           ) : (
             <p className="text-muted-foreground whitespace-pre-line leading-relaxed">

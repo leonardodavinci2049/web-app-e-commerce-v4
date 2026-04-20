@@ -1,25 +1,86 @@
+import DOMPurify from "isomorphic-dompurify";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
-import {
-  fetchCategoriesAction,
-  fetchProductWithRelatedAction,
-} from "@/app/actions/product";
 import { BreadcrumbJsonLd } from "@/components/seo";
 import { ProductGridSkeleton } from "@/components/skeletons";
 import { generateSlug } from "@/lib/slug";
 import { toTitleCase } from "@/lib/text-utils";
+import {
+  getCategoriesData,
+  getProductData,
+} from "../[...slug]/get-product-data";
 import { BackButton } from "./BackButton";
 import { ProductGalleryWrapper } from "./imagegallery/ProductGalleryWrapper";
 import { ProductInfo } from "./ProductInfo";
 import { ProductJsonLd } from "./ProductJsonLd";
-import { ProductTabs } from "./ProductTabs";
 import { RelatedProducts } from "./RelatedProducts";
+
+// Lazy-load ProductTabs — below the fold on mobile, deferring its JS reduces
+// initial bundle size and frees up CPU/bandwidth for the LCP image.
+const ProductTabs = dynamic(
+  () => import("./ProductTabs").then((m) => ({ default: m.ProductTabs })),
+  {
+    loading: () => (
+      <div className="h-48 bg-muted/30 animate-pulse rounded-lg" />
+    ),
+  },
+);
 
 interface ProductDetailContainerProps {
   params: Promise<{
     slug: string[];
   }>;
+}
+
+const DOMPURIFY_CONFIG = {
+  ALLOWED_TAGS: [
+    "p",
+    "br",
+    "strong",
+    "b",
+    "i",
+    "em",
+    "u",
+    "s",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "ul",
+    "ol",
+    "li",
+    "a",
+    "span",
+    "div",
+    "table",
+    "thead",
+    "tbody",
+    "tr",
+    "th",
+    "td",
+  ],
+  ALLOWED_ATTR: ["href", "target", "rel", "class", "style"],
+};
+
+function containsHtml(content: string): boolean {
+  return /<[a-z][\s\S]*>/i.test(content);
+}
+
+function sanitizeDescription(description: string): {
+  sanitizedHtml: string;
+  isHtml: boolean;
+} {
+  const isHtml = containsHtml(description);
+  return {
+    sanitizedHtml: isHtml
+      ? DOMPurify.sanitize(description, DOMPURIFY_CONFIG)
+      : description,
+    isHtml,
+  };
 }
 
 // Skeleton for gallery section with optional placeholder image.
@@ -36,6 +97,8 @@ function GallerySkeleton({ placeholderImage }: { placeholderImage?: string }) {
             fill
             sizes="(min-width: 768px) 50vw, 100vw"
             className="object-contain p-4 md:p-8"
+            preload
+            fetchPriority="high"
             unoptimized
           />
         ) : (
@@ -63,10 +126,11 @@ export async function ProductDetailContainer({
   params,
 }: ProductDetailContainerProps) {
   const { slug } = await params;
+  const slugKey = slug.join("/");
 
   const [productData, categories] = await Promise.all([
-    fetchProductWithRelatedAction(slug),
-    fetchCategoriesAction(),
+    getProductData(slugKey),
+    getCategoriesData(),
   ]);
 
   if (!productData) {
@@ -144,6 +208,11 @@ export async function ProductDetailContainer({
         returnDays: Number(product.shipping.returnDays) || 7,
       }
     : defaultShipping;
+
+  // Sanitize description on the server to keep DOMPurify out of the client bundle
+  const descriptionData = sanitizeDescription(
+    product.description || "Sem descrição disponível.",
+  );
 
   return (
     <div className="container mx-auto px-4 py-2 lg:py-8">
@@ -234,15 +303,20 @@ export async function ProductDetailContainer({
       {/* Tabs de Informações */}
       <div className="mb-16">
         <ProductTabs
-          description={product.description || "Sem descrição disponível."}
+          description={descriptionData.sanitizedHtml}
+          isHtmlContent={descriptionData.isHtml}
           specifications={productSpecifications}
           shipping={productShipping}
         />
       </div>
-      {/* Produtos Relacionados with Suspense */}
-      <Suspense fallback={<ProductGridSkeleton count={4} />}>
-        <RelatedProducts products={relatedWithNames} />
-      </Suspense>
+      {/* Produtos Relacionados — deferred rendering via content-visibility */}
+      <div
+        style={{ contentVisibility: "auto", containIntrinsicSize: "0 500px" }}
+      >
+        <Suspense fallback={<ProductGridSkeleton count={4} />}>
+          <RelatedProducts products={relatedWithNames} />
+        </Suspense>
+      </div>
       {/* Breadcrumb mobile — abaixo dos produtos relacionados */}
       {product.taxonomy && product.taxonomy.length > 0 && (
         <nav className="flex md:hidden flex-wrap items-center text-xs text-muted-foreground mt-8 gap-y-1">
