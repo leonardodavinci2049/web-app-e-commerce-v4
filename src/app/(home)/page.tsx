@@ -71,7 +71,7 @@ export default async function HomePage() {
             envs.HOME_SECTION_4_TITLE,
           )}
         >
-          <ProductSectionCat01 />
+          <ProductSectionCat01 title={envs.HOME_SECTION_4_TITLE} />
         </Suspense>
 
         {/* Product Category Sections 2 */}
@@ -81,7 +81,7 @@ export default async function HomePage() {
             envs.HOME_SECTION_5_TITLE,
           )}
         >
-          <ProductSectionCat02 />
+          <ProductSectionCat02 title={envs.HOME_SECTION_5_TITLE} />
         </Suspense>
 
         {/* Product Category Sections 3*/}
@@ -91,7 +91,7 @@ export default async function HomePage() {
             envs.HOME_SECTION_6_TITLE,
           )}
         >
-          <ProductSectionCat03 />
+          <ProductSectionCat03 title={envs.HOME_SECTION_6_TITLE} />
         </Suspense>
 
         {/* Product Category Sections5*/}
@@ -101,7 +101,7 @@ export default async function HomePage() {
             envs.HOME_SECTION_7_TITLE,
           )}
         >
-          <ProductSectionCat04 />
+          <ProductSectionCat04 title={envs.HOME_SECTION_7_TITLE} />
         </Suspense>
 
         {/* Product Category Sections 5*/}
@@ -111,7 +111,7 @@ export default async function HomePage() {
             envs.HOME_SECTION_8_TITLE,
           )}
         >
-          <ProductSectionCat05 />
+          <ProductSectionCat05 title={envs.HOME_SECTION_8_TITLE} />
         </Suspense>
 
         <PromoBanner />
@@ -123,7 +123,7 @@ export default async function HomePage() {
             envs.HOME_SECTION_1_TITLE,
           )}
         >
-          <ProductSectionHighlights />
+          <ProductSectionHighlights title={envs.HOME_SECTION_1_TITLE} />
         </Suspense>
 
         {/* SpecificCategory needs products passed - keeping static for now */}
@@ -138,7 +138,7 @@ export default async function HomePage() {
             envs.HOME_SECTION_3_TITLE,
           )}
         >
-          <ProductSectionNewReleases />
+          <ProductSectionNewReleases title={envs.HOME_SECTION_3_TITLE} />
         </Suspense>
 
         <PromoBannersGrid className="bg-muted/30" />

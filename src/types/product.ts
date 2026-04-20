@@ -116,4 +116,5 @@ export interface ProductWithMetadata extends Product {
   isLaunch?: boolean;
   createdAt?: string;
   slug?: string;
+  ean?: string;
 }

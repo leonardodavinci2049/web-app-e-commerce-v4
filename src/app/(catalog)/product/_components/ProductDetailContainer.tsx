@@ -163,6 +163,7 @@ export async function ProductDetailContainer({
           isNew: product.isNew,
           category: productWithNames.category,
           subcategory: productWithNames.subcategory,
+          gtin: product.ean || undefined,
         }}
       />
       {/* Breadcrumb JSON-LD para rich results */}

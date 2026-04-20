@@ -2,7 +2,11 @@ import { envs } from "@/core/config/envs";
 import { getCategoryThreeSectionProducts } from "../../actions";
 import { ProductCardHome } from "./components/ProductCardHome";
 
-export default async function ProductSectionCat03() {
+export default async function ProductSectionCat03({
+  title,
+}: {
+  title?: string;
+}) {
   const products = await getCategoryThreeSectionProducts();
 
   // Transform products to match ProductCardHome props
@@ -16,7 +20,7 @@ export default async function ProductSectionCat03() {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-end mb-8">
           <h2 className="text-2xl font-bold text-foreground relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-1/2 after:h-1 after:bg-primary after:rounded-full">
-            {envs.HOME_SECTION_6_TITLE}
+            {title ?? envs.HOME_SECTION_6_TITLE}
           </h2>
           <a
             href="/products"
