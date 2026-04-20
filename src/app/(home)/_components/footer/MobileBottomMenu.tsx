@@ -13,6 +13,7 @@ import { CategoryMenuAccordion } from "@/components/category-menu/CategoryMenuAc
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -64,6 +65,9 @@ export function MobileBottomMenu({ categories }: MobileBottomMenuProps) {
           <SheetContent side="left" className="w-[300px] sm:w-[350px] p-0">
             <SheetHeader className="px-6 py-4 border-b">
               <SheetTitle>Todas as Categorias</SheetTitle>
+              <SheetDescription className="sr-only">
+                Navegue pelas categorias de produtos
+              </SheetDescription>
             </SheetHeader>
             <div className="px-4 py-4 overflow-y-auto max-h-[calc(100vh-80px)]">
               <CategoryMenuAccordion
