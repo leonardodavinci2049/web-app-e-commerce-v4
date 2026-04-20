@@ -7,7 +7,7 @@ import { getCurrentDatePtBr, getCurrentYear } from "@/lib/current-time";
 
 export const metadata: Metadata = {
   title: `Termos e Condições - ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
-  description: `Termos de uso e condições para vendas no atacado B2B da ${envs.NEXT_PUBLIC_COMPANY_NAME}. Conheça as regras e políticas que regem nossa plataforma de e-commerce atacadista.`,
+  description: `Termos de uso e condições para vendas no atacado e varejo B2B/B2C da ${envs.NEXT_PUBLIC_COMPANY_NAME}. Conheça as regras e políticas que regem nossa plataforma de e-commerce atacadista e varejista.`,
 };
 
 export default async function TermsPage() {
@@ -27,13 +27,14 @@ export default async function TermsPage() {
           </h1>
         </div>
         <p className="text-muted-foreground mx-auto max-w-3xl text-xl leading-relaxed">
-          Condições de uso da plataforma de e-commerce atacadista. Ao acessar e
-          utilizar nossos serviços, você concorda com os termos estabelecidos.
+          Condições de uso da plataforma de e-commerce atacadista e varejista.
+          Ao acessar e utilizar nossos serviços, você concorda com os termos
+          estabelecidos.
         </p>
         <div className="mt-6 flex items-center justify-center gap-4">
           <Badge variant="outline" className="flex items-center gap-2">
             <Building2 className="h-4 w-4" />
-            Comércio B2B Atacadista
+            Comércio B2B/B2C - Atacado e Varejo
           </Badge>
           <Badge variant="outline" className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
@@ -98,7 +99,7 @@ export default async function TermsPage() {
                   href="#pricing"
                   className="hover:text-primary block py-1 text-sm transition-colors"
                 >
-                  4. Política de Preços B2B
+                  4. Política de Preços B2B/B2C
                 </a>
                 <a
                   href="#orders"
@@ -181,17 +182,19 @@ export default async function TermsPage() {
             <CardContent>
               <div className="grid gap-4">
                 <div className="border-primary/20 border-l-4 pl-4">
-                  <h4 className="mb-2 font-semibold">Plataforma B2B</h4>
+                  <h4 className="mb-2 font-semibold">Plataforma B2B/B2C</h4>
                   <p className="text-muted-foreground text-sm">
-                    Sistema de e-commerce voltado exclusivamente para vendas no
-                    atacado entre empresas.
+                    Sistema de e-commerce voltado para vendas no atacado e
+                    varejo, atendendo empresas e consumidores finais.
                   </p>
                 </div>
                 <div className="border-primary/20 border-l-4 pl-4">
-                  <h4 className="mb-2 font-semibold">Cliente Atacadista</h4>
+                  <h4 className="mb-2 font-semibold">
+                    Cliente Atacadista e Varejista
+                  </h4>
                   <p className="text-muted-foreground text-sm">
-                    Empresa ou pessoa jurídica credenciada para realizar compras
-                    em grandes volumes.
+                    Empresa, pessoa jurídica ou pessoa física credenciada para
+                    realizar compras no atacado ou varejo.
                   </p>
                 </div>
                 <div className="border-primary/20 border-l-4 pl-4">
@@ -228,11 +231,11 @@ export default async function TermsPage() {
             </CardContent>
           </Card>
 
-          {/* 4. Política de Preços B2B */}
+          {/* 4. Política de Preços B2B/B2C */}
           <Card id="pricing">
             <CardHeader>
               <CardTitle className="text-xl">
-                4. Política de Preços B2B
+                4. Política de Preços B2B/B2C
               </CardTitle>
             </CardHeader>
             <CardContent className="prose prose-slate max-w-none">
@@ -477,7 +480,7 @@ export default async function TermsPage() {
                 </p>
                 <p className="text-muted-foreground text-xs">
                   Todos os direitos reservados. E-commerce desenvolvido para
-                  vendas atacadistas B2B.
+                  vendas atacadistas e varejistas B2B/B2C.
                 </p>
                 <p className="text-muted-foreground mt-2 text-xs">
                   Última atualização: {currentDate}

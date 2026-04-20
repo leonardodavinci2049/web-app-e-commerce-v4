@@ -89,10 +89,50 @@ export default function FooterHome() {
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="/products"
+                  href="/about"
                   className="text-sm text-gray-400 transition-colors hover:text-white cursor-pointer"
                 >
-                  Catálogo de Produtos
+                  Quem Somos
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/antispam"
+                  className="text-sm text-gray-400 transition-colors hover:text-white cursor-pointer"
+                >
+                  Política Anti-Spam
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  className="text-sm text-gray-400 transition-colors hover:text-white cursor-pointer"
+                >
+                  Fale Conosco
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/privacy"
+                  className="text-sm text-gray-400 transition-colors hover:text-white cursor-pointer"
+                >
+                  Política de Privacidade
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/return"
+                  className="text-sm text-gray-400 transition-colors hover:text-white cursor-pointer"
+                >
+                  Política de Entrega, Troca e Devolução
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/terms"
+                  className="text-sm text-gray-400 transition-colors hover:text-white cursor-pointer"
+                >
+                  Termos e Condições
                 </Link>
               </li>
             </ul>
@@ -231,7 +271,7 @@ export default function FooterHome() {
             <p className="text-sm text-gray-400">
               &copy; {currentYear} {process.env.NEXT_PUBLIC_COMPANY_NAME}. Todos
               os direitos reservados - CNPJ: {envs.NEXT_PUBLIC_COMPANY_CNPJ} -
-              Build: 17041456
+              Build: 20041243
             </p>
             <div className="flex space-x-6 text-sm">
               <Link

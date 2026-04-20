@@ -23,7 +23,7 @@ import { getCurrentDatePtBr, getCurrentYear } from "@/lib/current-time";
 
 export const metadata: Metadata = {
   title: `Política de Entrega, Troca e Devolução - ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
-  description: `Política completa de entrega, troca e devolução de produtos da ${envs.NEXT_PUBLIC_COMPANY_NAME}. Conheça prazos, condições e procedimentos para vendas atacadistas B2B.`,
+  description: `Política completa de entrega, troca e devolução de produtos da ${envs.NEXT_PUBLIC_COMPANY_NAME}. Conheça prazos, condições e procedimentos para vendas no atacado e varejo B2B/B2C.`,
 };
 
 export default async function ReturnPage() {
@@ -48,12 +48,14 @@ export default async function ReturnPage() {
         <p className="text-muted-foreground mx-auto max-w-3xl px-4 text-lg leading-relaxed sm:text-xl">
           Sua satisfação é muito importante para nós. Conheça nossos
           procedimentos e prazos para entrega, troca e devolução de produtos no
-          segmento atacadista B2B.
+          segmento atacadista e varejista B2B/B2C.
         </p>
         <div className="mt-4 flex flex-wrap items-center justify-center gap-2 sm:mt-6 sm:gap-4">
           <Badge variant="outline" className="flex items-center gap-2">
             <Building2 className="h-4 w-4" />
-            <span className="text-xs sm:text-sm">Comércio B2B Atacadista</span>
+            <span className="text-xs sm:text-sm">
+              Comércio B2B/B2C - Atacado e Varejo
+            </span>
           </Badge>
           <Badge variant="outline" className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
@@ -439,13 +441,15 @@ export default async function ReturnPage() {
                 </div>
                 <div className="rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-950/20">
                   <h4 className="mb-3 font-semibold text-green-800 dark:text-green-200">
-                    📦 Condições B2B
+                    📦 Condições B2B/B2C
                   </h4>
                   <ul className="space-y-2 text-sm text-green-700 dark:text-green-300">
-                    <li>• Frete diferenciado para atacado</li>
+                    <li>• Frete diferenciado para atacado e varejo</li>
                     <li>• Prazos otimizados por região</li>
                     <li>• Entregas programadas disponíveis</li>
-                    <li>• Nota fiscal adequada para revenda</li>
+                    <li>
+                      • Nota fiscal adequada para revenda e consumidor final
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -649,12 +653,13 @@ export default async function ReturnPage() {
 
               <div className="bg-primary text-primary-foreground mt-6 rounded-lg p-4">
                 <h4 className="mb-2 font-semibold">
-                  💼 Atendimento Especializado B2B
+                  💼 Atendimento Especializado B2B/B2C
                 </h4>
                 <p className="text-sm opacity-90">
-                  Nossa equipe está preparada para atender empresas com
-                  processos específicos para compras corporativas, notas fiscais
-                  e condições diferenciadas.
+                  Nossa equipe está preparada para atender empresas e
+                  consumidores finais com processos específicos para compras
+                  corporativas, no varejo, notas fiscais e condições
+                  diferenciadas.
                 </p>
               </div>
             </CardContent>
@@ -676,7 +681,8 @@ export default async function ReturnPage() {
                   Última atualização: {currentDate}
                 </p>
                 <p className="text-muted-foreground mt-2 text-xs">
-                  E-commerce B2B com atendimento especializado para empresas
+                  E-commerce B2B/B2C com atendimento especializado para empresas
+                  e consumidores
                 </p>
               </div>
             </CardContent>

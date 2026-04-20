@@ -49,7 +49,7 @@ export default async function AntispamPage() {
         <div className="mt-6 flex items-center justify-center gap-4">
           <Badge variant="outline" className="flex items-center gap-2">
             <Building2 className="h-4 w-4" />
-            Comércio B2B Atacadista
+            Comércio B2B/B2C - Atacado e Varejo
           </Badge>
           <Badge variant="outline" className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
@@ -626,7 +626,7 @@ export default async function AntispamPage() {
                   Última atualização: {currentDate}
                 </p>
                 <p className="text-muted-foreground mt-2 text-xs">
-                  E-commerce B2B com comunicações éticas e responsáveis
+                  E-commerce B2B/B2C com comunicações éticas e responsáveis
                 </p>
               </div>
             </CardContent>
