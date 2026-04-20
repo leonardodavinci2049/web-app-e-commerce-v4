@@ -22,6 +22,13 @@ export const PLACEHOLDER_IMAGE = "/images/product/no-image.jpeg";
 // UI Types
 // ============================================================================
 
+export interface UITaxonomyItem {
+  id: string;
+  name: string;
+  slug: string;
+  level: number;
+}
+
 export interface UIProduct {
   id: string;
   sku?: string;
@@ -41,6 +48,7 @@ export interface UIProduct {
   ean?: string;
   specifications?: Record<string, unknown>;
   shipping?: Record<string, unknown>;
+  taxonomy?: UITaxonomyItem[];
 }
 
 export interface UISubcategory {

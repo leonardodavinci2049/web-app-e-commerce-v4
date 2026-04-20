@@ -30,23 +30,23 @@ export async function GET() {
           });
         }
 
-        // Level 2: Group (e.g., /category/informatica/notebooks)
+        // Level 2: Group (e.g., /category/notebooks)
         if (category.subcategories && category.subcategories.length > 0) {
           for (const subcategory of category.subcategories) {
             if (subcategory.slug) {
               pages.push({
-                url: `${baseUrl}/category/${category.slug}/${subcategory.slug}`,
+                url: `${baseUrl}/category/${subcategory.slug}`,
                 changeFrequency: "weekly",
                 priority: 0.6,
               });
             }
 
-            // Level 3: Subgroup (e.g., /category/informatica/notebooks/gaming)
+            // Level 3: Subgroup (e.g., /category/gaming)
             if (subcategory.children && subcategory.children.length > 0) {
               for (const subgroup of subcategory.children) {
                 if (subgroup.slug) {
                   pages.push({
-                    url: `${baseUrl}/category/${category.slug}/${subcategory.slug}/${subgroup.slug}`,
+                    url: `${baseUrl}/category/${subgroup.slug}`,
                     changeFrequency: "weekly",
                     priority: 0.5,
                   });
