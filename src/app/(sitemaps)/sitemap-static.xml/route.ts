@@ -21,6 +21,42 @@ export async function GET() {
       changeFrequency: "daily",
       priority: 0.9,
     },
+    {
+      url: `${baseUrl}/about`,
+      lastModified: "2025-10-15",
+      changeFrequency: "monthly",
+      priority: 0.4,
+    },
+    {
+      url: `${baseUrl}/contact`,
+      lastModified: "2025-10-15",
+      changeFrequency: "monthly",
+      priority: 0.4,
+    },
+    {
+      url: `${baseUrl}/privacy`,
+      lastModified: "2025-10-15",
+      changeFrequency: "monthly",
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/terms`,
+      lastModified: "2025-10-15",
+      changeFrequency: "monthly",
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/return`,
+      lastModified: "2025-10-15",
+      changeFrequency: "monthly",
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/antispam`,
+      lastModified: "2025-10-15",
+      changeFrequency: "monthly",
+      priority: 0.2,
+    },
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

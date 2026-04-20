@@ -12,6 +12,7 @@ import {
   transformRelatedProducts,
   type UICategory,
   type UIProduct,
+  type UITaxonomyItem,
 } from "@/lib/transformers";
 import { CategoryServiceApi } from "@/services/api-main/category/category-service-api";
 import { ProductWebServiceApi } from "@/services/api-main/product/product-service-api";
@@ -178,13 +179,27 @@ export async function getProductWithRelated(
     // Extract related products from data[2] of the API response
     const relatedRaw = ProductWebServiceApi.extractRelatedProducts(response);
 
+    // Extract taxonomies from data[1] for breadcrumb hierarchy
+    const taxonomiesRaw = ProductWebServiceApi.extractTaxonomies(response);
+    const taxonomy: UITaxonomyItem[] = taxonomiesRaw
+      .filter((t) => t.TAXONOMIA && t.ID_TAXONOMY)
+      .sort((a, b) => (a.LEVEL ?? 0) - (b.LEVEL ?? 0))
+      .map((t) => ({
+        id: String(t.ID_TAXONOMY),
+        name: t.TAXONOMIA as string,
+        slug: t.SLUG || "",
+        level: t.LEVEL ?? 0,
+      }));
+
     // Transform and filter out current product from related products
     const relatedProducts = transformRelatedProducts(relatedRaw).filter(
       (p) => p.id !== String(product.ID_PRODUTO),
     );
 
+    const transformedProduct = transformProductDetail(product);
+
     return {
-      product: transformProductDetail(product),
+      product: { ...transformedProduct, taxonomy },
       relatedProducts,
     };
   } catch (error) {

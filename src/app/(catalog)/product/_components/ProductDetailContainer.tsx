@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 import {
   fetchCategoriesAction,
@@ -83,6 +83,13 @@ export async function ProductDetailContainer({
   }
 
   const { product, relatedProducts } = productData;
+
+  // Redirect to canonical slug if the URL text doesn't match
+  const canonicalSlug = generateSlug(product.name, product.id);
+  const currentSlug = slug.join("/");
+  if (currentSlug !== canonicalSlug) {
+    redirect(`/product/${canonicalSlug}`);
+  }
 
   // resolve nomes de categoria / subcategoria a partir dos IDs
   const getCategoryName = (categoryId?: string) =>
@@ -171,6 +178,12 @@ export async function ProductDetailContainer({
         items={[
           { name: "Home", url: "/" },
           { name: "Produtos", url: "/products" },
+          ...(product.taxonomy
+            ?.filter((t) => t.slug)
+            .map((t) => ({
+              name: toTitleCase(t.name),
+              url: `/category/${t.slug}`,
+            })) ?? []),
           {
             name: toTitleCase(product.name),
             url: `/product/${generateSlug(product.name, product.id)}`,
@@ -186,6 +199,19 @@ export async function ProductDetailContainer({
         <a href="/products" className="hover:text-primary transition-colors">
           Produtos
         </a>
+        {product.taxonomy
+          ?.filter((t) => t.slug)
+          .map((t) => (
+            <span key={t.id} className="contents">
+              <span className="mx-2">/</span>
+              <a
+                href={`/category/${t.slug}`}
+                className="hover:text-primary transition-colors"
+              >
+                {toTitleCase(t.name)}
+              </a>
+            </span>
+          ))}
         <span className="mx-2">/</span>
         <span className="text-foreground font-medium">
           {toTitleCase(product.name)}
@@ -226,6 +252,31 @@ export async function ProductDetailContainer({
       <Suspense fallback={<ProductGridSkeleton count={4} />}>
         <RelatedProducts products={relatedWithNames} />
       </Suspense>
+      {/* Breadcrumb mobile — abaixo dos produtos relacionados */}
+      {product.taxonomy?.some((t) => t.slug) && (
+        <nav className="flex md:hidden flex-wrap items-center text-xs text-muted-foreground mt-8 gap-y-1">
+          <a href="/" className="hover:text-primary transition-colors">
+            Home
+          </a>
+          <span className="mx-1.5">/</span>
+          <a href="/products" className="hover:text-primary transition-colors">
+            Produtos
+          </a>
+          {product.taxonomy
+            .filter((t) => t.slug)
+            .map((t) => (
+              <span key={t.id} className="contents">
+                <span className="mx-1.5">/</span>
+                <a
+                  href={`/category/${t.slug}`}
+                  className="hover:text-primary transition-colors"
+                >
+                  {toTitleCase(t.name)}
+                </a>
+              </span>
+            ))}
+        </nav>
+      )}
     </div>
   );
 }
