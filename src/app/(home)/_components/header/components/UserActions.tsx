@@ -22,7 +22,7 @@ export function UserActions() {
   return (
     <div className="flex items-center gap-6 text-sm font-medium text-foreground">
       <a
-        href="/"
+        href="/contact"
         className="flex flex-col items-center gap-1 hover:text-primary transition-colors group"
       >
         <MessageCircle className="w-6 h-6 group-hover:scale-110 transition-transform" />

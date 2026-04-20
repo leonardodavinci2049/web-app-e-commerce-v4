@@ -48,7 +48,7 @@ export function FAQSection() {
           {/* Left Side - Content */}
           <div className="order-2 lg:order-1">
             <Badge className="mb-3 sm:mb-4 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 text-xs sm:text-sm">
-              REVENDA ATACADISTA
+              ATACADO E VAREJO
             </Badge>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 leading-tight">
               Há mais de 25 anos Fornecendo Produtos de Qualidade para
@@ -56,8 +56,8 @@ export function FAQSection() {
             </h2>
             <p className="text-base sm:text-lg text-muted-foreground">
               Distribuição de Eletrônicos, Informática e Perfumes Importados,
-              Preços Atacadistas, Suporte Especializado e Condições Exclusivas
-              para Revenda.
+              Preços para Atacado e Varejo, Suporte Especializado e Condições
+              Exclusivas para Revendedores e Consumidores.
             </p>
           </div>
 

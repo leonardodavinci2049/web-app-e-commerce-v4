@@ -2,7 +2,7 @@ import { CheckCircle, Package } from "lucide-react";
 
 const BENEFITS_DATA = [
   {
-    title: "Preços Atacadistas",
+    title: "Preços para Atacado e Varejo",
     description: "Margens competitivas para maximizar seus lucros",
   },
   {
