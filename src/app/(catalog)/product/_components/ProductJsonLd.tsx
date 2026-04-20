@@ -1,5 +1,3 @@
-"use client";
-
 import { envs } from "@/core/config";
 import { generateSlug } from "@/lib/slug";
 
