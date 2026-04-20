@@ -43,12 +43,12 @@ export default async function PrivacyPage() {
         <p className="text-muted-foreground mx-auto max-w-3xl text-xl leading-relaxed">
           Nosso compromisso é respeitar sua privacidade e garantir o sigilo de
           todas as informações que você nos fornece em nossa plataforma de
-          e-commerce atacadista.
+          e-commerce atacadista e varejista.
         </p>
         <div className="mt-6 flex items-center justify-center gap-4">
           <Badge variant="outline" className="flex items-center gap-2">
             <Building2 className="h-4 w-4" />
-            Comércio B2B Atacadista
+            Comércio B2B/B2C - Atacado e Varejo
           </Badge>
           <Badge variant="outline" className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
@@ -275,7 +275,7 @@ export default async function PrivacyPage() {
                   </h4>
                   <p className="text-muted-foreground text-sm">
                     Assinam nossa newsletter para receber ofertas e novidades do
-                    atacado.
+                    atacado e varejo.
                   </p>
                 </div>
                 <div className="border-primary/20 border-l-4 pl-4">
@@ -846,8 +846,8 @@ export default async function PrivacyPage() {
                   Criado: 06 de Maio de 2018 | Última atualização: {currentDate}
                 </p>
                 <p className="text-muted-foreground mt-2 text-xs">
-                  E-commerce B2B desenvolvido para vendas atacadistas com
-                  proteção de dados
+                  E-commerce B2B/B2C desenvolvido para vendas no atacado e
+                  varejo com proteção de dados
                 </p>
               </div>
             </CardContent>

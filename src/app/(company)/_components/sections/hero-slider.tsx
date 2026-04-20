@@ -11,10 +11,10 @@ const SLIDES_DATA: SlideData[] = [
   {
     type: "content",
     title: "Sua Parceira em",
-    highlight: "Revenda Atacadista",
+    highlight: "Atacado e Varejo",
     description:
-      "Distribuidora especializada em Eletrônicos, Informática e Perfumes Importados. Oferecemos qualidade, procedência e agilidade para fazer seu negócio prosperar.",
-    badge: "🚀 Plataforma de Revenda - Preços no Atacado",
+      "Distribuidora especializada em Eletrônicos, Informática e Perfumes Importados. Oferecemos qualidade, procedência e agilidade para fazer seu negócio prosperar ou para você encontrar os melhores produtos.",
+    badge: "🚀 Plataforma de Atacado e Varejo - Melhores Preços",
   },
   {
     type: "image",

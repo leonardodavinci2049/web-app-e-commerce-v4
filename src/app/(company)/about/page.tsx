@@ -21,7 +21,7 @@ import { getCurrentYear } from "@/lib/current-time";
 
 export const metadata: Metadata = {
   title: `Quem Somos - ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
-  description: `Conheça a história da ${envs.NEXT_PUBLIC_COMPANY_NAME}, empresa atacadista B2B com mais de 30 anos de experiência no mercado. Excelência em atendimento e os melhores preços para sua empresa.`,
+  description: `Conheça a história da ${envs.NEXT_PUBLIC_COMPANY_NAME}, empresa atacadista e varejista B2B/B2C com mais de 30 anos de experiência no mercado. Excelência em atendimento e os melhores preços para sua empresa.`,
 };
 
 export default async function AboutPage() {
@@ -41,8 +41,8 @@ export default async function AboutPage() {
         </div>
         <p className="text-muted-foreground mx-auto max-w-4xl text-2xl leading-relaxed">
           Há mais de <strong>{yearsInMarket} anos</strong> no mercado, somos uma
-          das maiores distribuidoras atacadistas do Brasil, oferecendo{" "}
-          <strong>excelência em atendimento </strong> e os{" "}
+          das maiores distribuidoras atacadistas e varejistas do Brasil,
+          oferecendo <strong>excelência em atendimento </strong> e os{" "}
           <strong>melhores preços </strong>
           para empresas que buscam tecnologia e qualidade.
         </p>
@@ -66,7 +66,7 @@ export default async function AboutPage() {
             className="flex items-center gap-2 px-4 py-2 text-base"
           >
             <Building2 className="h-4 w-4" />
-            B2B Atacadista
+            B2B/B2C - Atacado e Varejo
           </Badge>
         </div>
       </div>
@@ -205,15 +205,15 @@ export default async function AboutPage() {
                 year: "2012",
                 title: "Era Digital",
                 description:
-                  "Início das atividades online utilizando tecnologia própria, revolucionando o atendimento B2B.",
+                  "Início das atividades online utilizando tecnologia própria, revolucionando o atendimento B2B e B2C.",
                 icon: <Globe className="h-6 w-6" />,
                 position: "right",
               },
               {
                 year: "2024",
-                title: `${envs.NEXT_PUBLIC_COMPANY_NAME} B2B`,
+                title: `${envs.NEXT_PUBLIC_COMPANY_NAME} B2B/B2C`,
                 description:
-                  "Lançamento da plataforma especializada em vendas atacadistas para empresas, com foco total no segmento B2B.",
+                  "Lançamento da plataforma especializada em vendas no atacado e varejo, atendendo tanto empresas quanto consumidores finais nos segmentos B2B e B2C.",
                 icon: <Star className="h-6 w-6" />,
                 position: "left",
               },
@@ -288,9 +288,10 @@ export default async function AboutPage() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground leading-relaxed">
-                Ser reconhecida como a principal distribuidora atacadista do
-                Brasil, referência em qualidade, inovação e relacionamento
-                duradouro com nossos parceiros comerciais.
+                Ser reconhecida como a principal distribuidora atacadista e
+                varejista do Brasil, referência em qualidade, inovação e
+                relacionamento duradouro com nossos parceiros comerciais e
+                clientes.
               </p>
             </CardContent>
           </Card>
@@ -455,8 +456,8 @@ export default async function AboutPage() {
               Nos últimos anos, realizamos grandes investimentos em gestão de
               produtos, relacionamento com clientes e desenvolvimento de
               tecnologias exclusivas. Nosso objetivo é oferecer essas inovações
-              ao mercado atacadista, sempre mantendo nossa tradição de
-              excelência e preços competitivos.
+              ao mercado atacadista e varejista, sempre mantendo nossa tradição
+              de excelência e preços competitivos.
             </p>
           </CardContent>
         </Card>
@@ -469,7 +470,8 @@ export default async function AboutPage() {
             <h2 className="mb-4 text-3xl font-bold">Quer Saber Mais?</h2>
             <p className="mb-8 text-lg opacity-90">
               Entre em contato conosco e descubra como podemos ajudar sua
-              empresa a crescer com as melhores soluções do mercado atacadista.
+              empresa a crescer com as melhores soluções do mercado atacadista e
+              varejista.
             </p>
             <div className="grid gap-6 text-center md:grid-cols-3">
               <div>

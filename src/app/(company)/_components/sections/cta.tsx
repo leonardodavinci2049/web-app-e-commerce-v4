@@ -11,7 +11,7 @@ export function CTASection() {
         </h2>
         <p className="mx-auto mb-6 max-w-2xl text-base opacity-90 sm:mb-8 sm:text-lg lg:text-xl">
           Cadastre-se agora e tenha acesso ao nosso catálogo exclusivo com
-          preços atacadistas
+          preços para atacado e varejo
         </p>
         <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
           <Link href="/sign-up" className="w-full sm:w-auto">
