@@ -22,21 +22,12 @@ interface ProductDetailContainerProps {
   }>;
 }
 
-// Skeleton for gallery section with optional placeholder image
+// Skeleton for gallery section with optional placeholder image.
+// Shows only the main image area without fake thumbnails to avoid
+// layout shift and prevent search engines from indexing placeholder images.
 function GallerySkeleton({ placeholderImage }: { placeholderImage?: string }) {
   return (
     <div className="flex flex-row gap-2 md:gap-4">
-      {/* Thumbnail skeleton area */}
-      <div className="flex flex-col gap-2 w-16 md:w-20 shrink-0">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <div
-            // biome-ignore lint/suspicious/noArrayIndexKey: Static skeleton that never reorders
-            key={`thumb-${i}`}
-            className="aspect-square bg-muted rounded-lg animate-pulse"
-          />
-        ))}
-      </div>
-      {/* Main image area - shows placeholder if available */}
       <div className="relative flex-1 aspect-square bg-white rounded-lg border border-border overflow-hidden">
         {placeholderImage ? (
           <Image
@@ -178,12 +169,10 @@ export async function ProductDetailContainer({
         items={[
           { name: "Home", url: "/" },
           { name: "Produtos", url: "/products" },
-          ...(product.taxonomy
-            ?.filter((t) => t.slug)
-            .map((t) => ({
-              name: toTitleCase(t.name),
-              url: `/category/${t.slug}`,
-            })) ?? []),
+          ...(product.taxonomy?.map((t) => ({
+            name: toTitleCase(t.name),
+            url: t.slug ? `/category/${t.slug}` : "/products",
+          })) ?? []),
           {
             name: toTitleCase(product.name),
             url: `/product/${generateSlug(product.name, product.id)}`,
@@ -199,19 +188,21 @@ export async function ProductDetailContainer({
         <a href="/products" className="hover:text-primary transition-colors">
           Produtos
         </a>
-        {product.taxonomy
-          ?.filter((t) => t.slug)
-          .map((t) => (
-            <span key={t.id} className="contents">
-              <span className="mx-2">/</span>
+        {product.taxonomy?.map((t) => (
+          <span key={t.id} className="contents">
+            <span className="mx-2">/</span>
+            {t.slug ? (
               <a
                 href={`/category/${t.slug}`}
                 className="hover:text-primary transition-colors"
               >
                 {toTitleCase(t.name)}
               </a>
-            </span>
-          ))}
+            ) : (
+              <span>{toTitleCase(t.name)}</span>
+            )}
+          </span>
+        ))}
         <span className="mx-2">/</span>
         <span className="text-foreground font-medium">
           {toTitleCase(product.name)}
@@ -253,7 +244,7 @@ export async function ProductDetailContainer({
         <RelatedProducts products={relatedWithNames} />
       </Suspense>
       {/* Breadcrumb mobile — abaixo dos produtos relacionados */}
-      {product.taxonomy?.some((t) => t.slug) && (
+      {product.taxonomy && product.taxonomy.length > 0 && (
         <nav className="flex md:hidden flex-wrap items-center text-xs text-muted-foreground mt-8 gap-y-1">
           <a href="/" className="hover:text-primary transition-colors">
             Home
@@ -262,19 +253,21 @@ export async function ProductDetailContainer({
           <a href="/products" className="hover:text-primary transition-colors">
             Produtos
           </a>
-          {product.taxonomy
-            .filter((t) => t.slug)
-            .map((t) => (
-              <span key={t.id} className="contents">
-                <span className="mx-1.5">/</span>
+          {product.taxonomy.map((t) => (
+            <span key={t.id} className="contents">
+              <span className="mx-1.5">/</span>
+              {t.slug ? (
                 <a
                   href={`/category/${t.slug}`}
                   className="hover:text-primary transition-colors"
                 >
                   {toTitleCase(t.name)}
                 </a>
-              </span>
-            ))}
+              ) : (
+                <span>{toTitleCase(t.name)}</span>
+              )}
+            </span>
+          ))}
         </nav>
       )}
     </div>

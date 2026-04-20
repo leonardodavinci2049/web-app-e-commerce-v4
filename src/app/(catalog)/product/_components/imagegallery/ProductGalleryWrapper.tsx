@@ -1,5 +1,5 @@
 import { fetchProductGalleryAction } from "@/app/actions/product";
-import { ProgressiveGallery } from "./ProgressiveGallery";
+import { ProductImageGallery } from "./ProductImageGallery";
 
 interface ProductGalleryWrapperProps {
   productId: string;
@@ -8,25 +8,24 @@ interface ProductGalleryWrapperProps {
 }
 
 /**
- * Async wrapper for ProductImageGallery that enables streaming with progressive loading.
+ * Async wrapper for ProductImageGallery that enables streaming via Suspense.
  *
- * Progressive Loading Strategy:
- * 1. T0: Immediately shows fallbackImage (PATH_IMAGE) as placeholder
- * 2. T1: Gallery API loads in background while user sees the main image
- * 3. T2: When gallery loads, smoothly transitions to full gallery with thumbnails
+ * Loading strategy:
+ * 1. During fetch: Suspense shows GallerySkeleton with the product's main image
+ * 2. On resolve: ProductImageGallery renders the correct gallery layout server-side
+ *    (with real thumbnails if available, single image otherwise)
  *
- * This improves perceived performance by showing content immediately.
+ * This avoids fake placeholder thumbnails that cause layout shift and hurt SEO.
  */
 export async function ProductGalleryWrapper({
   productId,
   fallbackImage,
   productName,
 }: ProductGalleryWrapperProps) {
-  // Fetch happens inside this async component, enabling Suspense streaming
   const galleryImages = await fetchProductGalleryAction(productId);
 
   return (
-    <ProgressiveGallery
+    <ProductImageGallery
       galleryImages={galleryImages}
       fallbackImage={fallbackImage}
       productName={productName}

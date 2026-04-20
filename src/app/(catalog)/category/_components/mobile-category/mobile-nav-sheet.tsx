@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -38,6 +39,9 @@ export function MobileNavSheet({ categories }: MobileNavSheetProps) {
       >
         <SheetHeader>
           <SheetTitle>Categorias</SheetTitle>
+          <SheetDescription className="sr-only">
+            Navegue pelas categorias de produtos
+          </SheetDescription>
         </SheetHeader>
         <div className="mt-4">
           <CategoryMenu categories={categories} onNavigate={handleNavigate} />
