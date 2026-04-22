@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { GalleryImageData } from "../ProductImageGallery";
 
@@ -15,6 +15,21 @@ export function ImageGalleryClient({
   productName,
 }: ImageGalleryClientProps) {
   const [selectedImage, setSelectedImage] = useState(0);
+
+  useEffect(() => {
+    setSelectedImage((current) => {
+      if (images.length === 0) {
+        return 0;
+      }
+      return Math.min(current, images.length - 1);
+    });
+  }, [images.length]);
+
+  if (images.length === 0) {
+    return null;
+  }
+
+  const activeImage = images[selectedImage] || images[0];
 
   // Obtém URL preview (1000x1000px) para imagem principal - maior qualidade
   const getMainImageUrl = (img: GalleryImageData) => {
@@ -38,38 +53,36 @@ export function ImageGalleryClient({
   return (
     <div className="flex flex-row gap-2 md:gap-4">
       {/* Miniaturas - Visible on Left for both Mobile and Desktop */}
-      {images.length > 1 && (
-        <div className="flex flex-col gap-2 w-16 md:w-20 shrink-0 h-[300px] md:h-[500px] overflow-y-auto no-scrollbar scroll-smooth">
-          {visibleThumbnails.map((image, index) => (
-            <button
-              key={image.id}
-              type="button"
-              onClick={() => setSelectedImage(index)}
-              className={cn(
-                "relative aspect-square bg-white rounded-lg border-2 overflow-hidden shrink-0 transition-all",
-                selectedImage === index
-                  ? "border-primary"
-                  : "border-border hover:border-primary/50",
-              )}
-            >
-              <Image
-                src={getThumbnailUrl(image)}
-                alt={`${productName} - Imagem ${index + 1}`}
-                fill
-                sizes="80px"
-                className="object-contain p-1"
-                loading="lazy"
-                unoptimized
-              />
-            </button>
-          ))}
-        </div>
-      )}
+      <div className="flex flex-col gap-2 w-16 md:w-20 shrink-0 h-75 md:h-125 overflow-y-auto no-scrollbar scroll-smooth">
+        {visibleThumbnails.map((image, index) => (
+          <button
+            key={image.id}
+            type="button"
+            onClick={() => setSelectedImage(index)}
+            className={cn(
+              "relative aspect-square bg-white rounded-lg border-2 overflow-hidden shrink-0 transition-all",
+              selectedImage === index
+                ? "border-primary"
+                : "border-border hover:border-primary/50",
+            )}
+          >
+            <Image
+              src={getThumbnailUrl(image)}
+              alt={`${productName} - Imagem ${index + 1}`}
+              fill
+              sizes="80px"
+              className="object-contain p-1"
+              loading="lazy"
+              unoptimized
+            />
+          </button>
+        ))}
+      </div>
 
       {/* Imagem Principal — LCP element */}
       <div className="relative flex-1 aspect-square bg-white rounded-lg border border-border overflow-hidden">
         <Image
-          src={getMainImageUrl(images[selectedImage])}
+          src={getMainImageUrl(activeImage)}
           alt={productName}
           fill
           sizes="(min-width: 768px) 50vw, 100vw"
