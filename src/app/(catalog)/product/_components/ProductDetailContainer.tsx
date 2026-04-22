@@ -84,26 +84,36 @@ function sanitizeDescription(description: string): {
 }
 
 // Skeleton for gallery section with optional placeholder image.
-// Shows only the main image area without fake thumbnails to avoid
-// layout shift and prevent search engines from indexing placeholder images.
+// Keeps one temporary thumbnail to preserve gallery layout while
+// API thumbnails are loading.
 function GallerySkeleton({ placeholderImage }: { placeholderImage?: string }) {
+  const imageSrc = placeholderImage || "/images/product/no-image.jpeg";
+
   return (
     <div className="flex flex-row gap-2 md:gap-4">
-      <div className="relative flex-1 aspect-square bg-white rounded-lg border border-border overflow-hidden">
-        {placeholderImage ? (
+      <div className="flex flex-col gap-2 w-16 md:w-20 shrink-0 h-75 md:h-125 overflow-y-auto no-scrollbar scroll-smooth">
+        <div className="relative aspect-square bg-white rounded-lg border-2 border-primary overflow-hidden shrink-0">
           <Image
-            src={placeholderImage}
-            alt="Carregando..."
+            src={imageSrc}
+            alt="Carregando miniatura"
             fill
-            sizes="(min-width: 768px) 50vw, 100vw"
-            className="object-contain p-4 md:p-8"
-            preload
-            fetchPriority="high"
+            sizes="80px"
+            className="object-contain p-1"
             unoptimized
           />
-        ) : (
-          <div className="w-full h-full bg-muted animate-pulse" />
-        )}
+        </div>
+      </div>
+
+      <div className="relative flex-1 aspect-square bg-white rounded-lg border border-border overflow-hidden">
+        <Image
+          src={imageSrc}
+          alt="Carregando..."
+          fill
+          sizes="(min-width: 768px) 50vw, 100vw"
+          className="object-contain p-4 md:p-8"
+          loading="eager"
+          unoptimized
+        />
       </div>
     </div>
   );
