@@ -75,13 +75,11 @@ export async function generateMetadata({
   // Preço formatado para exibição
   // (já calculado acima para descrição)
 
-  // Descrição para Open Graph (pode ser um pouco mais longa)
-  const ogDescription = truncateText(
+  // Open Graph sem truncamento para preservar o texto completo da API
+  const ogDescription =
     apiMetaDescription ||
-      product.description ||
-      `${productName} por apenas ${formattedPrice}. Compre agora na ${envs.NEXT_PUBLIC_COMPANY_NAME}!`,
-    200,
-  );
+    product.description ||
+    `${productName} por apenas ${formattedPrice}. Compre agora na ${envs.NEXT_PUBLIC_COMPANY_NAME}!`;
 
   return {
     title: pageTitle,
