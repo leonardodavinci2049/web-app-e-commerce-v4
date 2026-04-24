@@ -35,6 +35,8 @@ export interface UIProduct {
   slug?: string;
   name: string;
   description: string | null;
+  metaTitle?: string;
+  metaDescription?: string;
   price: number;
   image: string;
   categoryId: string;
@@ -140,6 +142,9 @@ function calculateDiscount(item: ProductWebListItem): number | undefined {
  * Transforms a ProductWebDetail from API to UIProduct for product detail page
  */
 export function transformProductDetail(detail: ProductWebDetail): UIProduct {
+  const metaTitle = detail.META_TITLE?.trim();
+  const metaDescription = detail.META_DESCRIPTION?.trim();
+
   return {
     id: String(detail.ID_PRODUTO),
     sku: detail.SKU ? String(detail.SKU) : undefined,
@@ -150,6 +155,11 @@ export function transformProductDetail(detail: ProductWebDetail): UIProduct {
       detail.DESCRICAO_TAB ??
       detail.DESCRICAO_VENDA ??
       null,
+    metaTitle: metaTitle && metaTitle.length > 0 ? metaTitle : undefined,
+    metaDescription:
+      metaDescription && metaDescription.length > 0
+        ? metaDescription
+        : undefined,
     price: parsePrice(detail.VL_VAREJO),
     image: getImagePath(detail.PATH_IMAGEM),
     categoryId: detail.ID_FAMILIA ? String(detail.ID_FAMILIA) : "",
