@@ -50,7 +50,8 @@ export async function generateMetadata({
   // Construir título otimizado para SEO
   const productName = toTitleCase(product.name);
   const brandSuffix = product.brand ? ` ${product.brand}` : "";
-  const pageTitle = `${productName}${brandSuffix} | Compre na ${envs.NEXT_PUBLIC_COMPANY_NAME}`;
+  const fallbackTitle = `${productName}${brandSuffix} | Compre na ${envs.NEXT_PUBLIC_COMPANY_NAME}`;
+  const pageTitle = product.metaTitle?.trim() || fallbackTitle;
 
   // Descrição otimizada (≤160 chars para melhor exibição no Google)
   const formattedPrice = new Intl.NumberFormat("pt-BR", {
@@ -58,10 +59,14 @@ export async function generateMetadata({
     currency: "BRL",
   }).format(product.price);
 
-  const rawDescription =
+  const apiMetaDescription = product.metaDescription?.trim();
+  const fallbackDescription =
     product.description ||
     `${productName} por ${formattedPrice}. Compre na ${envs.NEXT_PUBLIC_COMPANY_NAME}. Parcele em até ${envs.NEXT_PUBLIC_PAY_IN_UP_TO}x. Frete grátis acima de R$ ${envs.NEXT_PUBLIC_FREE_SHIPPING_OVER}.`;
-  const metaDescription = truncateText(rawDescription, 157);
+  const metaDescription =
+    apiMetaDescription && apiMetaDescription.length > 0
+      ? apiMetaDescription
+      : truncateText(fallbackDescription, 157);
 
   // URL canônica do produto (sem parâmetros)
   const productSlug = generateSlug(product.name, product.id);
@@ -72,7 +77,8 @@ export async function generateMetadata({
 
   // Descrição para Open Graph (pode ser um pouco mais longa)
   const ogDescription = truncateText(
-    product.description ||
+    apiMetaDescription ||
+      product.description ||
       `${productName} por apenas ${formattedPrice}. Compre agora na ${envs.NEXT_PUBLIC_COMPANY_NAME}!`,
     200,
   );
