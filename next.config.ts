@@ -3,6 +3,14 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactCompiler: true,
   cacheComponents: true,
+  async rewrites() {
+    return [
+      {
+        source: "/sitemap-products-:id.xml",
+        destination: "/sitemap-products/:id",
+      },
+    ];
+  },
   cacheLife: {
     // Perfil para produtos e listagens (10 minutos)
     hours: {

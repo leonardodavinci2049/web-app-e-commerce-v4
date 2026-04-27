@@ -1,16 +1,15 @@
 import type { MetadataRoute } from "next";
 import { unstable_noStore } from "next/cache";
 import { fetchCategoriesAction } from "@/app/actions/product";
-import { envs } from "@/core/config/envs";
+import { getSitemapBaseUrl } from "../base-url";
 
 /**
  * Sitemap for categories only (3 levels: family > group > subgroup)
  */
-export async function GET() {
+export async function GET(request: Request) {
   unstable_noStore();
 
-  const baseUrl =
-    envs.NEXT_PUBLIC_BASE_URL_APP || "https://mundialmegastore.com.br";
+  const baseUrl = getSitemapBaseUrl(request);
 
   let categoryPages: MetadataRoute.Sitemap = [];
 
