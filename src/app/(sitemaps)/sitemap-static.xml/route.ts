@@ -1,12 +1,11 @@
 import type { MetadataRoute } from "next";
-import { envs } from "@/core/config/envs";
+import { getSitemapBaseUrl } from "../base-url";
 
 /**
  * Sitemap for static pages only
  */
-export async function GET() {
-  const baseUrl =
-    envs.NEXT_PUBLIC_BASE_URL_APP || "https://mundialmegastore.com.br";
+export async function GET(request: Request) {
+  const baseUrl = getSitemapBaseUrl(request);
 
   const staticPages: MetadataRoute.Sitemap = [
     {

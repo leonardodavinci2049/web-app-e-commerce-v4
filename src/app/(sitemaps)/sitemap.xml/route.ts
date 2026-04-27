@@ -1,21 +1,22 @@
-import { envs } from "@/core/config/envs";
+import { unstable_noStore } from "next/cache";
+import { getSitemapBaseUrl } from "../base-url";
+import { getProductSitemapLocations } from "../product-sitemap";
 
 /**
  * Sitemap Index - Main sitemap that references all other sitemaps
  * This follows the sitemap index protocol for large sites
  */
-export async function GET() {
-  const baseUrl =
-    envs.NEXT_PUBLIC_BASE_URL_APP || "https://mundialmegastore.com.br";
+export async function GET(request: Request) {
+  unstable_noStore();
 
-  // List of all sitemap files
+  const baseUrl = getSitemapBaseUrl(request);
+
+  const productSitemaps = await getProductSitemapLocations(baseUrl);
+
   const sitemaps = [
     `${baseUrl}/sitemap-static.xml`,
     `${baseUrl}/sitemap-categories.xml`,
-    `${baseUrl}/sitemap-products-0.xml`,
-    `${baseUrl}/sitemap-products-1.xml`,
-    `${baseUrl}/sitemap-products-2.xml`,
-    `${baseUrl}/sitemap-products-3.xml`,
+    ...productSitemaps,
   ];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
