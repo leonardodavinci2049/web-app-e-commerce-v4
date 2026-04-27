@@ -1,3 +1,4 @@
+// @refresh reset
 "use client";
 
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
@@ -11,27 +12,27 @@ const SLIDES_DATA: SlideData[] = [
   {
     type: "content",
     title: "Sua Parceira em",
-    highlight: "Atacado e Varejo",
+    highlight: "Revenda Atacadista",
     description:
-      "Distribuidora especializada em Eletrônicos, Informática e Perfumes Importados. Oferecemos qualidade, procedência e agilidade para fazer seu negócio prosperar ou para você encontrar os melhores produtos.",
-    badge: "🚀 Plataforma de Atacado e Varejo - Melhores Preços",
+      "Distribuidora especializada em Eletrônicos, Informática e Perfumes Importados. Oferecemos qualidade, procedência e agilidade para fazer seu negócio prosperar.",
+    badge: "🚀 Plataforma de Revenda - Preços no Atacado",
   },
   {
     type: "image",
     title: "Eletrônicos",
-    image: "/slides/Vitrine-eletronicos.jpg?height=600&width=800",
+    image: "/slides/Vitrine-eletronicos.jpg",
     description: "Visite nossa loja e conheça nossos produtos de perto",
   },
   {
     type: "image",
     title: "Estoque Completo",
-    image: "/slides/Vitrine-Fone-Games.jpg?height=600&width=800",
+    image: "/slides/Vitrine-Fone-Games.jpg",
     description: "Mais de 5000 produtos sempre disponíveis",
   },
   {
     type: "image",
     title: "Perfumes Importados",
-    image: "/slides/Vitrine-Perfumes.jpg?height=600&width=800",
+    image: "/slides/Vitrine-Perfumes.jpg",
     description: "Diversos perfumes femininos e masculinos de grandes marcas ",
   },
 ] as const;
@@ -42,12 +43,13 @@ export function HeroSlider() {
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const slides = SLIDES_DATA;
+  const slideCount = slides.length;
 
   useEffect(() => {
     if (!isAutoPlaying) return;
 
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
+      setCurrentSlide((prev) => (prev + 1) % slideCount);
     }, 5000);
 
     return () => clearInterval(interval);
@@ -56,7 +58,7 @@ export function HeroSlider() {
   const nextSlide = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
+    setCurrentSlide((prev) => (prev + 1) % slideCount);
     setIsAutoPlaying(false);
     setTimeout(() => setIsTransitioning(false), 700);
   };
@@ -64,7 +66,7 @@ export function HeroSlider() {
   const prevSlide = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+    setCurrentSlide((prev) => (prev - 1 + slideCount) % slideCount);
     setIsAutoPlaying(false);
     setTimeout(() => setIsTransitioning(false), 700);
   };
@@ -80,7 +82,7 @@ export function HeroSlider() {
   return (
     <section
       id="inicio"
-      className="relative h-[500px] overflow-hidden sm:h-[600px] lg:h-[700px]"
+      className="relative h-125 overflow-hidden sm:h-150 lg:h-175"
     >
       <div className="relative h-full overflow-hidden">
         {/* Slides */}
@@ -93,19 +95,19 @@ export function HeroSlider() {
             }}
           >
             {slides.map((slide) => (
-              <div key={slide.title} className="h-full w-full flex-shrink-0">
+              <div key={slide.title} className="h-full w-full shrink-0">
                 {slide.type === "content" ? (
                   // Content Slide - Mobile First
                   <div className="relative h-full">
-                    <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20" />
-                    <div className="relative container flex h-full items-center justify-center px-4 sm:px-6 lg:px-8">
+                    <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-background to-muted" />
+                    <div className="relative container mx-auto flex h-full max-w-7xl items-center justify-center px-4 sm:px-6 lg:px-8">
                       <div className="mx-auto w-full max-w-4xl text-center">
-                        <Badge className="mb-3 bg-green-100 text-xs text-green-800 sm:mb-4 sm:text-sm dark:bg-green-900 dark:text-green-200">
+                        <Badge className="mb-3 border border-primary/20 bg-primary/10 text-xs text-primary sm:mb-4 sm:text-sm">
                           {slide.badge}
                         </Badge>
                         <h1 className="mb-4 text-2xl leading-tight font-bold tracking-tight sm:mb-6 sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
                           {slide.title}
-                          <span className="block bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent sm:inline">
+                          <span className="block bg-linear-to-r from-primary to-primary/70 bg-clip-text text-transparent sm:inline">
                             {" "}
                             {slide.highlight}
                           </span>
@@ -141,11 +143,11 @@ export function HeroSlider() {
                   <div className="relative h-full">
                     <div
                       className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                      style={{ backgroundImage: `url(${slide.image})` }}
+                      style={{ backgroundImage: `url("${slide.image}")` }}
                     >
                       <div className="absolute inset-0 bg-black/40" />
                     </div>
-                    <div className="relative container flex h-full items-center justify-center px-4 sm:px-6 lg:px-8">
+                    <div className="relative container mx-auto flex h-full max-w-7xl items-center justify-center px-4 sm:px-6 lg:px-8">
                       <div className="mx-auto w-full max-w-2xl text-center text-white">
                         <h2 className="mb-3 text-2xl font-bold sm:mb-4 sm:text-3xl md:text-4xl lg:text-5xl">
                           {slide.title}
@@ -194,12 +196,12 @@ export function HeroSlider() {
         <div className="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 space-x-2 sm:bottom-6">
           {slides.map((slide, index) => (
             <button
-              key={`dot-${slide.title}`}
+              key={slide.title}
               type="button"
               onClick={() => goToSlide(index)}
               className={`h-2.5 w-2.5 rounded-full transition-all duration-300 sm:h-3 sm:w-3 ${
                 index === currentSlide
-                  ? "bg-white"
+                  ? "scale-125 bg-white"
                   : "bg-white/50 hover:bg-white/75"
               }`}
               aria-label={`Ir para slide ${index + 1}`}
@@ -214,7 +216,7 @@ export function HeroSlider() {
             onClick={() => setIsAutoPlaying(!isAutoPlaying)}
             className={`rounded-full p-1.5 text-sm backdrop-blur-sm transition-colors sm:p-2 ${
               isAutoPlaying
-                ? "bg-green-500/20 text-green-400"
+                ? "bg-primary/20 text-primary"
                 : "bg-white/20 text-white/70"
             }`}
             aria-label={
