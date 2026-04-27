@@ -21,15 +21,15 @@ export default async function CompanyLayout({
   const categories = await fetchCategoriesAction();
 
   return (
-    <>
+    <div className="min-h-screen bg-background flex flex-col font-sans">
       <MobileMainHeader />
       <MainHeader />
       <NavigationMenu />
-      <main className="min-h-[60vh] py-12">{children}</main>
+      <div className="grow">{children}</div>
       <Suspense fallback={<div>Loading...</div>}>
         <FooterHome />
       </Suspense>
       <MobileBottomMenu categories={categories} />
-    </>
+    </div>
   );
 }

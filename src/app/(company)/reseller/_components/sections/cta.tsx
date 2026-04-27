@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 
 export function CTASection() {
   return (
-    <section className="bg-linear-to-r from-green-600 to-blue-600 py-16 text-white sm:py-20">
-      <div className="container px-4 text-center sm:px-6 lg:px-8">
+    <section className="bg-linear-to-r from-primary to-primary/80 py-16 text-primary-foreground sm:py-20">
+      <div className="container mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
         <h2 className="mb-3 text-2xl font-bold sm:mb-4 sm:text-3xl lg:text-4xl">
           Pronto para começar a revender?
         </h2>
@@ -28,7 +28,7 @@ export function CTASection() {
             <Button
               size="lg"
               variant="outline"
-              className="h-12 w-full border-white bg-transparent px-6 text-base text-white hover:bg-white hover:text-green-600 sm:w-auto sm:px-8 sm:text-lg cursor-pointer"
+              className="h-12 w-full border-white bg-transparent px-6 text-base text-white hover:bg-white hover:text-primary sm:w-auto sm:px-8 sm:text-lg cursor-pointer"
             >
               Falar com Consultor
             </Button>
