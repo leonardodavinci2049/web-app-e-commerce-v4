@@ -145,8 +145,16 @@ export async function NavigationMenu() {
           <ul className="flex items-center ml-2">
             {[
               { label: "Home", href: "/", icon: Home },
-              { label: "Lançamentos", href: "/products", icon: Zap },
-              { label: "Ofertas", href: "/products", icon: Percent },
+              {
+                label: "Computador",
+                href: "/category/computador-1764955925",
+                icon: Zap,
+              },
+              {
+                label: "Áudio e Vídeo",
+                href: "/category/audio-e-video",
+                icon: Percent,
+              },
               {
                 label: "Eletrônicos",
                 href:
@@ -162,15 +170,20 @@ export async function NavigationMenu() {
                 icon: Smartphone,
               },
               {
-                label: "Perfumes",
+                label: "Perfumaria",
                 href:
                   categories.find((c) => c.slug === "perfumes-importados")
                     ?.href || "/category/perfumaria-e-beleza",
                 icon: Sparkles,
               },
               {
-                label: "Catálogo",
-                href: "/products",
+                label: "Rede e Wireless",
+                href: "/category/rede-e-wireless",
+                icon: BookOpen,
+              },
+              {
+                label: "Seja um Revendedor",
+                href: "/reseller",
                 icon: BookOpen,
               },
             ].map((item) => {

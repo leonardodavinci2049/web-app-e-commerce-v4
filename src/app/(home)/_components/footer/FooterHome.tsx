@@ -271,7 +271,7 @@ export default function FooterHome() {
             <p className="text-sm text-gray-400">
               &copy; {currentYear} {process.env.NEXT_PUBLIC_COMPANY_NAME}. Todos
               os direitos reservados - CNPJ: {envs.NEXT_PUBLIC_COMPANY_CNPJ} -
-              Build: 22041053
+              Build: 27042018
             </p>
             <div className="flex space-x-6 text-sm">
               <Link
