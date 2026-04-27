@@ -145,8 +145,16 @@ export async function NavigationMenu() {
           <ul className="flex items-center ml-2">
             {[
               { label: "Home", href: "/", icon: Home },
-              { label: "Computador", href: "/category/computador-1764955925", icon: Zap },
-              { label: "Áudio e Vídeo", href: "/category/audio-e-video", icon: Percent },
+              {
+                label: "Computador",
+                href: "/category/computador-1764955925",
+                icon: Zap,
+              },
+              {
+                label: "Áudio e Vídeo",
+                href: "/category/audio-e-video",
+                icon: Percent,
+              },
               {
                 label: "Eletrônicos",
                 href:
@@ -172,12 +180,12 @@ export async function NavigationMenu() {
                 label: "Rede e Wireless",
                 href: "/category/rede-e-wireless",
                 icon: BookOpen,
-              },   
+              },
               {
                 label: "Seja um Revendedor",
                 href: "/reseller",
                 icon: BookOpen,
-              },             
+              },
             ].map((item) => {
               const IconNav = item.icon;
               return (
