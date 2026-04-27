@@ -17,6 +17,7 @@ import type {
   TaxonomyWebMenuRequest,
   TaxonomyWebMenuResponse,
   TblTaxonomyFindById,
+  TblTaxonomyRelated,
   TblTaxonomyWebMenu,
 } from "./types/category-types";
 import { CategoryError, CategoryNotFoundError } from "./types/category-types";
@@ -26,6 +27,7 @@ import {
 } from "./validation/category-schemas";
 
 const logger = createLogger("CategoryServiceApi");
+const TAXONOMY_FIND_ID_USER_ROLE = "seller";
 
 export class CategoryServiceApi extends BaseApiService {
   /**
@@ -43,6 +45,25 @@ export class CategoryServiceApi extends BaseApiService {
       pe_user_id: envs.USER_ID,
       pe_person_id: envs.PERSON_ID,
       ...additionalData,
+    };
+  }
+
+  /**
+   * Constrói payload específico do endpoint taxonomy-find-id v3.
+   */
+  private static buildFindByIdPayload(
+    taxonomyId: number,
+  ): Record<string, unknown> {
+    return {
+      pe_app_id: envs.APP_ID,
+      pe_system_client_id: envs.SYSTEM_CLIENT_ID,
+      pe_store_id: envs.STORE_ID,
+      pe_organization_id: envs.ORGANIZATION_ID,
+      pe_user_id: envs.USER_ID,
+      pe_user_name: envs.USER_ID,
+      pe_user_role: TAXONOMY_FIND_ID_USER_ROLE,
+      pe_person_id: envs.PERSON_ID,
+      pe_taxonomy_id: taxonomyId,
     };
   }
 
@@ -136,31 +157,34 @@ export class CategoryServiceApi extends BaseApiService {
   }
 
   /**
-   * Busca uma taxonomia específica por ID ou slug
+   * Busca uma taxonomia específica por ID
    */
   static async findByIdOrSlug(
-    params: Pick<TaxonomyFindIdRequest, "pe_id_taxonomy" | "pe_slug_taxonomy">,
+    params: Pick<TaxonomyFindIdRequest, "pe_taxonomy_id" | "pe_id_taxonomy">,
   ): Promise<TaxonomyFindIdResponse> {
     try {
       const payloadInput: Record<string, unknown> = {};
 
-      if (params.pe_id_taxonomy !== undefined) {
-        payloadInput.pe_id_taxonomy = params.pe_id_taxonomy;
-      }
+      const normalizedTaxonomyId =
+        params.pe_taxonomy_id ?? params.pe_id_taxonomy;
 
-      if (
-        params.pe_slug_taxonomy !== undefined &&
-        params.pe_slug_taxonomy.trim() !== ""
-      ) {
-        payloadInput.pe_slug_taxonomy = params.pe_slug_taxonomy.trim();
+      if (normalizedTaxonomyId !== undefined) {
+        payloadInput.pe_taxonomy_id = normalizedTaxonomyId;
       }
 
       const validatedParams = TaxonomyFindIdSchema.parse(payloadInput);
+      const taxonomyId = validatedParams.pe_taxonomy_id;
+
+      if (taxonomyId === undefined) {
+        throw new CategoryError(
+          "pe_taxonomy_id é obrigatório para buscar categoria por ID",
+          "CATEGORY_FIND_BY_ID_VALIDATION_ERROR",
+          API_STATUS_CODES.ERROR,
+        );
+      }
 
       const instance = new CategoryServiceApi();
-      const requestBody = CategoryServiceApi.buildBasePayload({
-        ...validatedParams,
-      });
+      const requestBody = CategoryServiceApi.buildFindByIdPayload(taxonomyId);
 
       const response = await instance.post<TaxonomyFindIdResponse>(
         TAXONOMY_ENDPOINTS.FIND_BY_ID,
@@ -173,14 +197,15 @@ export class CategoryServiceApi extends BaseApiService {
 
       if (isApiError(response.statusCode)) {
         throw new CategoryError(
-          response.message || "Erro ao buscar categoria por ID/slug",
+          response.message || "Erro ao buscar categoria por ID",
           "CATEGORY_FIND_BY_ID_ERROR",
           response.statusCode,
         );
       }
 
       const hasCategoryData =
-        Array.isArray(response.data?.[0]) && response.data[0].length > 0;
+        Array.isArray(response.data?.["Taxonomy find Id"]) &&
+        response.data["Taxonomy find Id"].length > 0;
 
       if (!hasCategoryData) {
         throw new CategoryNotFoundError(validatedParams);
@@ -242,22 +267,16 @@ export class CategoryServiceApi extends BaseApiService {
   static extractCategoryDetails(
     response: TaxonomyFindIdResponse,
   ): TblTaxonomyFindById | null {
-    return response.data?.[0]?.[0] ?? null;
+    return response.data?.["Taxonomy find Id"]?.[0] ?? null;
   }
 
   /**
-   * Extrai feedback da stored procedure da resposta taxonomy-find-id
+   * Extrai taxonomias relacionadas da resposta taxonomy-find-id
    */
-  static extractFindByIdFeedback(
+  static extractRelatedCategories(
     response: TaxonomyFindIdResponse,
-  ): StoredProcedureResponse {
-    return (
-      response.data?.[1]?.[0] ?? {
-        sp_return_id: 0,
-        sp_message: "",
-        sp_error_id: 0,
-      }
-    );
+  ): TblTaxonomyRelated[] {
+    return response.data?.["Taxonomy related"] ?? [];
   }
 
   /**
@@ -291,8 +310,8 @@ export class CategoryServiceApi extends BaseApiService {
     return (
       isApiSuccess(response.statusCode) &&
       response.data &&
-      Array.isArray(response.data[0]) &&
-      response.data[0].length > 0
+      Array.isArray(response.data["Taxonomy find Id"]) &&
+      response.data["Taxonomy find Id"].length > 0
     );
   }
 

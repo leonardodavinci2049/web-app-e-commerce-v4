@@ -1,5 +1,6 @@
 import DOMPurify from "isomorphic-dompurify";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import {
@@ -13,9 +14,10 @@ import { envs } from "@/core/config";
 import { getProductPath } from "@/lib/slug";
 import { toTitleCase } from "@/lib/text-utils";
 import {
-  getCategoryDetailsById,
-  getCategoryDetailsBySlug,
+  getCategoryDetailsWithRelatedById,
+  getCategoryDetailsWithRelatedBySlug,
   type TblTaxonomyFindById,
+  type TblTaxonomyRelated,
 } from "@/services/api-main/category";
 import { Breadcrumbs } from "../_components/breadcrumbs";
 import { CategorySidebar } from "../_components/category-sidebar/category-sidebar";
@@ -85,11 +87,59 @@ function sanitizeCategoryNotes(notes: string): {
   };
 }
 
+function getRelatedCategoryName(
+  category: TblTaxonomyRelated,
+): string | undefined {
+  return normalizeText(category.TAXONOMIA);
+}
+
+function getRelatedCategoryHref(category: TblTaxonomyRelated): string | null {
+  const slug = normalizeText(category.SLUG);
+
+  if (slug) {
+    return `/category/${slug}`;
+  }
+
+  return null;
+}
+
+function buildRelatedCategories(
+  categories: TblTaxonomyRelated[],
+  currentTaxonomyId?: number,
+): TblTaxonomyRelated[] {
+  const seenKeys = new Set<string>();
+
+  return categories.filter((category) => {
+    if (!getRelatedCategoryName(category)) {
+      return false;
+    }
+
+    if (
+      currentTaxonomyId !== undefined &&
+      category.ID_TAXONOMY === currentTaxonomyId
+    ) {
+      return false;
+    }
+
+    const key = String(
+      category.ID_TAXONOMY ?? category.SLUG ?? category.TAXONOMIA,
+    );
+
+    if (seenKeys.has(key)) {
+      return false;
+    }
+
+    seenKeys.add(key);
+    return true;
+  });
+}
+
 interface ResolvedCategoryPageData {
   detail: TblTaxonomyFindById;
   taxonomyId?: number;
   taxonomySlug: string;
   categoryName: string;
+  relatedCategories: TblTaxonomyRelated[];
   categoryNotes?: string;
   categoryNotesIsHtml: boolean;
   metaTitle?: string;
@@ -104,12 +154,12 @@ async function resolveCategoryPageData(
   const taxonomySlug = slugParts[slugParts.length - 1];
   const numericTaxonomyId = Number.parseInt(taxonomySlug, 10);
 
-  const detailBySlug = await getCategoryDetailsBySlug(taxonomySlug);
-  const detail =
-    detailBySlug ??
-    (!Number.isNaN(numericTaxonomyId)
-      ? await getCategoryDetailsById(numericTaxonomyId)
-      : null);
+  const resultBySlug = await getCategoryDetailsWithRelatedBySlug(taxonomySlug);
+  const fallbackResultById =
+    resultBySlug.detail || Number.isNaN(numericTaxonomyId)
+      ? null
+      : await getCategoryDetailsWithRelatedById(numericTaxonomyId);
+  const detail = resultBySlug.detail ?? fallbackResultById?.detail ?? null;
 
   if (!detail || detail.INATIVO === 1) {
     return null;
@@ -127,12 +177,19 @@ async function resolveCategoryPageData(
     slugParts.length > 1 && parentName
       ? `/category/${slugParts.slice(0, -1).join("/")}`
       : undefined;
+  const relatedCategories = buildRelatedCategories(
+    resultBySlug.detail
+      ? resultBySlug.relatedCategories
+      : (fallbackResultById?.relatedCategories ?? []),
+    detail.ID_TAXONOMY,
+  );
 
   return {
     detail,
     taxonomyId: detail.ID_TAXONOMY,
     taxonomySlug: resolvedSlug,
     categoryName,
+    relatedCategories,
     categoryNotes: categoryNotes?.content,
     categoryNotesIsHtml: categoryNotes?.isHtml ?? false,
     metaTitle: normalizeText(detail.META_TITLE),
@@ -370,9 +427,61 @@ async function CategoryContent({
               ...(stockOnly && { stock: "1" }),
             }}
           />
+          <RelatedCategoriesSection
+            categories={categoryData.relatedCategories}
+          />
         </div>
       </div>
     </div>
+  );
+}
+
+function RelatedCategoriesSection({
+  categories,
+}: {
+  categories: TblTaxonomyRelated[];
+}) {
+  if (categories.length === 0) {
+    return null;
+  }
+
+  return (
+    <section className="mt-10 border-t border-border pt-6">
+      <div className="mb-4">
+        <h2 className="text-lg font-semibold tracking-tight">
+          Categorias relacionadas
+        </h2>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+        {categories.map((category) => {
+          const name = getRelatedCategoryName(category);
+
+          if (!name) {
+            return null;
+          }
+
+          const href = getRelatedCategoryHref(category);
+          const key = String(category.ID_TAXONOMY ?? category.SLUG ?? name);
+          const cardClassName =
+            "flex min-h-20 items-center rounded-lg border border-border bg-card px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground";
+
+          if (href) {
+            return (
+              <Link key={key} href={href} className={cardClassName}>
+                {name}
+              </Link>
+            );
+          }
+
+          return (
+            <div key={key} className={cardClassName}>
+              {name}
+            </div>
+          );
+        })}
+      </div>
+    </section>
   );
 }
 

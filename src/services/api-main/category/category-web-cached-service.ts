@@ -8,14 +8,66 @@ import {
   findCategoryBySlug,
   transformCategoryMenu,
   type UICategory,
+  type UISubcategory,
 } from "@/lib/transformers";
 import { CategoryServiceApi } from "./category-service-api";
-import type { TblTaxonomyFindById } from "./types/category-types";
+import type {
+  TblTaxonomyFindById,
+  TblTaxonomyRelated,
+} from "./types/category-types";
 
 const logger = createLogger("CategoryWebCachedService");
 
 const CATEGORY_MENU_TYPE_ID = 1;
 const CATEGORY_PARENT_ID = 0;
+
+export interface CategoryDetailsWithRelated {
+  detail: TblTaxonomyFindById | null;
+  relatedCategories: TblTaxonomyRelated[];
+}
+
+function findSubcategoryIdBySlug(
+  subcategories: UISubcategory[] | undefined,
+  taxonomySlug: string,
+): string | null {
+  if (!subcategories) {
+    return null;
+  }
+
+  for (const subcategory of subcategories) {
+    if (subcategory.slug === taxonomySlug) {
+      return subcategory.id;
+    }
+
+    const childId = findSubcategoryIdBySlug(subcategory.children, taxonomySlug);
+    if (childId) {
+      return childId;
+    }
+  }
+
+  return null;
+}
+
+function findTaxonomyIdBySlug(
+  categories: UICategory[],
+  taxonomySlug: string,
+): string | null {
+  for (const category of categories) {
+    if (category.slug === taxonomySlug) {
+      return category.id;
+    }
+
+    const subcategoryId = findSubcategoryIdBySlug(
+      category.subcategories,
+      taxonomySlug,
+    );
+    if (subcategoryId) {
+      return subcategoryId;
+    }
+  }
+
+  return null;
+}
 
 /**
  * Busca o menu hierárquico de categorias com cache.
@@ -65,11 +117,11 @@ export async function getCategoryBySlug(
 }
 
 /**
- * Busca detalhes de uma taxonomia por ID com cache.
+ * Busca detalhes e categorias relacionadas de uma taxonomia por ID com cache.
  */
-export async function getCategoryDetailsById(
+export async function getCategoryDetailsWithRelatedById(
   taxonomyId: number | string,
-): Promise<TblTaxonomyFindById | null> {
+): Promise<CategoryDetailsWithRelated> {
   "use cache";
   cacheLife("hours");
 
@@ -80,23 +132,88 @@ export async function getCategoryDetailsById(
 
   if (Number.isNaN(normalizedId) || normalizedId <= 0) {
     logger.warn(`Invalid taxonomy ID: ${String(taxonomyId)}`);
-    return null;
+    return {
+      detail: null,
+      relatedCategories: [],
+    };
   }
 
   cacheTag(CACHE_TAGS.categories, CACHE_TAGS.category(String(normalizedId)));
 
   try {
     const response = await CategoryServiceApi.findByIdOrSlug({
-      pe_id_taxonomy: normalizedId,
+      pe_taxonomy_id: normalizedId,
     });
 
-    return CategoryServiceApi.extractCategoryDetails(response);
+    return {
+      detail: CategoryServiceApi.extractCategoryDetails(response),
+      relatedCategories: CategoryServiceApi.extractRelatedCategories(response),
+    };
   } catch (error) {
     logger.error(
       `Failed to fetch category details by ID ${normalizedId}:`,
       error,
     );
-    return null;
+    return {
+      detail: null,
+      relatedCategories: [],
+    };
+  }
+}
+
+/**
+ * Busca detalhes de uma taxonomia por ID com cache.
+ */
+export async function getCategoryDetailsById(
+  taxonomyId: number | string,
+): Promise<TblTaxonomyFindById | null> {
+  const result = await getCategoryDetailsWithRelatedById(taxonomyId);
+  return result.detail;
+}
+
+/**
+ * Busca detalhes e categorias relacionadas de uma taxonomia por slug com cache.
+ */
+export async function getCategoryDetailsWithRelatedBySlug(
+  taxonomySlug: string,
+): Promise<CategoryDetailsWithRelated> {
+  "use cache";
+  cacheLife("hours");
+
+  const normalizedSlug = taxonomySlug.trim();
+
+  if (normalizedSlug.length === 0) {
+    logger.warn("Invalid taxonomy slug: empty value");
+    return {
+      detail: null,
+      relatedCategories: [],
+    };
+  }
+
+  cacheTag(CACHE_TAGS.categories, CACHE_TAGS.category(normalizedSlug));
+
+  try {
+    const categories = await getCategories();
+    const taxonomyId = findTaxonomyIdBySlug(categories, normalizedSlug);
+
+    if (!taxonomyId) {
+      logger.warn(`Category slug not found in cached menu: ${normalizedSlug}`);
+      return {
+        detail: null,
+        relatedCategories: [],
+      };
+    }
+
+    return getCategoryDetailsWithRelatedById(taxonomyId);
+  } catch (error) {
+    logger.error(
+      `Failed to fetch category details by slug ${normalizedSlug}:`,
+      error,
+    );
+    return {
+      detail: null,
+      relatedCategories: [],
+    };
   }
 }
 
@@ -106,29 +223,6 @@ export async function getCategoryDetailsById(
 export async function getCategoryDetailsBySlug(
   taxonomySlug: string,
 ): Promise<TblTaxonomyFindById | null> {
-  "use cache";
-  cacheLife("hours");
-
-  const normalizedSlug = taxonomySlug.trim();
-
-  if (normalizedSlug.length === 0) {
-    logger.warn("Invalid taxonomy slug: empty value");
-    return null;
-  }
-
-  cacheTag(CACHE_TAGS.categories, CACHE_TAGS.category(normalizedSlug));
-
-  try {
-    const response = await CategoryServiceApi.findByIdOrSlug({
-      pe_slug_taxonomy: normalizedSlug,
-    });
-
-    return CategoryServiceApi.extractCategoryDetails(response);
-  } catch (error) {
-    logger.error(
-      `Failed to fetch category details by slug ${normalizedSlug}:`,
-      error,
-    );
-    return null;
-  }
+  const result = await getCategoryDetailsWithRelatedBySlug(taxonomySlug);
+  return result.detail;
 }

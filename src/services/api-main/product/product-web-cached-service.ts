@@ -324,16 +324,18 @@ export async function getProductsByTaxonomy(
 ): Promise<UIProduct[]> {
   "use cache";
   cacheLife("hours");
-  cacheTag(CACHE_TAGS.products, CACHE_TAGS.category(slugOrId));
+  const resolvedCategoryTag =
+    taxonomyId && taxonomyId > 0 ? String(taxonomyId) : slugOrId;
+
+  cacheTag(CACHE_TAGS.products, CACHE_TAGS.category(resolvedCategoryTag));
 
   const stockFlag = stockOnly ? 1 : 0;
+  const hasValidTaxonomyId = taxonomyId !== undefined && taxonomyId > 0;
 
   try {
-    // Fazer UMA ÚNICA chamada à API enviando tanto ID quanto slug
-    // A API decide qual usar baseado nos parâmetros fornecidos
     const response = await ProductWebServiceApi.findProducts({
-      pe_id_taxonomy: taxonomyId && taxonomyId > 0 ? taxonomyId : 0,
-      pe_slug_taxonomy: slugOrId,
+      pe_id_taxonomy: hasValidTaxonomyId ? taxonomyId : 0,
+      pe_slug_taxonomy: hasValidTaxonomyId ? "" : slugOrId,
       pe_qt_registros: limit,
       pe_pagina_id: Math.max(0, page - 1),
       pe_coluna_id: sortCol,
@@ -346,7 +348,7 @@ export async function getProductsByTaxonomy(
     // Se não encontrou produtos, retornar array vazio
     if (products.length === 0) {
       logger.info(
-        `No products found for taxonomy: ${slugOrId} (ID: ${taxonomyId})`,
+        `No products found for taxonomy: ${slugOrId} (ID: ${taxonomyId ?? "n/a"})`,
       );
       return [];
     }
