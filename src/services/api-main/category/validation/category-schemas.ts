@@ -19,4 +19,23 @@ export const TaxonomyWebMenuSchema = z.object({
     .optional(),
 });
 
+/**
+ * Schema para buscar taxonomia por ID ou slug
+ */
+export const TaxonomyFindIdSchema = z
+  .object({
+    pe_id_taxonomy: z.number().int().positive().optional(),
+    pe_slug_taxonomy: z.string().trim().min(1).max(300).optional(),
+  })
+  .refine(
+    (data) =>
+      data.pe_id_taxonomy !== undefined || data.pe_slug_taxonomy !== undefined,
+    {
+      message:
+        "Informe pe_id_taxonomy ou pe_slug_taxonomy para buscar a taxonomia",
+      path: ["pe_id_taxonomy"],
+    },
+  );
+
 export type TaxonomyWebMenuInput = z.infer<typeof TaxonomyWebMenuSchema>;
+export type TaxonomyFindIdInput = z.infer<typeof TaxonomyFindIdSchema>;

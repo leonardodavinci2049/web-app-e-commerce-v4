@@ -1,4 +1,6 @@
+import DOMPurify from "isomorphic-dompurify";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import {
   fetchCategoriesAction,
@@ -10,6 +12,11 @@ import { ProductGridSkeleton } from "@/components/skeletons";
 import { envs } from "@/core/config";
 import { getProductPath } from "@/lib/slug";
 import { toTitleCase } from "@/lib/text-utils";
+import {
+  getCategoryDetailsById,
+  getCategoryDetailsBySlug,
+  type TblTaxonomyFindById,
+} from "@/services/api-main/category";
 import { Breadcrumbs } from "../_components/breadcrumbs";
 import { CategorySidebar } from "../_components/category-sidebar/category-sidebar";
 import { MobileCategoryNav } from "../_components/mobile-category/mobile-category-nav";
@@ -23,27 +30,116 @@ interface CategoryPageProps {
 }
 
 /**
- * Busca o nome real da categoria na API pela slug.
- * Percorre até 3 níveis de hierarquia (família, grupo, subgrupo).
+ * Formata a slug para fallback visual quando a API não retorna nome.
  */
-function findCategoryName(
-  categories: Awaited<ReturnType<typeof fetchCategoriesAction>>,
-  taxonomySlug: string,
-): string | undefined {
-  for (const cat of categories) {
-    if (cat.slug === taxonomySlug) return cat.name;
-    if (cat.subcategories) {
-      for (const sub of cat.subcategories) {
-        if (sub.slug === taxonomySlug) return sub.name;
-        if (sub.children) {
-          for (const child of sub.children) {
-            if (child.slug === taxonomySlug) return child.name;
-          }
-        }
-      }
-    }
+function formatCategoryNameFromSlug(taxonomySlug: string): string {
+  return taxonomySlug
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function normalizeText(value: string | null | undefined): string | undefined {
+  const normalized = value?.trim();
+  return normalized && normalized.length > 0 ? normalized : undefined;
+}
+
+const DOMPURIFY_CONFIG = {
+  ALLOWED_TAGS: [
+    "p",
+    "br",
+    "strong",
+    "b",
+    "i",
+    "em",
+    "u",
+    "s",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "ul",
+    "ol",
+    "li",
+    "a",
+    "span",
+    "div",
+  ],
+  ALLOWED_ATTR: ["href", "target", "rel", "class", "style"],
+};
+
+function containsHtml(content: string): boolean {
+  return /<[a-z][\s\S]*>/i.test(content);
+}
+
+function sanitizeCategoryNotes(notes: string): {
+  content: string;
+  isHtml: boolean;
+} {
+  const isHtml = containsHtml(notes);
+
+  return {
+    content: isHtml ? DOMPurify.sanitize(notes, DOMPURIFY_CONFIG) : notes,
+    isHtml,
+  };
+}
+
+interface ResolvedCategoryPageData {
+  detail: TblTaxonomyFindById;
+  taxonomyId?: number;
+  taxonomySlug: string;
+  categoryName: string;
+  categoryNotes?: string;
+  categoryNotesIsHtml: boolean;
+  metaTitle?: string;
+  metaDescription?: string;
+  parentName?: string;
+  parentPath?: string;
+}
+
+async function resolveCategoryPageData(
+  slugParts: string[],
+): Promise<ResolvedCategoryPageData | null> {
+  const taxonomySlug = slugParts[slugParts.length - 1];
+  const numericTaxonomyId = Number.parseInt(taxonomySlug, 10);
+
+  const detailBySlug = await getCategoryDetailsBySlug(taxonomySlug);
+  const detail =
+    detailBySlug ??
+    (!Number.isNaN(numericTaxonomyId)
+      ? await getCategoryDetailsById(numericTaxonomyId)
+      : null);
+
+  if (!detail || detail.INATIVO === 1) {
+    return null;
   }
-  return undefined;
+
+  const categoryName =
+    normalizeText(detail.TAXONOMIA) ?? formatCategoryNameFromSlug(taxonomySlug);
+  const normalizedNotes = normalizeText(detail.ANOTACOES);
+  const categoryNotes = normalizedNotes
+    ? sanitizeCategoryNotes(normalizedNotes)
+    : undefined;
+  const resolvedSlug = normalizeText(detail.SLUG) ?? taxonomySlug;
+  const parentName = normalizeText(detail.PARENT_CATEGORY);
+  const parentPath =
+    slugParts.length > 1 && parentName
+      ? `/category/${slugParts.slice(0, -1).join("/")}`
+      : undefined;
+
+  return {
+    detail,
+    taxonomyId: detail.ID_TAXONOMY,
+    taxonomySlug: resolvedSlug,
+    categoryName,
+    categoryNotes: categoryNotes?.content,
+    categoryNotesIsHtml: categoryNotes?.isHtml ?? false,
+    metaTitle: normalizeText(detail.META_TITLE),
+    metaDescription: normalizeText(detail.META_DESCRIPTION),
+    parentName,
+    parentPath,
+  };
 }
 
 export async function generateMetadata({
@@ -58,14 +154,11 @@ export async function generateMetadata({
     typeof resolvedSearchParams.page === "string"
       ? Math.max(1, Number(resolvedSearchParams.page))
       : 1;
+  const categoryData = await resolveCategoryPageData(slugParts);
 
-  // Buscar nome real da categoria via API
-  const categories = await fetchCategoriesAction();
-  const rawName = findCategoryName(categories, taxonomySlug);
-  const title = toTitleCase(
-    rawName ||
-      taxonomySlug.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()),
-  );
+  const categoryName =
+    categoryData?.categoryName ?? formatCategoryNameFromSlug(taxonomySlug);
+  const title = toTitleCase(categoryName);
 
   // Verificar se há filtros ativos
   const sortCol = typeof resolvedSearchParams.sort_col === "string";
@@ -83,8 +176,12 @@ export async function generateMetadata({
   const canonicalUrl = page > 1 ? `${categoryUrl}?page=${page}` : categoryUrl;
   const fullUrl = `${envs.NEXT_PUBLIC_BASE_URL_APP}${canonicalUrl}`;
 
-  const pageTitle = `${title} | Compre na ${envs.NEXT_PUBLIC_COMPANY_NAME}`;
-  const pageDescription = `Encontre os melhores ${title} na ${envs.NEXT_PUBLIC_COMPANY_NAME}. Preços imbatíveis, parcele em até ${envs.NEXT_PUBLIC_PAY_IN_UP_TO}x sem juros. Entrega para todo o Brasil!`;
+  const pageTitle =
+    categoryData?.metaTitle ??
+    `${title} | Compre na ${envs.NEXT_PUBLIC_COMPANY_NAME}`;
+  const pageDescription =
+    categoryData?.metaDescription ??
+    `Encontre os melhores ${title} na ${envs.NEXT_PUBLIC_COMPANY_NAME}. Preços imbatíveis, parcele em até ${envs.NEXT_PUBLIC_PAY_IN_UP_TO}x sem juros. Entrega para todo o Brasil!`;
 
   const metadata: Metadata = {
     title: pageTitle,
@@ -154,74 +251,17 @@ async function CategoryContent({
   const ITEMS_PER_PAGE = 30;
   const slugParts = resolvedParams.slug;
 
-  // Usar o último segmento do slug para filtrar produtos
-  const taxonomySlug = slugParts[slugParts.length - 1];
+  const [categories, categoryData] = await Promise.all([
+    fetchCategoriesAction(),
+    resolveCategoryPageData(slugParts),
+  ]);
 
-  // Buscar categorias primeiro para obter o ID e slug real
-  const categories = await fetchCategoriesAction();
+  if (!categoryData) {
+    notFound();
+  }
 
-  // Tentar encontrar a categoria pelo slug para obter o ID, slug real e nome (busca em 3 níveis)
-  const findTaxonomyInfo = (): {
-    id: number | undefined;
-    slug: string | undefined;
-    name: string | undefined;
-    parentName: string | undefined;
-    parentSlug: string | undefined;
-  } => {
-    for (const cat of categories) {
-      // Level 1 - Família
-      if (cat.slug === taxonomySlug || cat.id === taxonomySlug) {
-        return {
-          id: Number(cat.id),
-          slug: cat.slug,
-          name: cat.name,
-          parentName: undefined,
-          parentSlug: undefined,
-        };
-      }
-      if (cat.subcategories) {
-        for (const sub of cat.subcategories) {
-          // Level 2 - Grupo
-          if (sub.slug === taxonomySlug || sub.id === taxonomySlug) {
-            return {
-              id: Number(sub.id),
-              slug: sub.slug,
-              name: sub.name,
-              parentName: cat.name,
-              parentSlug: cat.slug,
-            };
-          }
-          // Level 3 - Subgrupo
-          if (sub.children) {
-            for (const child of sub.children) {
-              if (child.slug === taxonomySlug || child.id === taxonomySlug) {
-                return {
-                  id: Number(child.id),
-                  slug: child.slug,
-                  name: child.name,
-                  parentName: sub.name,
-                  parentSlug: sub.slug,
-                };
-              }
-            }
-          }
-        }
-      }
-    }
-    return {
-      id: undefined,
-      slug: undefined,
-      name: undefined,
-      parentName: undefined,
-      parentSlug: undefined,
-    };
-  };
-
-  const taxonomyInfo = findTaxonomyInfo();
-
-  // Usar o slug real da categoria se encontrado, senão usar o da URL
-  const effectiveSlug = taxonomyInfo.slug || taxonomySlug;
-  const taxonomyId = taxonomyInfo.id;
+  const effectiveSlug = categoryData.taxonomySlug;
+  const taxonomyId = categoryData.taxonomyId;
 
   // Buscar produtos por slug ou ID (com paginação)
   const productsRaw = await fetchProductsByTaxonomyAction(
@@ -239,26 +279,20 @@ async function CategoryContent({
     ? productsRaw.slice(0, ITEMS_PER_PAGE)
     : productsRaw;
 
-  // Título da página - usar nome da categoria se encontrado, senão formatar o slug
-  const pageTitle = toTitleCase(
-    taxonomyInfo.name ||
-      slugParts[slugParts.length - 1]
-        .replace(/-/g, " ")
-        .replace(/\b\w/g, (c) => c.toUpperCase()),
-  );
+  const pageTitle = categoryData.categoryName;
 
   // Construir breadcrumbs com hierarquia
   const breadcrumbItems = [
     { label: "Home", href: "/" },
-    ...(taxonomyInfo.parentName && taxonomyInfo.parentSlug
+    ...(categoryData.parentName && categoryData.parentPath
       ? [
           {
-            label: toTitleCase(taxonomyInfo.parentName),
-            href: `/category/${taxonomyInfo.parentSlug}`,
+            label: categoryData.parentName,
+            href: categoryData.parentPath,
           },
         ]
       : []),
-    { label: pageTitle, href: `/category/${effectiveSlug}` },
+    { label: pageTitle, href: `/category/${slugParts.join("/")}` },
   ];
 
   const breadcrumbJsonLdItems = breadcrumbItems.map((item) => ({
@@ -294,6 +328,21 @@ async function CategoryContent({
             <h1 className="text-xl lg:text-3xl font-bold tracking-tight py-3 lg:py-0 -mx-4 lg:mx-0 px-4 lg:px-0 text-center lg:text-left bg-primary lg:bg-transparent text-primary-foreground lg:text-foreground lg:mb-2">
               {pageTitle}
             </h1>
+            {categoryData.categoryNotes ? (
+              categoryData.categoryNotesIsHtml ? (
+                <div
+                  className="prose prose-sm max-w-none text-muted-foreground mt-3 dark:prose-invert"
+                  // biome-ignore lint/security/noDangerouslySetInnerHtml: HTML is sanitized on the server via DOMPurify
+                  dangerouslySetInnerHTML={{
+                    __html: categoryData.categoryNotes,
+                  }}
+                />
+              ) : (
+                <p className="text-sm text-muted-foreground whitespace-pre-line leading-relaxed mt-3">
+                  {categoryData.categoryNotes}
+                </p>
+              )
+            ) : null}
           </div>
           {/* Mobile Navigation */}
           <MobileCategoryNav categories={categories} />

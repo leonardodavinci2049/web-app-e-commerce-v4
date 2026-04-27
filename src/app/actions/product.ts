@@ -4,6 +4,8 @@ import { createLogger } from "@/core/logger";
 import {
   getCategories,
   getCategoryBySlug,
+} from "@/services/api-main/category/category-web-cached-service";
+import {
   getProductBySlug,
   getProducts,
   getProductsByCategory,
