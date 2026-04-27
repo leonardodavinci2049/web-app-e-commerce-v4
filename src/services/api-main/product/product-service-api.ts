@@ -12,6 +12,7 @@ import { BaseApiService } from "@/lib/axios/base-api-service";
 
 import type {
   ProductWebDetail,
+  ProductWebDynamicSqlRow,
   ProductWebFindByIdRequest,
   ProductWebFindByIdResponse,
   ProductWebFindRequest,
@@ -35,6 +36,42 @@ import {
 } from "./validation/product-schemas";
 
 const logger = createLogger("ProductWebService");
+
+function isProductListItemArray(value: unknown): value is ProductWebListItem[] {
+  return (
+    Array.isArray(value) &&
+    (value.length === 0 ||
+      (typeof value[0] === "object" &&
+        value[0] !== null &&
+        "ID_PRODUTO" in value[0]))
+  );
+}
+
+function isDynamicSqlRowArray(
+  value: unknown,
+): value is ProductWebDynamicSqlRow[] {
+  return (
+    Array.isArray(value) &&
+    value.length > 0 &&
+    typeof value[0] === "object" &&
+    value[0] !== null &&
+    "@dynamic_sql" in value[0]
+  );
+}
+
+function extractSearchFeedback(
+  response: ProductWebFindResponse,
+): [StoredProcedureResponse] | undefined {
+  if (Array.isArray(response.data?.[2])) {
+    return response.data[2] as [StoredProcedureResponse];
+  }
+
+  if (Array.isArray(response.data?.[1])) {
+    return response.data[1] as [StoredProcedureResponse];
+  }
+
+  return undefined;
+}
 
 export class ProductWebServiceApi extends BaseApiService {
   private static buildBasePayload(
@@ -240,7 +277,7 @@ export class ProductWebServiceApi extends BaseApiService {
         quantity: 0,
         data: [
           [],
-          response.data?.[1] ?? defaultFeedback,
+          extractSearchFeedback(response) ?? defaultFeedback,
           {
             fieldCount: 0,
             affectedRows: 0,
@@ -333,7 +370,17 @@ export class ProductWebServiceApi extends BaseApiService {
   static extractProductList(
     response: ProductWebFindResponse,
   ): ProductWebListItem[] {
-    return response.data?.[0] ?? [];
+    const firstSlot = response.data?.[0];
+    if (isProductListItemArray(firstSlot)) {
+      return firstSlot;
+    }
+
+    const secondSlot = response.data?.[1];
+    if (isDynamicSqlRowArray(firstSlot) && isProductListItemArray(secondSlot)) {
+      return secondSlot;
+    }
+
+    return [];
   }
 
   static extractProductSections(
@@ -352,11 +399,7 @@ export class ProductWebServiceApi extends BaseApiService {
   }
 
   static isValidProductList(response: ProductWebFindResponse): boolean {
-    return (
-      isApiSuccess(response.statusCode) &&
-      response.data &&
-      Array.isArray(response.data[0])
-    );
+    return isApiSuccess(response.statusCode) && response.data !== undefined;
   }
 
   static isValidProductSections(response: ProductWebSectionsResponse): boolean {

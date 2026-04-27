@@ -1,6 +1,6 @@
 /**
  * Tipos e interfaces utilizados pelo CategoryServiceApi
- * Baseado no endpoint /taxonomy/v2/taxonomy-find-menu
+ * Baseado nos endpoints taxonomy web menu e taxonomy find id
  */
 
 /**
@@ -85,11 +85,23 @@ export interface TblTaxonomyFindById {
 }
 
 /**
+ * Registro de taxonomia relacionada retornado pelo endpoint taxonomy-find-id
+ */
+export interface TblTaxonomyRelated {
+  ID_TAXONOMY?: number;
+  TAXONOMIA?: string;
+  PATH_IMAGEM?: string | null;
+  SLUG?: string | null;
+  LEVEL?: number | null;
+  ORDEM?: number;
+}
+
+/**
  * Requisição para taxonomy-find-id
  */
 export interface TaxonomyFindIdRequest extends CategoryBaseRequest {
+  pe_taxonomy_id?: number;
   pe_id_taxonomy?: number;
-  pe_slug_taxonomy?: string;
 }
 
 /**
@@ -106,15 +118,13 @@ export type SpResultTaxonomyWebMenuData = [
 
 /**
  * Estrutura de dados retornada pelo endpoint taxonomy-find-id
- * [0]: Array com a taxonomia encontrada
- * [1]: Feedback da stored procedure
- * [2]: Metadados da operação MySQL
  */
-export type SpResultTaxonomyFindIdData = [
-  TblTaxonomyFindById[],
-  [StoredProcedureResponse],
-  MySQLMetadata,
-];
+export interface TaxonomyFindIdData {
+  "Taxonomy find Id": TblTaxonomyFindById[];
+  "Taxonomy related": TblTaxonomyRelated[];
+}
+
+export type SpResultTaxonomyFindIdData = TaxonomyFindIdData;
 
 /**
  * Resposta do endpoint taxonomy-find-menu
@@ -135,8 +145,9 @@ export interface TaxonomyFindIdResponse {
   statusCode: number;
   message: string;
   recordId: number;
-  data: SpResultTaxonomyFindIdData;
+  data: TaxonomyFindIdData;
   quantity: number;
+  errorId?: number;
   info1: string;
 }
 

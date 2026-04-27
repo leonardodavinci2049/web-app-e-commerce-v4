@@ -83,7 +83,7 @@ export const CHECKOUT_ENDPOINTS = {
 export const TAXONOMY_ENDPOINTS = {
   FIND_MENU: "/taxonomy/v2/taxonomy-find-menu",
   FIND: "/taxonomy/v2/taxonomy-find",
-  FIND_BY_ID: "/taxonomy/v2/taxonomy-find-id",
+  FIND_BY_ID: "/taxonomy-base/v3/taxonomy-find-id",
   CREATE: "/taxonomy/v2/taxonomy-create",
   UPDATE: "/taxonomy/v2/taxonomy-update",
   DELETE: "/taxonomy/v2/taxonomy-delete",

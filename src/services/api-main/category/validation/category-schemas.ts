@@ -24,16 +24,16 @@ export const TaxonomyWebMenuSchema = z.object({
  */
 export const TaxonomyFindIdSchema = z
   .object({
+    pe_taxonomy_id: z.number().int().positive().optional(),
     pe_id_taxonomy: z.number().int().positive().optional(),
-    pe_slug_taxonomy: z.string().trim().min(1).max(300).optional(),
   })
   .refine(
     (data) =>
-      data.pe_id_taxonomy !== undefined || data.pe_slug_taxonomy !== undefined,
+      data.pe_taxonomy_id !== undefined || data.pe_id_taxonomy !== undefined,
     {
       message:
-        "Informe pe_id_taxonomy ou pe_slug_taxonomy para buscar a taxonomia",
-      path: ["pe_id_taxonomy"],
+        "Informe pe_taxonomy_id ou pe_id_taxonomy para buscar a taxonomia",
+      path: ["pe_taxonomy_id"],
     },
   );
 

@@ -38,6 +38,13 @@ export interface StoredProcedureResponse {
 }
 
 /**
+ * Linha auxiliar retornada por algumas execucoes do endpoint product-web-find.
+ */
+export interface ProductWebDynamicSqlRow {
+  "@dynamic_sql": string;
+}
+
+/**
  * Dados detalhados retornados pelo endpoint product-web-find-id
  */
 export interface ProductWebDetail {
@@ -264,8 +271,17 @@ export interface ProductWebFindByIdResponse extends ProductWebBaseResponse {
 /**
  * Resposta do endpoint product-web-find
  */
+export type ProductWebFindData =
+  | [ProductWebListItem[], [StoredProcedureResponse], MySQLMetadata]
+  | [
+      ProductWebDynamicSqlRow[],
+      ProductWebListItem[],
+      [StoredProcedureResponse],
+      MySQLMetadata,
+    ];
+
 export interface ProductWebFindResponse extends ProductWebBaseResponse {
-  data: [ProductWebListItem[], [StoredProcedureResponse], MySQLMetadata];
+  data: ProductWebFindData;
 }
 
 /**
