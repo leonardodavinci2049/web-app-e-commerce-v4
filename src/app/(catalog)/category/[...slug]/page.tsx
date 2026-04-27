@@ -335,6 +335,10 @@ async function CategoryContent({
   const products = hasNextPage
     ? productsRaw.slice(0, ITEMS_PER_PAGE)
     : productsRaw;
+  const totalRecords = Math.max(0, categoryData.detail.QT_RECORDS ?? 0);
+  const totalPages =
+    totalRecords > 0 ? Math.ceil(totalRecords / ITEMS_PER_PAGE) : undefined;
+  const canGoNext = totalPages ? page < totalPages : hasNextPage;
 
   const pageTitle = categoryData.categoryName;
 
@@ -415,8 +419,9 @@ async function CategoryContent({
           {/* Pagination Nav for crawlability */}
           <PaginationNav
             currentPage={page}
-            hasNextPage={hasNextPage}
+            hasNextPage={canGoNext}
             basePath={`/category/${slugParts.join("/")}`}
+            totalPages={totalPages}
             params={{
               ...(sortCol !== undefined && {
                 sort_col: String(sortCol),
