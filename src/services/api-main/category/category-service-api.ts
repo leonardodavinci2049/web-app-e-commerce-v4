@@ -12,12 +12,18 @@ import { BaseApiService } from "@/lib/axios/base-api-service";
 
 import type {
   StoredProcedureResponse,
+  TaxonomyFindIdRequest,
+  TaxonomyFindIdResponse,
   TaxonomyWebMenuRequest,
   TaxonomyWebMenuResponse,
+  TblTaxonomyFindById,
   TblTaxonomyWebMenu,
 } from "./types/category-types";
-import { CategoryError } from "./types/category-types";
-import { TaxonomyWebMenuSchema } from "./validation/category-schemas";
+import { CategoryError, CategoryNotFoundError } from "./types/category-types";
+import {
+  TaxonomyFindIdSchema,
+  TaxonomyWebMenuSchema,
+} from "./validation/category-schemas";
 
 const logger = createLogger("CategoryServiceApi");
 
@@ -130,6 +136,64 @@ export class CategoryServiceApi extends BaseApiService {
   }
 
   /**
+   * Busca uma taxonomia específica por ID ou slug
+   */
+  static async findByIdOrSlug(
+    params: Pick<TaxonomyFindIdRequest, "pe_id_taxonomy" | "pe_slug_taxonomy">,
+  ): Promise<TaxonomyFindIdResponse> {
+    try {
+      const payloadInput: Record<string, unknown> = {};
+
+      if (params.pe_id_taxonomy !== undefined) {
+        payloadInput.pe_id_taxonomy = params.pe_id_taxonomy;
+      }
+
+      if (
+        params.pe_slug_taxonomy !== undefined &&
+        params.pe_slug_taxonomy.trim() !== ""
+      ) {
+        payloadInput.pe_slug_taxonomy = params.pe_slug_taxonomy.trim();
+      }
+
+      const validatedParams = TaxonomyFindIdSchema.parse(payloadInput);
+
+      const instance = new CategoryServiceApi();
+      const requestBody = CategoryServiceApi.buildBasePayload({
+        ...validatedParams,
+      });
+
+      const response = await instance.post<TaxonomyFindIdResponse>(
+        TAXONOMY_ENDPOINTS.FIND_BY_ID,
+        requestBody,
+      );
+
+      if (response.statusCode === API_STATUS_CODES.NOT_FOUND) {
+        throw new CategoryNotFoundError(validatedParams);
+      }
+
+      if (isApiError(response.statusCode)) {
+        throw new CategoryError(
+          response.message || "Erro ao buscar categoria por ID/slug",
+          "CATEGORY_FIND_BY_ID_ERROR",
+          response.statusCode,
+        );
+      }
+
+      const hasCategoryData =
+        Array.isArray(response.data?.[0]) && response.data[0].length > 0;
+
+      if (!hasCategoryData) {
+        throw new CategoryNotFoundError(validatedParams);
+      }
+
+      return response;
+    } catch (error) {
+      logger.error("Erro no serviço de categorias (busca por ID/slug)", error);
+      throw error;
+    }
+  }
+
+  /**
    * Extrai array hierárquico de categorias da resposta
    *
    * @param response - Resposta do endpoint taxonomy-find-menu
@@ -173,6 +237,30 @@ export class CategoryServiceApi extends BaseApiService {
   }
 
   /**
+   * Extrai a taxonomia encontrada da resposta do endpoint taxonomy-find-id
+   */
+  static extractCategoryDetails(
+    response: TaxonomyFindIdResponse,
+  ): TblTaxonomyFindById | null {
+    return response.data?.[0]?.[0] ?? null;
+  }
+
+  /**
+   * Extrai feedback da stored procedure da resposta taxonomy-find-id
+   */
+  static extractFindByIdFeedback(
+    response: TaxonomyFindIdResponse,
+  ): StoredProcedureResponse {
+    return (
+      response.data?.[1]?.[0] ?? {
+        sp_return_id: 0,
+        sp_message: "",
+        sp_error_id: 0,
+      }
+    );
+  }
+
+  /**
    * Valida se a resposta contém categorias válidas
    *
    * @param response - Resposta do endpoint taxonomy-find-menu
@@ -193,6 +281,18 @@ export class CategoryServiceApi extends BaseApiService {
       isApiSuccess(response.statusCode) &&
       response.data &&
       Array.isArray(response.data[0])
+    );
+  }
+
+  /**
+   * Valida se a resposta contém uma taxonomia válida
+   */
+  static isValidFindByIdResponse(response: TaxonomyFindIdResponse): boolean {
+    return (
+      isApiSuccess(response.statusCode) &&
+      response.data &&
+      Array.isArray(response.data[0]) &&
+      response.data[0].length > 0
     );
   }
 

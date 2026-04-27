@@ -4,17 +4,12 @@ import { cacheLife, cacheTag } from "next/cache";
 import { createLogger } from "@/core/logger";
 import { CACHE_TAGS } from "@/lib/cache-config";
 import {
-  type CategoryLookupResult,
-  findCategoryBySlug,
-  transformCategoryMenu,
   transformProductDetail,
   transformProductList,
   transformRelatedProducts,
-  type UICategory,
   type UIProduct,
   type UITaxonomyItem,
 } from "@/lib/transformers";
-import { CategoryServiceApi } from "@/services/api-main/category/category-service-api";
 import { ProductWebServiceApi } from "@/services/api-main/product/product-service-api";
 
 const logger = createLogger("ProductWebCachedService");
@@ -360,65 +355,5 @@ export async function getProductsByTaxonomy(
   } catch (error) {
     logger.error(`Failed to fetch products by taxonomy:`, error);
     return [];
-  }
-}
-
-// ============================================================================
-// Category Functions
-// ============================================================================
-
-// pe_id_tipo: 1 = menu hierárquico completo (conforme teste Postman)
-// pe_parent_id: 0 = buscar a partir da raiz
-const CATEGORY_MENU_TYPE_ID = 1;
-const CATEGORY_PARENT_ID = 0;
-
-/**
- * Fetch all categories (menu) with cache
- * Uses CategoryServiceApi.findMenu
- */
-export async function getCategories(): Promise<UICategory[]> {
-  "use cache";
-  cacheLife("quarter");
-  cacheTag(CACHE_TAGS.categories, CACHE_TAGS.navigation);
-
-  try {
-    const response = await CategoryServiceApi.findMenu({
-      pe_id_tipo: CATEGORY_MENU_TYPE_ID,
-      pe_parent_id: CATEGORY_PARENT_ID,
-    });
-
-    const menu = CategoryServiceApi.extractCategories(response);
-
-    if (menu.length === 0) {
-      logger.warn("No categories found in menu response");
-    }
-
-    const transformed = transformCategoryMenu(menu);
-
-    return transformed;
-  } catch (error) {
-    logger.error("Failed to fetch categories:", error);
-    return [];
-  }
-}
-
-/**
- * Fetch category by slug with cache
- * Searches the hierarchical menu structure for matching slug
- */
-export async function getCategoryBySlug(
-  categorySlug: string,
-  subcategorySlug?: string,
-): Promise<CategoryLookupResult | null> {
-  "use cache";
-  cacheLife("hours");
-  cacheTag(CACHE_TAGS.categories);
-
-  try {
-    const categories = await getCategories();
-    return findCategoryBySlug(categories, categorySlug, subcategorySlug);
-  } catch (error) {
-    logger.error(`Failed to fetch category by slug:`, error);
-    return null;
   }
 }
