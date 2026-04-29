@@ -33,10 +33,11 @@ const envsSchema = z.object({
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().positive("STORE_ID must be a positive number")),
 
-  // Organization/Member/User IDs
+  // Organization/User IDs
   ORGANIZATION_ID: z.string().min(1, "ORGANIZATION_ID is required"),
-  MEMBER_ID: z.string().min(1, "MEMBER_ID is required"),
   USER_ID: z.string().min(1, "USER_ID is required"),
+  USER_NAME: z.string().min(1, "USER_NAME is required"),
+  USER_ROLE: z.string().min(1, "USER_ROLE is required"),
   PERSON_ID: z
     .string()
     .transform((val) => parseInt(val, 10))
@@ -299,8 +300,9 @@ if (typeof window === "undefined") {
     SYSTEM_CLIENT_ID: 0,
     STORE_ID: 0,
     ORGANIZATION_ID: "",
-    MEMBER_ID: "",
     USER_ID: "",
+    USER_NAME: "",
+    USER_ROLE: "",
     PERSON_ID: 0,
     TYPE_BUSINESS: 0,
 
@@ -400,11 +402,15 @@ export const envs = {
   SYSTEM_CLIENT_ID: envVars.SYSTEM_CLIENT_ID,
   STORE_ID: envVars.STORE_ID,
 
-  // Organization/Member/User IDs
+  // Organization/User IDs
   ORGANIZATION_ID: envVars.ORGANIZATION_ID,
-  MEMBER_ID: envVars.MEMBER_ID,
   USER_ID: envVars.USER_ID,
+  USER_NAME: envVars.USER_NAME,
+  USER_ROLE: envVars.USER_ROLE,
   PERSON_ID: envVars.PERSON_ID,
+
+  // Legacy alias kept for API payloads that still expect pe_member_id
+  MEMBER_ID: envVars.USER_NAME,
 
   TYPE_BUSINESS: envVars.TYPE_BUSINESS,
 

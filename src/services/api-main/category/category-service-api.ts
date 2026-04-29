@@ -27,7 +27,6 @@ import {
 } from "./validation/category-schemas";
 
 const logger = createLogger("CategoryServiceApi");
-const TAXONOMY_FIND_ID_USER_ROLE = "seller";
 
 export class CategoryServiceApi extends BaseApiService {
   /**
@@ -60,8 +59,8 @@ export class CategoryServiceApi extends BaseApiService {
       pe_store_id: envs.STORE_ID,
       pe_organization_id: envs.ORGANIZATION_ID,
       pe_user_id: envs.USER_ID,
-      pe_user_name: envs.USER_ID,
-      pe_user_role: TAXONOMY_FIND_ID_USER_ROLE,
+      pe_user_name: envs.USER_NAME,
+      pe_user_role: envs.USER_ROLE,
       pe_person_id: envs.PERSON_ID,
       pe_taxonomy_id: taxonomyId,
     };
