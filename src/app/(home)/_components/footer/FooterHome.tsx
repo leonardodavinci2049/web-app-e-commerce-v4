@@ -233,7 +233,7 @@ export default function FooterHome() {
                     Seg - Sex: {envs.NEXT_PUBLIC_COMPANY_OPENING_HOURS}
                   </p>
                   <p className="text-gray-400">
-                    Sáb: {envs.NEXT_PUBLIC_COMPANY_OPENING_HOURS}
+                    Sáb: {envs.NEXT_PUBLIC_COMPANY_OPENING_SATURDAY}
                   </p>
                 </div>
               </div>

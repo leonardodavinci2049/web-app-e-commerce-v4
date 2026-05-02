@@ -3,6 +3,10 @@ import { getSitemapBaseUrl } from "../base-url";
 
 /**
  * Sitemap for static pages only
+ *
+ * lastModified is intentionally omitted — a hardcoded date that never updates
+ * signals to crawlers that the data is unreliable.  When a real "last modified"
+ * date becomes available (e.g. from CMS or git), it should be added back.
  */
 export async function GET(request: Request) {
   const baseUrl = getSitemapBaseUrl(request);
@@ -10,49 +14,46 @@ export async function GET(request: Request) {
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
-      lastModified: "2025-10-15",
       changeFrequency: "daily",
       priority: 1.0,
     },
     {
       url: `${baseUrl}/products`,
-      lastModified: "2025-10-15",
       changeFrequency: "daily",
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/reseller`,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
       url: `${baseUrl}/about`,
-      lastModified: "2025-10-15",
       changeFrequency: "monthly",
       priority: 0.4,
     },
     {
       url: `${baseUrl}/contact`,
-      lastModified: "2025-10-15",
       changeFrequency: "monthly",
       priority: 0.4,
     },
     {
       url: `${baseUrl}/privacy`,
-      lastModified: "2025-10-15",
       changeFrequency: "monthly",
       priority: 0.3,
     },
     {
       url: `${baseUrl}/terms`,
-      lastModified: "2025-10-15",
       changeFrequency: "monthly",
       priority: 0.3,
     },
     {
       url: `${baseUrl}/return`,
-      lastModified: "2025-10-15",
       changeFrequency: "monthly",
       priority: 0.3,
     },
     {
       url: `${baseUrl}/antispam`,
-      lastModified: "2025-10-15",
       changeFrequency: "monthly",
       priority: 0.2,
     },
@@ -64,7 +65,6 @@ ${staticPages
   .map(
     (item) => `  <url>
     <loc>${item.url}</loc>
-    <lastmod>${item.lastModified}</lastmod>
     <changefreq>${item.changeFrequency}</changefreq>
     <priority>${item.priority}</priority>
   </url>`,

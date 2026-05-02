@@ -1,4 +1,5 @@
 import { envs } from "@/core/config";
+import { JsonLdScript, SCHEMA_IDS } from "@/lib/seo/json-ld";
 import { generateSlug } from "@/lib/slug";
 
 interface ProductJsonLdProps {
@@ -17,6 +18,8 @@ interface ProductJsonLdProps {
     gtin?: string;
     mpn?: string;
   };
+  /** Additional gallery images (full URLs) */
+  galleryImages?: string[];
   /** Rating médio (1-5) - opcional */
   rating?: {
     value: number;
@@ -35,10 +38,12 @@ interface ProductJsonLdProps {
  */
 export function ProductJsonLd({
   product,
+  galleryImages,
   rating,
   priceValidUntil,
 }: ProductJsonLdProps) {
-  const productUrl = `${envs.NEXT_PUBLIC_BASE_URL_APP}/product/${generateSlug(product.name, product.id)}`;
+  const baseUrl = envs.NEXT_PUBLIC_BASE_URL_APP;
+  const productUrl = `${baseUrl}/product/${generateSlug(product.name, product.id)}`;
 
   // Calcula priceValidUntil como +30 dias se não fornecido (Google exige para rich results)
   const effectivePriceValidUntil =
@@ -56,12 +61,56 @@ export function ProductJsonLd({
       ? "https://schema.org/NewCondition"
       : "https://schema.org/UsedCondition";
 
+  // Build image array: main image + gallery
+  const images: string[] = [product.image];
+  if (galleryImages && galleryImages.length > 0) {
+    for (const img of galleryImages) {
+      if (img && !images.includes(img)) {
+        images.push(img);
+      }
+    }
+  }
+
+  // Build shipping details with free shipping threshold
+  const freeShippingOver = envs.NEXT_PUBLIC_FREE_SHIPPING_OVER;
+  const shippingDetails: Record<string, unknown>[] = [];
+
+  if (freeShippingOver > 0 && product.price >= freeShippingOver) {
+    shippingDetails.push({
+      "@type": "OfferShippingDetails",
+      shippingRate: {
+        "@type": "MonetaryAmount",
+        value: "0",
+        currency: "BRL",
+      },
+      shippingDestination: {
+        "@type": "DefinedRegion",
+        addressCountry: "BR",
+      },
+      deliveryTime: {
+        "@type": "ShippingDeliveryTime",
+        handlingTime: {
+          "@type": "QuantitativeValue",
+          minValue: 1,
+          maxValue: 3,
+          unitCode: "DAY",
+        },
+        transitTime: {
+          "@type": "QuantitativeValue",
+          minValue: 3,
+          maxValue: 10,
+          unitCode: "DAY",
+        },
+      },
+    });
+  }
+
   // Construir objeto JSON-LD base
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
-    image: product.image,
+    image: images.length > 1 ? images : product.image,
     description:
       product.description ||
       `${product.name} disponível na ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
@@ -78,8 +127,23 @@ export function ProductJsonLd({
       itemCondition,
       seller: {
         "@type": "Organization",
+        "@id": SCHEMA_IDS.organization,
         name: envs.NEXT_PUBLIC_COMPANY_NAME,
       },
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "BR",
+        returnPolicyCategory:
+          "https://schema.org/MerchantReturnFiniteReturnWindow",
+        merchantReturnDays: 7,
+        returnMethod: "https://schema.org/ReturnByMail",
+        returnFees: "https://schema.org/FreeReturn",
+        returnPolicySeasonalOverride: undefined,
+        itemCondition: "https://schema.org/NewCondition",
+      },
+      ...(shippingDetails.length > 0 && {
+        shippingDetails: shippingDetails,
+      }),
     },
   };
 
@@ -124,11 +188,5 @@ export function ProductJsonLd({
     };
   }
 
-  return (
-    <script
-      type="application/ld+json"
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD requires innerHTML for structured data
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  );
+  return <JsonLdScript data={jsonLd} />;
 }

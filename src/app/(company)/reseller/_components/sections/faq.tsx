@@ -7,7 +7,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import type { FAQItem } from "@/types/home-type";
 
-const FAQ_DATA: FAQItem[] = [
+export const RESELLER_FAQ_DATA: FAQItem[] = [
   {
     question: "Como faço para me cadastrar como revendedor?",
     answer:
@@ -68,7 +68,7 @@ export function FAQSection() {
               collapsible
               className="space-y-3 sm:space-y-4"
             >
-              {FAQ_DATA.map((item, index) => (
+              {RESELLER_FAQ_DATA.map((item, index) => (
                 <AccordionItem
                   key={item.question}
                   value={`item-${index + 1}`}
