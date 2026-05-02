@@ -31,25 +31,26 @@ export function HeroBanner() {
       {slides.map((slide) => (
         <div
           key={slide.id}
-          className={`flex-shrink-0 w-full h-full ${slide.bg}`}
+          className={`relative h-full w-full shrink-0 overflow-hidden ${slide.bg}`}
         >
+          <div className="absolute inset-0 bg-black/25 dark:bg-black/40" />
           <div className="container mx-auto px-4 h-full flex items-center">
             <div className="grid md:grid-cols-2 gap-8 items-center w-full">
-              <div className="text-white space-y-6 z-10">
+              <div className="z-10 space-y-6 text-white">
                 <h2 className="text-4xl md:text-6xl font-bold leading-tight">
                   {slide.title}
                 </h2>
-                <p className="text-xl md:text-2xl opacity-90">
+                <p className="text-xl md:text-2xl text-white/90">
                   {slide.subtitle}
                 </p>
                 <button
                   type="button"
-                  className="bg-accent text-accent-foreground px-8 py-3 rounded-full font-bold hover:scale-105 transition-transform"
+                  className="rounded-full border border-white/30 bg-white/92 px-8 py-3 font-bold text-slate-950 shadow-lg transition-transform hover:scale-105 hover:bg-white dark:bg-white/12 dark:text-white dark:hover:bg-white/18"
                 >
                   {slide.cta}
                 </button>
               </div>
-              <div className="hidden md:block relative h-[400px]">
+              <div className="relative hidden h-100 md:block">
                 <div className="relative w-full h-full">
                   <Image
                     src={slide.image}
