@@ -1,7 +1,6 @@
-import DOMPurify from "isomorphic-dompurify";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 import {
   fetchCategoriesAction,
@@ -11,6 +10,7 @@ import { PaginationNav } from "@/components/product/PaginationNav";
 import { BreadcrumbJsonLd, ItemListJsonLd } from "@/components/seo";
 import { ProductGridSkeleton } from "@/components/skeletons";
 import { envs } from "@/core/config";
+import { sanitizeApiHtml } from "@/lib/seo/sanitize-html";
 import { getProductPath } from "@/lib/slug";
 import { toTitleCase } from "@/lib/text-utils";
 import {
@@ -43,48 +43,6 @@ function formatCategoryNameFromSlug(taxonomySlug: string): string {
 function normalizeText(value: string | null | undefined): string | undefined {
   const normalized = value?.trim();
   return normalized && normalized.length > 0 ? normalized : undefined;
-}
-
-const DOMPURIFY_CONFIG = {
-  ALLOWED_TAGS: [
-    "p",
-    "br",
-    "strong",
-    "b",
-    "i",
-    "em",
-    "u",
-    "s",
-    "h1",
-    "h2",
-    "h3",
-    "h4",
-    "h5",
-    "h6",
-    "ul",
-    "ol",
-    "li",
-    "a",
-    "span",
-    "div",
-  ],
-  ALLOWED_ATTR: ["href", "target", "rel", "class", "style"],
-};
-
-function containsHtml(content: string): boolean {
-  return /<[a-z][\s\S]*>/i.test(content);
-}
-
-function sanitizeCategoryNotes(notes: string): {
-  content: string;
-  isHtml: boolean;
-} {
-  const isHtml = containsHtml(notes);
-
-  return {
-    content: isHtml ? DOMPurify.sanitize(notes, DOMPURIFY_CONFIG) : notes,
-    isHtml,
-  };
 }
 
 function getRelatedCategoryName(
@@ -169,7 +127,7 @@ async function resolveCategoryPageData(
     normalizeText(detail.TAXONOMIA) ?? formatCategoryNameFromSlug(taxonomySlug);
   const normalizedNotes = normalizeText(detail.ANOTACOES);
   const categoryNotes = normalizedNotes
-    ? sanitizeCategoryNotes(normalizedNotes)
+    ? sanitizeApiHtml(normalizedNotes)
     : undefined;
   const resolvedSlug = normalizeText(detail.SLUG) ?? taxonomySlug;
   const parentName = normalizeText(detail.PARENT_CATEGORY);
@@ -190,7 +148,7 @@ async function resolveCategoryPageData(
     taxonomySlug: resolvedSlug,
     categoryName,
     relatedCategories,
-    categoryNotes: categoryNotes?.content,
+    categoryNotes: categoryNotes?.sanitizedHtml,
     categoryNotesIsHtml: categoryNotes?.isHtml ?? false,
     metaTitle: normalizeText(detail.META_TITLE),
     metaDescription: normalizeText(detail.META_DESCRIPTION),
@@ -207,10 +165,6 @@ export async function generateMetadata({
   const resolvedSearchParams = await searchParams;
   const slugParts = resolvedParams.slug;
   const taxonomySlug = slugParts[slugParts.length - 1];
-  const page =
-    typeof resolvedSearchParams.page === "string"
-      ? Math.max(1, Number(resolvedSearchParams.page))
-      : 1;
   const categoryData = await resolveCategoryPageData(slugParts);
 
   const categoryName =
@@ -228,9 +182,11 @@ export async function generateMetadata({
   // Estratégia: noindex se houver 2 ou mais filtros (evitar thin content)
   const shouldNoindex = filterCount >= 2;
 
-  const categoryUrl = `/category/${slugParts.join("/")}`;
-  // Canonical aponta para si mesma (cada página paginada é canônica)
-  const canonicalUrl = page > 1 ? `${categoryUrl}?page=${page}` : categoryUrl;
+  // Canonical always points to the canonical slug (from API), without ?page=N.
+  // This consolidates PageRank on the main category URL.
+  const canonicalSlug =
+    categoryData?.taxonomySlug ?? slugParts[slugParts.length - 1];
+  const canonicalUrl = `/category/${canonicalSlug}`;
   const fullUrl = `${envs.NEXT_PUBLIC_BASE_URL_APP}${canonicalUrl}`;
 
   const pageTitle =
@@ -320,6 +276,19 @@ async function CategoryContent({
   const effectiveSlug = categoryData.taxonomySlug;
   const taxonomyId = categoryData.taxonomyId;
 
+  // Redirect to canonical slug if the URL slug doesn't match the API slug
+  const currentSlug = slugParts[slugParts.length - 1];
+  if (currentSlug !== effectiveSlug) {
+    const canonicalPath = `/category/${effectiveSlug}`;
+    const qs = new URLSearchParams();
+    if (page > 1) qs.set("page", String(page));
+    if (sortCol !== undefined) qs.set("sort_col", String(sortCol));
+    if (sortOrd !== undefined) qs.set("sort_ord", String(sortOrd));
+    if (stockOnly) qs.set("stock", "1");
+    const query = qs.toString();
+    redirect(query ? `${canonicalPath}?${query}` : canonicalPath);
+  }
+
   // Buscar produtos por slug ou ID (com paginação)
   const productsRaw = await fetchProductsByTaxonomyAction(
     effectiveSlug,
@@ -372,6 +341,7 @@ async function CategoryContent({
           items={products.slice(0, 30).map((p, i) => ({
             name: toTitleCase(p.name),
             url: getProductPath(p.name, p.id),
+            image: p.image,
             position: (page - 1) * ITEMS_PER_PAGE + i + 1,
           }))}
         />

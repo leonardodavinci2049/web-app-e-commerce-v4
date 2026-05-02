@@ -1,4 +1,5 @@
 import { envs } from "@/core/config";
+import { JsonLdScript, SCHEMA_IDS } from "@/lib/seo/json-ld";
 
 /**
  * Componente para dados estruturados do WebSite (Schema.org)
@@ -8,9 +9,13 @@ export function WebSiteJsonLd() {
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": SCHEMA_IDS.website,
     name: envs.NEXT_PUBLIC_COMPANY_NAME,
     url: envs.NEXT_PUBLIC_BASE_URL_APP,
     description: envs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION,
+    publisher: {
+      "@id": SCHEMA_IDS.organization,
+    },
     potentialAction: {
       "@type": "SearchAction",
       target: {
@@ -21,11 +26,5 @@ export function WebSiteJsonLd() {
     },
   };
 
-  return (
-    <script
-      type="application/ld+json"
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD requires structured data injection
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
-    />
-  );
+  return <JsonLdScript data={websiteSchema} />;
 }

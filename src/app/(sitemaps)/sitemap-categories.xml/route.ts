@@ -4,7 +4,11 @@ import { fetchCategoriesAction } from "@/app/actions/product";
 import { getSitemapBaseUrl } from "../base-url";
 
 /**
- * Sitemap for categories only (3 levels: family > group > subgroup)
+ * Sitemap for categories — flat, canonical URLs only.
+ *
+ * Publishes every category at `/category/{slug}` regardless of its hierarchy
+ * level, because the app resolves categories by slug (not by parent path).
+ * This avoids duplicate URLs like `/category/parent/child` vs `/category/child`.
  */
 export async function GET(request: Request) {
   unstable_noStore();
@@ -17,11 +21,14 @@ export async function GET(request: Request) {
     const categories = await fetchCategoriesAction();
 
     if (categories && categories.length > 0) {
+      const seenSlugs = new Set<string>();
+
       categoryPages = categories.flatMap((category) => {
         const pages: MetadataRoute.Sitemap = [];
 
         // Level 1: Family (e.g., /category/informatica)
-        if (category.slug) {
+        if (category.slug && !seenSlugs.has(category.slug)) {
+          seenSlugs.add(category.slug);
           pages.push({
             url: `${baseUrl}/category/${category.slug}`,
             changeFrequency: "weekly",
@@ -32,7 +39,8 @@ export async function GET(request: Request) {
         // Level 2: Group (e.g., /category/notebooks)
         if (category.subcategories && category.subcategories.length > 0) {
           for (const subcategory of category.subcategories) {
-            if (subcategory.slug) {
+            if (subcategory.slug && !seenSlugs.has(subcategory.slug)) {
+              seenSlugs.add(subcategory.slug);
               pages.push({
                 url: `${baseUrl}/category/${subcategory.slug}`,
                 changeFrequency: "weekly",
@@ -43,7 +51,8 @@ export async function GET(request: Request) {
             // Level 3: Subgroup (e.g., /category/gaming)
             if (subcategory.children && subcategory.children.length > 0) {
               for (const subgroup of subcategory.children) {
-                if (subgroup.slug) {
+                if (subgroup.slug && !seenSlugs.has(subgroup.slug)) {
+                  seenSlugs.add(subgroup.slug);
                   pages.push({
                     url: `${baseUrl}/category/${subgroup.slug}`,
                     changeFrequency: "weekly",

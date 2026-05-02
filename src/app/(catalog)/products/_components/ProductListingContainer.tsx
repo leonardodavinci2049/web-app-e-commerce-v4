@@ -65,6 +65,7 @@ export async function ProductListingContainer({
           items={products.slice(0, 30).map((p, i) => ({
             name: toTitleCase(p.name),
             url: getProductPath(p.name, p.id),
+            image: p.image,
             position: (page - 1) * PRODUCTS_PER_PAGE + i + 1,
           }))}
         />

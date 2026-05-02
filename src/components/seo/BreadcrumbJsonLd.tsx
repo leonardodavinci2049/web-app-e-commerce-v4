@@ -1,4 +1,5 @@
 import { envs } from "@/core/config";
+import { JsonLdScript } from "@/lib/seo/json-ld";
 
 interface BreadcrumbItem {
   name: string;
@@ -30,11 +31,5 @@ export function BreadcrumbJsonLd({ items }: BreadcrumbJsonLdProps) {
     })),
   };
 
-  return (
-    <script
-      type="application/ld+json"
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD requires structured data injection
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  );
+  return <JsonLdScript data={jsonLd} />;
 }
