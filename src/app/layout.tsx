@@ -13,6 +13,7 @@ import {
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { CartProvider } from "@/contexts/CartContext";
 import { envs } from "@/core/config";
+import { DEFAULT_OG_IMAGE_URL } from "@/lib/seo/company";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,7 +51,7 @@ export const metadata: Metadata = {
     description: envs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION,
     images: [
       {
-        url: "/images/logo/logo-horizontal-header1.png",
+        url: DEFAULT_OG_IMAGE_URL,
         width: 1200,
         height: 630,
         alt: envs.NEXT_PUBLIC_COMPANY_NAME,
@@ -61,7 +62,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${envs.NEXT_PUBLIC_COMPANY_META_TITLE_MAIN} | ${envs.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION}`,
     description: envs.NEXT_PUBLIC_COMPANY_META_DESCRIPTION,
-    images: ["/images/logo/logo-horizontal-header1.png"],
+    images: [DEFAULT_OG_IMAGE_URL],
   },
 };
 

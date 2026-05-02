@@ -1,42 +1,10 @@
-import { envs } from "@/core/config";
-import { JsonLdScript, SCHEMA_IDS } from "@/lib/seo/json-ld";
+import { getOrganizationSchema } from "@/lib/seo/company";
+import { JsonLdScript } from "@/lib/seo/json-ld";
 
 /**
  * Componente para dados estruturados da Organização (Schema.org)
  * Melhora o SEO e permite Knowledge Panel no Google
  */
 export function OrganizationJsonLd() {
-  const organizationSchema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "@id": SCHEMA_IDS.organization,
-    name: envs.NEXT_PUBLIC_COMPANY_NAME,
-    url: envs.NEXT_PUBLIC_BASE_URL_APP,
-    logo: `${envs.NEXT_PUBLIC_BASE_URL_APP}/images/logo/logo-horizontal-header1.png`,
-    description: envs.NEXT_PUBLIC_COMPANY_ABOUT,
-    contactPoint: {
-      "@type": "ContactPoint",
-      telephone: envs.NEXT_PUBLIC_COMPANY_PHONE,
-      contactType: "customer service",
-      areaServed: "BR",
-      availableLanguage: "Portuguese",
-    },
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: envs.NEXT_PUBLIC_COMPANY_ADDRESS,
-      addressLocality: envs.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION,
-      addressCountry: "BR",
-    },
-    email: envs.NEXT_PUBLIC_COMPANY_EMAIL,
-    telephone: envs.NEXT_PUBLIC_COMPANY_PHONE,
-    foundingDate: envs.NEXT_PUBLIC_COMPANY_YEAR_FOUNDATION,
-    sameAs: [
-      envs.NEXT_PUBLIC_COMPANY_FACEBOOK_URL,
-      envs.NEXT_PUBLIC_COMPANY_INSTAGRAM_URL,
-      envs.NEXT_PUBLIC_COMPANY_LINKTREE_URL,
-      envs.NEXT_PUBLIC_COMPANY_WHATSAPP_URL,
-    ].filter(Boolean),
-  };
-
-  return <JsonLdScript data={organizationSchema} />;
+  return <JsonLdScript data={getOrganizationSchema()} />;
 }

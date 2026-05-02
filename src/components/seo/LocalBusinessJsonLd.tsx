@@ -1,5 +1,5 @@
-import { envs } from "@/core/config";
-import { JsonLdScript, SCHEMA_IDS } from "@/lib/seo/json-ld";
+import { getLocalBusinessSchema } from "@/lib/seo/company";
+import { JsonLdScript } from "@/lib/seo/json-ld";
 
 /**
  * Componente de Dados Estruturados JSON-LD para LocalBusiness
@@ -9,49 +9,5 @@ import { JsonLdScript, SCHEMA_IDS } from "@/lib/seo/json-ld";
  * @see https://developers.google.com/search/docs/appearance/structured-data/local-business
  */
 export function LocalBusinessJsonLd() {
-  const localBusinessSchema = {
-    "@context": "https://schema.org",
-    "@type": "Store",
-    "@id": SCHEMA_IDS.localBusiness,
-    name: envs.NEXT_PUBLIC_COMPANY_NAME,
-    url: envs.NEXT_PUBLIC_BASE_URL_APP,
-    logo: `${envs.NEXT_PUBLIC_BASE_URL_APP}/images/logo/logo-horizontal-header1.png`,
-    image: `${envs.NEXT_PUBLIC_BASE_URL_APP}/images/logo/logo-horizontal-header1.png`,
-    description: envs.NEXT_PUBLIC_COMPANY_ABOUT,
-    telephone: envs.NEXT_PUBLIC_COMPANY_PHONE,
-    email: envs.NEXT_PUBLIC_COMPANY_EMAIL,
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: envs.NEXT_PUBLIC_COMPANY_ADDRESS,
-      addressLocality: envs.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION,
-      addressCountry: "BR",
-    },
-    parentOrganization: {
-      "@id": SCHEMA_IDS.organization,
-    },
-    openingHoursSpecification: [
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-        opens:
-          envs.NEXT_PUBLIC_COMPANY_OPENING_HOURS.split(" - ")[0] || "08:00",
-        closes:
-          envs.NEXT_PUBLIC_COMPANY_OPENING_HOURS.split(" - ")[1] || "18:00",
-      },
-      {
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: "Saturday",
-        opens:
-          envs.NEXT_PUBLIC_COMPANY_OPENING_SATURDAY.split(" - ")[0] || "08:00",
-        closes:
-          envs.NEXT_PUBLIC_COMPANY_OPENING_SATURDAY.split(" - ")[1] || "12:00",
-      },
-    ],
-    priceRange: "$$",
-    currenciesAccepted: "BRL",
-    paymentAccepted: "Pix, Cartão de Crédito, Dinheiro",
-    hasMap: envs.NEXT_PUBLIC_COMPANY_MAPS_URL,
-  };
-
-  return <JsonLdScript data={localBusinessSchema} />;
+  return <JsonLdScript data={getLocalBusinessSchema()} />;
 }

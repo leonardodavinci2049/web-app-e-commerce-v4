@@ -23,6 +23,9 @@ interface ItemListJsonLdProps {
 export function ItemListJsonLd({ name, items }: ItemListJsonLdProps) {
   const baseUrl = envs.NEXT_PUBLIC_BASE_URL_APP;
 
+  const toAbsoluteUrl = (url: string) =>
+    url.startsWith("http") ? url : `${baseUrl}${url}`;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -31,8 +34,14 @@ export function ItemListJsonLd({ name, items }: ItemListJsonLdProps) {
     itemListElement: items.map((item, index) => ({
       "@type": "ListItem",
       position: item.position ?? index + 1,
-      url: item.url.startsWith("http") ? item.url : `${baseUrl}${item.url}`,
+      url: toAbsoluteUrl(item.url),
       name: item.name,
+      item: {
+        "@type": "Product",
+        name: item.name,
+        url: toAbsoluteUrl(item.url),
+        ...(item.image ? { image: toAbsoluteUrl(item.image) } : {}),
+      },
     })),
   };
 
