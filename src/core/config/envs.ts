@@ -33,10 +33,11 @@ const envsSchema = z.object({
     .transform((val) => parseInt(val, 10))
     .pipe(z.number().positive("STORE_ID must be a positive number")),
 
-  // Organization/Member/User IDs
+  // Organization/User IDs
   ORGANIZATION_ID: z.string().min(1, "ORGANIZATION_ID is required"),
-  MEMBER_ID: z.string().min(1, "MEMBER_ID is required"),
   USER_ID: z.string().min(1, "USER_ID is required"),
+  USER_NAME: z.string().min(1, "USER_NAME is required"),
+  USER_ROLE: z.string().min(1, "USER_ROLE is required"),
   PERSON_ID: z
     .string()
     .transform((val) => parseInt(val, 10))
@@ -135,6 +136,20 @@ const envsSchema = z.object({
   NEXT_PUBLIC_COMPANY_META_DESCRIPTION: z
     .string()
     .min(1, "NEXT_PUBLIC_COMPANY_META_DESCRIPTION is required"),
+
+  // Social Media
+  NEXT_PUBLIC_COMPANY_FACEBOOK_URL: z
+    .string()
+    .url("NEXT_PUBLIC_COMPANY_FACEBOOK_URL must be a valid URL"),
+  NEXT_PUBLIC_COMPANY_INSTAGRAM_URL: z
+    .string()
+    .url("NEXT_PUBLIC_COMPANY_INSTAGRAM_URL must be a valid URL"),
+  NEXT_PUBLIC_COMPANY_LINKTREE_URL: z
+    .string()
+    .url("NEXT_PUBLIC_COMPANY_LINKTREE_URL must be a valid URL"),
+  NEXT_PUBLIC_COMPANY_WHATSAPP_URL: z
+    .string()
+    .url("NEXT_PUBLIC_COMPANY_WHATSAPP_URL must be a valid URL"),
 
   // Payment & Shipping
   NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT: z
@@ -299,8 +314,9 @@ if (typeof window === "undefined") {
     SYSTEM_CLIENT_ID: 0,
     STORE_ID: 0,
     ORGANIZATION_ID: "",
-    MEMBER_ID: "",
     USER_ID: "",
+    USER_NAME: "",
+    USER_ROLE: "",
     PERSON_ID: 0,
     TYPE_BUSINESS: 0,
 
@@ -349,6 +365,14 @@ if (typeof window === "undefined") {
       process.env.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION || "",
     NEXT_PUBLIC_COMPANY_META_DESCRIPTION:
       process.env.NEXT_PUBLIC_COMPANY_META_DESCRIPTION || "",
+    NEXT_PUBLIC_COMPANY_FACEBOOK_URL:
+      process.env.NEXT_PUBLIC_COMPANY_FACEBOOK_URL || "",
+    NEXT_PUBLIC_COMPANY_INSTAGRAM_URL:
+      process.env.NEXT_PUBLIC_COMPANY_INSTAGRAM_URL || "",
+    NEXT_PUBLIC_COMPANY_LINKTREE_URL:
+      process.env.NEXT_PUBLIC_COMPANY_LINKTREE_URL || "",
+    NEXT_PUBLIC_COMPANY_WHATSAPP_URL:
+      process.env.NEXT_PUBLIC_COMPANY_WHATSAPP_URL || "",
     NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT:
       Number(process.env.NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT) || 0,
     NEXT_PUBLIC_PAY_IN_UP_TO: Number(process.env.NEXT_PUBLIC_PAY_IN_UP_TO) || 0,
@@ -400,11 +424,15 @@ export const envs = {
   SYSTEM_CLIENT_ID: envVars.SYSTEM_CLIENT_ID,
   STORE_ID: envVars.STORE_ID,
 
-  // Organization/Member/User IDs
+  // Organization/User IDs
   ORGANIZATION_ID: envVars.ORGANIZATION_ID,
-  MEMBER_ID: envVars.MEMBER_ID,
   USER_ID: envVars.USER_ID,
+  USER_NAME: envVars.USER_NAME,
+  USER_ROLE: envVars.USER_ROLE,
   PERSON_ID: envVars.PERSON_ID,
+
+  // Legacy alias kept for API payloads that still expect pe_member_id
+  MEMBER_ID: envVars.USER_NAME,
 
   TYPE_BUSINESS: envVars.TYPE_BUSINESS,
 
@@ -447,6 +475,10 @@ export const envs = {
     envVars.NEXT_PUBLIC_COMPANY_META_TITLE_CAPTION,
   NEXT_PUBLIC_COMPANY_META_DESCRIPTION:
     envVars.NEXT_PUBLIC_COMPANY_META_DESCRIPTION,
+  NEXT_PUBLIC_COMPANY_FACEBOOK_URL: envVars.NEXT_PUBLIC_COMPANY_FACEBOOK_URL,
+  NEXT_PUBLIC_COMPANY_INSTAGRAM_URL: envVars.NEXT_PUBLIC_COMPANY_INSTAGRAM_URL,
+  NEXT_PUBLIC_COMPANY_LINKTREE_URL: envVars.NEXT_PUBLIC_COMPANY_LINKTREE_URL,
+  NEXT_PUBLIC_COMPANY_WHATSAPP_URL: envVars.NEXT_PUBLIC_COMPANY_WHATSAPP_URL,
 
   // Payment & Shipping
   NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT: envVars.NEXT_PUBLIC_DISCOUNT_CASH_PAYMENT,
