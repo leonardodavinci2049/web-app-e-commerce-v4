@@ -1,13 +1,12 @@
 "use client";
 
 import {
-  AtSign,
-  Camera,
   Clock,
   CreditCard,
   Globe,
   Mail,
   MapPin,
+  MessageCircle,
   Phone,
   Send,
   Shield,
@@ -19,6 +18,44 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { envs } from "@/core/config";
+
+function FacebookIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+      {...props}
+    >
+      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+    </svg>
+  );
+}
+
+function InstagramIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+      {...props}
+    >
+      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+    </svg>
+  );
+}
 
 export default function FooterHome() {
   const currentYear = new Date().getFullYear();
@@ -59,27 +96,42 @@ export default function FooterHome() {
 
             {/* Redes sociais */}
             <div className="flex space-x-4">
-              <Link
-                href="#"
+              <a
+                href={envs.NEXT_PUBLIC_COMPANY_FACEBOOK_URL}
+                target="_blank"
+                rel="noreferrer"
                 className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
                 aria-label="Facebook"
               >
-                <Globe className="h-5 w-5" />
-              </Link>
-              <Link
-                href="#"
+                <FacebookIcon className="h-5 w-5" />
+              </a>
+              <a
+                href={envs.NEXT_PUBLIC_COMPANY_INSTAGRAM_URL}
+                target="_blank"
+                rel="noreferrer"
                 className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
                 aria-label="Instagram"
               >
-                <Camera className="h-5 w-5" />
-              </Link>
-              <Link
-                href="#"
+                <InstagramIcon className="h-5 w-5" />
+              </a>
+              <a
+                href={envs.NEXT_PUBLIC_COMPANY_LINKTREE_URL}
+                target="_blank"
+                rel="noreferrer"
                 className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
-                aria-label="Twitter"
+                aria-label="Linktree"
               >
-                <AtSign className="h-5 w-5" />
-              </Link>
+                <Globe className="h-5 w-5" />
+              </a>
+              <a
+                href={envs.NEXT_PUBLIC_COMPANY_WHATSAPP_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-800 hover:text-white"
+                aria-label="WhatsApp"
+              >
+                <MessageCircle className="h-5 w-5" />
+              </a>
             </div>
           </div>
 
