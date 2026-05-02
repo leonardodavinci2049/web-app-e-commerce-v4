@@ -24,7 +24,13 @@ export function mapProductsToSitemap(
   baseUrl: string,
 ): MetadataRoute.Sitemap {
   return products
-    .filter((product) => product.slug)
+    .filter((product) => {
+      // Exclude products without a valid slug (incomplete data)
+      if (!product.slug) return false;
+      // Exclude products without a valid name (can't generate canonical URL)
+      if (!product.name || product.name.trim() === "") return false;
+      return true;
+    })
     .map((product) => ({
       url: `${baseUrl}${getProductPath(product.name, product.id)}`,
       changeFrequency: "weekly" as const,

@@ -1,4 +1,5 @@
 import { envs } from "@/core/config";
+import { JsonLdScript, SCHEMA_IDS } from "@/lib/seo/json-ld";
 
 /**
  * Componente de Dados Estruturados JSON-LD para LocalBusiness
@@ -11,6 +12,7 @@ export function LocalBusinessJsonLd() {
   const localBusinessSchema = {
     "@context": "https://schema.org",
     "@type": "Store",
+    "@id": SCHEMA_IDS.localBusiness,
     name: envs.NEXT_PUBLIC_COMPANY_NAME,
     url: envs.NEXT_PUBLIC_BASE_URL_APP,
     logo: `${envs.NEXT_PUBLIC_BASE_URL_APP}/images/logo/logo-horizontal-header1.png`,
@@ -23,6 +25,9 @@ export function LocalBusinessJsonLd() {
       streetAddress: envs.NEXT_PUBLIC_COMPANY_ADDRESS,
       addressLocality: envs.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION,
       addressCountry: "BR",
+    },
+    parentOrganization: {
+      "@id": SCHEMA_IDS.organization,
     },
     openingHoursSpecification: [
       {
@@ -48,13 +53,5 @@ export function LocalBusinessJsonLd() {
     hasMap: envs.NEXT_PUBLIC_COMPANY_MAPS_URL,
   };
 
-  return (
-    <script
-      type="application/ld+json"
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD requires structured data injection
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(localBusinessSchema),
-      }}
-    />
-  );
+  return <JsonLdScript data={localBusinessSchema} />;
 }

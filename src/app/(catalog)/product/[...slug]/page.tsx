@@ -107,7 +107,7 @@ export async function generateMetadata({
           ]
         : [],
       locale: "pt_BR",
-      type: "article",
+      type: "website",
     },
 
     // Twitter Card para compartilhamentos no Twitter/X

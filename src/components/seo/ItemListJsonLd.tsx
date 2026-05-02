@@ -1,4 +1,5 @@
 import { envs } from "@/core/config";
+import { JsonLdScript } from "@/lib/seo/json-ld";
 
 interface ItemListProduct {
   name: string;
@@ -35,11 +36,5 @@ export function ItemListJsonLd({ name, items }: ItemListJsonLdProps) {
     })),
   };
 
-  return (
-    <script
-      type="application/ld+json"
-      // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD requires structured data injection
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  );
+  return <JsonLdScript data={jsonLd} />;
 }

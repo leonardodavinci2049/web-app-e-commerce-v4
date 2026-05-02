@@ -1,10 +1,10 @@
-import DOMPurify from "isomorphic-dompurify";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 import { BreadcrumbJsonLd } from "@/components/seo";
 import { ProductGridSkeleton } from "@/components/skeletons";
+import { sanitizeApiHtml } from "@/lib/seo/sanitize-html";
 import { generateSlug } from "@/lib/slug";
 import { toTitleCase } from "@/lib/text-utils";
 import {
@@ -32,55 +32,6 @@ interface ProductDetailContainerProps {
   params: Promise<{
     slug: string[];
   }>;
-}
-
-const DOMPURIFY_CONFIG = {
-  ALLOWED_TAGS: [
-    "p",
-    "br",
-    "strong",
-    "b",
-    "i",
-    "em",
-    "u",
-    "s",
-    "h1",
-    "h2",
-    "h3",
-    "h4",
-    "h5",
-    "h6",
-    "ul",
-    "ol",
-    "li",
-    "a",
-    "span",
-    "div",
-    "table",
-    "thead",
-    "tbody",
-    "tr",
-    "th",
-    "td",
-  ],
-  ALLOWED_ATTR: ["href", "target", "rel", "class", "style"],
-};
-
-function containsHtml(content: string): boolean {
-  return /<[a-z][\s\S]*>/i.test(content);
-}
-
-function sanitizeDescription(description: string): {
-  sanitizedHtml: string;
-  isHtml: boolean;
-} {
-  const isHtml = containsHtml(description);
-  return {
-    sanitizedHtml: isHtml
-      ? DOMPurify.sanitize(description, DOMPURIFY_CONFIG)
-      : description,
-    isHtml,
-  };
 }
 
 // Skeleton for gallery section with optional placeholder image.
@@ -219,8 +170,8 @@ export async function ProductDetailContainer({
       }
     : defaultShipping;
 
-  // Sanitize description on the server to keep DOMPurify out of the client bundle
-  const descriptionData = sanitizeDescription(
+  // Sanitize description on the server using the shared sanitizer
+  const descriptionData = sanitizeApiHtml(
     product.description || "Sem descrição disponível.",
   );
 
