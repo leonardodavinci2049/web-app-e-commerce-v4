@@ -133,7 +133,9 @@ export class ProductWebServiceApi extends BaseApiService {
 
       return response;
     } catch (error) {
-      logger.error("Erro no serviço de produto web (busca por ID)", error);
+      if (!(error instanceof ProductWebNotFoundError)) {
+        logger.error("Erro no serviço de produto web (busca por ID)", error);
+      }
       throw error;
     }
   }

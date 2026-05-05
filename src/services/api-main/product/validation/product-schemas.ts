@@ -7,11 +7,20 @@ import { z } from "zod";
 /**
  * Schema para buscar produto web por ID/slug
  */
-export const ProductWebFindByIdSchema = z.object({
-  pe_type_business: z.number().int().positive(),
-  pe_id_produto: z.number().int().positive(),
-  pe_slug_produto: z.string().max(300).min(1),
-});
+export const ProductWebFindByIdSchema = z
+  .object({
+    pe_type_business: z.number().int().positive(),
+    pe_id_produto: z.number().int().min(0),
+    pe_slug_produto: z.string().max(300),
+  })
+  .refine(
+    (params) =>
+      params.pe_id_produto > 0 || params.pe_slug_produto.trim().length > 0,
+    {
+      message: "Informe o ID do produto ou o slug do produto.",
+      path: ["pe_slug_produto"],
+    },
+  );
 
 /**
  * Schema para listar produtos web com filtros

@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { BreadcrumbJsonLd } from "@/components/seo";
 import { ProductGridSkeleton } from "@/components/skeletons";
@@ -99,13 +99,6 @@ export async function ProductDetailContainer({
   }
 
   const { product, relatedProducts } = productData;
-
-  // Redirect to canonical slug if the URL text doesn't match
-  const canonicalSlug = generateSlug(product.name, product.id);
-  const currentSlug = slug.join("/");
-  if (currentSlug !== canonicalSlug) {
-    redirect(`/product/${canonicalSlug}`);
-  }
 
   // resolve nomes de categoria / subcategoria a partir dos IDs
   const getCategoryName = (categoryId?: string) =>
