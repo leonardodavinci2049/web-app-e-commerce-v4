@@ -1,4 +1,4 @@
-import { cache } from "react";
+import { cacheLife } from "next/cache";
 import {
   fetchCategoriesAction,
   fetchProductWithRelatedAction,
@@ -6,22 +6,25 @@ import {
 import type { ProductWithRelated } from "@/services/api-main/product/product-web-cached-service";
 
 /**
- * Deduplicates the product data fetch within a single request.
- * Both generateMetadata and ProductDetailContainer call this —
- * React's cache() ensures the API is only called once per render pass.
- *
- * Uses a string key (slug joined) so Object.is comparison works correctly.
+ * Cached product detail fetch shared by metadata, canonical redirect and UI.
+ * Uses a string key (slug joined) so the cache key stays serializable.
  */
-export const getProductData = cache(
-  async (slugKey: string): Promise<ProductWithRelated | undefined> => {
-    const slug = slugKey.split("/");
-    return fetchProductWithRelatedAction(slug);
-  },
-);
+export async function getProductData(
+  slugKey: string,
+): Promise<ProductWithRelated | undefined> {
+  "use cache";
+  cacheLife("hours");
+
+  const slug = slugKey.split("/");
+  return fetchProductWithRelatedAction(slug);
+}
 
 /**
- * Deduplicates category fetch within a single request.
+ * Cached category fetch shared by product detail sections.
  */
-export const getCategoriesData = cache(async () => {
+export async function getCategoriesData() {
+  "use cache";
+  cacheLife("hours");
+
   return fetchCategoriesAction();
-});
+}

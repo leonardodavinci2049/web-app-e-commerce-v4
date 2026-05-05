@@ -11,8 +11,115 @@ import {
   type UITaxonomyItem,
 } from "@/lib/transformers";
 import { ProductWebServiceApi } from "@/services/api-main/product/product-service-api";
+import type { ProductWebFindByIdResponse } from "./types/product-types";
+import { ProductWebNotFoundError } from "./types/product-types";
 
 const logger = createLogger("ProductWebCachedService");
+
+interface ProductSlugResolution {
+  fullSlug: string;
+  productId: number;
+}
+
+function resolveProductSlug(slug: string[]): ProductSlugResolution | undefined {
+  const fullSlug = slug.join("/").replace(/^\/+|\/+$/g, "");
+
+  if (!fullSlug) {
+    return undefined;
+  }
+
+  const lastSegment = fullSlug.split("-").at(-1);
+  const productId =
+    lastSegment && /^\d+$/.test(lastSegment)
+      ? Number.parseInt(lastSegment, 10)
+      : 0;
+
+  return {
+    fullSlug,
+    productId: productId > 0 ? productId : 0,
+  };
+}
+
+function normalizeSlugForCompare(value: string | null | undefined): string {
+  return (value ?? "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9-]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function isCloseSlugMatch(
+  requestedSlug: string,
+  candidateSlug: string,
+): boolean {
+  const requested = normalizeSlugForCompare(requestedSlug);
+  const candidate = normalizeSlugForCompare(candidateSlug);
+
+  if (!requested || !candidate) {
+    return false;
+  }
+
+  if (requested === candidate) {
+    return true;
+  }
+
+  return (
+    (candidate.startsWith(requested) &&
+      candidate.length - requested.length <= 5) ||
+    (requested.startsWith(candidate) &&
+      requested.length - candidate.length <= 5)
+  );
+}
+
+async function findProductResponseBySlugFallback(
+  resolution: ProductSlugResolution,
+): Promise<ProductWebFindByIdResponse | undefined> {
+  if (resolution.productId > 0) {
+    return undefined;
+  }
+
+  const searchTerm = resolution.fullSlug.replace(/-/g, " ");
+  const searchResponse = await ProductWebServiceApi.findProducts({
+    pe_produto: searchTerm,
+    pe_qt_registros: 10,
+    pe_pagina_id: 0,
+  });
+  const candidates = ProductWebServiceApi.extractProductList(searchResponse);
+  const candidate = candidates.find(
+    (product) =>
+      product.ID_PRODUTO > 0 &&
+      product.SLUG &&
+      isCloseSlugMatch(resolution.fullSlug, product.SLUG),
+  );
+
+  if (!candidate) {
+    return undefined;
+  }
+
+  return ProductWebServiceApi.findProductById({
+    pe_id_produto: candidate.ID_PRODUTO,
+    pe_slug_produto: candidate.SLUG ?? resolution.fullSlug,
+  });
+}
+
+async function findProductResponseByResolution(
+  resolution: ProductSlugResolution,
+): Promise<ProductWebFindByIdResponse | undefined> {
+  try {
+    return await ProductWebServiceApi.findProductById({
+      pe_id_produto: resolution.productId,
+      pe_slug_produto: resolution.fullSlug,
+    });
+  } catch (error) {
+    if (error instanceof ProductWebNotFoundError) {
+      return findProductResponseBySlugFallback(resolution);
+    }
+
+    throw error;
+  }
+}
 
 // ============================================================================
 // Product Functions
@@ -93,8 +200,8 @@ export async function getProductById(
 }
 
 /**
- * Fetch a product by slug with cache
- * Extracts product ID from slug and uses findProductById
+ * Fetch a product by slug with cache.
+ * Uses the trailing ID when present, or lets the API resolve by slug.
  */
 export async function getProductBySlug(
   slug: string[],
@@ -104,20 +211,18 @@ export async function getProductBySlug(
   cacheTag(CACHE_TAGS.products);
 
   try {
-    const fullSlug = slug.join("/");
-    // Extract ID from slug (format: product-name-123)
-    const parts = fullSlug.split("-");
-    const id = parts[parts.length - 1];
+    const resolution = resolveProductSlug(slug);
 
-    if (!id || Number.isNaN(Number.parseInt(id, 10))) {
-      logger.error(`Invalid product slug: ${fullSlug}`);
+    if (!resolution) {
+      logger.error("Invalid empty product slug");
       return undefined;
     }
 
-    const response = await ProductWebServiceApi.findProductById({
-      pe_id_produto: Number.parseInt(id, 10),
-      pe_slug_produto: fullSlug,
-    });
+    const response = await findProductResponseByResolution(resolution);
+
+    if (!response) {
+      return undefined;
+    }
 
     const product = ProductWebServiceApi.extractProduct(response);
     if (!product) {
@@ -140,8 +245,8 @@ export interface ProductWithRelated {
 }
 
 /**
- * Fetch a product by slug along with related products (from API response data[2])
- * Uses a single API call to get both product and related products
+ * Fetch a product by slug along with related products (from API response data[2]).
+ * Uses the trailing ID as the primary key when present, or resolves by slug.
  */
 export async function getProductWithRelated(
   slug: string[],
@@ -151,20 +256,18 @@ export async function getProductWithRelated(
   cacheTag(CACHE_TAGS.products);
 
   try {
-    const fullSlug = slug.join("/");
-    // Extract ID from slug (format: product-name-123)
-    const parts = fullSlug.split("-");
-    const id = parts[parts.length - 1];
+    const resolution = resolveProductSlug(slug);
 
-    if (!id || Number.isNaN(Number.parseInt(id, 10))) {
-      logger.error(`Invalid product slug: ${fullSlug}`);
+    if (!resolution) {
+      logger.error("Invalid empty product slug");
       return undefined;
     }
 
-    const response = await ProductWebServiceApi.findProductById({
-      pe_id_produto: Number.parseInt(id, 10),
-      pe_slug_produto: fullSlug,
-    });
+    const response = await findProductResponseByResolution(resolution);
+
+    if (!response) {
+      return undefined;
+    }
 
     const product = ProductWebServiceApi.extractProduct(response);
     if (!product) {

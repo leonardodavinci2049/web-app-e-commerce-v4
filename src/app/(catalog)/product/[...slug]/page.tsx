@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound, permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
 import { ProductDetailSkeleton } from "@/components/skeletons";
 import { envs } from "@/core/config";
@@ -132,15 +133,31 @@ export async function generateMetadata({
   };
 }
 
-/**
- * Product detail page with Suspense boundary
- * Uses ProductDetailSkeleton as fallback for better UX
- */
+async function ProductDetailPageContent({ params }: ProductDetailPageProps) {
+  const { slug } = await params;
+  const currentSlug = slug.join("/");
+  const productData = await getProductData(currentSlug);
+
+  if (!productData) {
+    notFound();
+  }
+
+  const canonicalSlug = generateSlug(
+    productData.product.name,
+    productData.product.id,
+  );
+  if (currentSlug !== canonicalSlug) {
+    permanentRedirect(`/product/${canonicalSlug}`);
+  }
+
+  return <ProductDetailContainer params={params} />;
+}
+
 export default function ProductDetailPage({ params }: ProductDetailPageProps) {
   return (
     <div className="min-h-screen bg-background font-sans pb-12">
       <Suspense fallback={<ProductDetailSkeleton />}>
-        <ProductDetailContainer params={params} />
+        <ProductDetailPageContent params={params} />
       </Suspense>
     </div>
   );
