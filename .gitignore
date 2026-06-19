@@ -40,16 +40,24 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# others
-tasks
-/tasks
+# deploy
 ecosystem.config.js
-/generated/prisma
-/docs
-/.github
-/.kiro
-/scripts
-/plan
+.well-known
+
+# multitenancy 
+public/upload
+public/images
+public/slides
+src/core/config-tenant
+/src/data
+/upload
+
+# agent files
+.agents/
+.codex/
 AGENTS.md
-/reports
+
+# project generated files
+/scripts
+/docs
 
