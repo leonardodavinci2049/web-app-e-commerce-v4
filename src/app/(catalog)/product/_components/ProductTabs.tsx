@@ -1,6 +1,7 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { envs } from "@/core/config/envs";
 
 interface ProductTabsProps {
   /** Pre-sanitized description HTML (sanitized on the server) */
@@ -123,25 +124,9 @@ export function ProductTabs({
           <h3 className="text-lg font-semibold mb-4">Informações de Entrega</h3>
           <div className="space-y-3 text-muted-foreground">
             <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full bg-primary mt-2" />
-              <div>
-                <p className="font-medium text-foreground">
-                  Política de Devolução
-                </p>
-                <p className="text-sm">
-                  Devolução gratuita em até {shipping.returnDays} dias úteis
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="w-2 h-2 rounded-full bg-primary mt-2" />
-              <div>
-                <p className="font-medium text-foreground">Garantia</p>
-                <p className="text-sm">
-                  Garantia de fábrica de 12 meses + 3 meses de garantia
-                  estendida
-                </p>
-              </div>
+              <p>
+                <strong>WhatsApp:</strong> {envs.NEXT_PUBLIC_COMPANY_WHATSAPP}
+              </p>
             </div>
           </div>
         </div>
