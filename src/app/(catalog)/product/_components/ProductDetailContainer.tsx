@@ -129,7 +129,7 @@ export async function ProductDetailContainer({
     subcategory: getSubcategoryName(p.categoryId, p.subcategoryId),
   }));
 
-  // Dados padrão para especificações e entrega
+  // Dados padrão para especificações
   const defaultSpecifications: Record<string, string> = {
     Marca: product.brand || "Genérica",
     Categoria: getCategoryName(product.categoryId),
@@ -145,23 +145,6 @@ export async function ProductDetailContainer({
           .map(([k, v]) => [k, String(v)]),
       )
     : defaultSpecifications;
-
-  const defaultShipping = {
-    freeShippingMinValue: 199.9,
-    estimatedDays: "3 a 7 dias úteis",
-    returnDays: 7,
-  };
-
-  // Converte shipping do produto para o formato esperado
-  const productShipping = product.shipping
-    ? {
-        freeShippingMinValue:
-          Number(product.shipping.freeShippingMinValue) || 199.9,
-        estimatedDays:
-          String(product.shipping.estimatedDays) || "3 a 7 dias úteis",
-        returnDays: Number(product.shipping.returnDays) || 7,
-      }
-    : defaultShipping;
 
   // Sanitize description on the server using the shared sanitizer
   const descriptionData = sanitizeApiHtml(
@@ -260,7 +243,6 @@ export async function ProductDetailContainer({
           description={descriptionData.sanitizedHtml}
           isHtmlContent={descriptionData.isHtml}
           specifications={productSpecifications}
-          shipping={productShipping}
         />
       </div>
       {/* Produtos Relacionados — deferred rendering via content-visibility */}
