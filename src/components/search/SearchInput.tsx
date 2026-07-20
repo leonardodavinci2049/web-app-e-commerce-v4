@@ -9,6 +9,8 @@ interface SearchInputProps {
   className?: string;
 }
 
+const MIN_SEARCH_TERM_LENGTH = 2;
+
 export function SearchInput({
   placeholder = "O que você procura?",
   className,
@@ -17,7 +19,7 @@ export function SearchInput({
   const router = useRouter();
 
   const isValidSearchTerm = (term: string): boolean => {
-    return term.trim().length > 2;
+    return term.trim().length >= MIN_SEARCH_TERM_LENGTH;
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -48,10 +50,11 @@ export function SearchInput({
     >
       <div className="relative">
         <input
-          type="text"
+          type="search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           onKeyDown={handleKeyDown}
+          minLength={MIN_SEARCH_TERM_LENGTH}
           placeholder={placeholder}
           className="w-full pl-4 pr-12 py-2 rounded-lg border border-input bg-background focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
         />
