@@ -9,11 +9,6 @@ interface ProductTabsProps {
   /** Whether the description contains HTML tags */
   isHtmlContent: boolean;
   specifications: Record<string, string>;
-  shipping: {
-    freeShippingMinValue: number;
-    estimatedDays: string;
-    returnDays: number;
-  };
 }
 
 const DESCRIPTION_HTML_CLASS_NAME = [
@@ -73,7 +68,6 @@ export function ProductTabs({
   description,
   isHtmlContent,
   specifications,
-  shipping,
 }: ProductTabsProps) {
   return (
     <Tabs defaultValue="description" className="w-full">
