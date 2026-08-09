@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { envs } from "@/core/config";
+import {
+  buildPaginatedCanonical,
+  hasCatalogVariant,
+  parseCatalogPage,
+} from "@/lib/seo/catalog-params";
 import { ProductsContent } from "./_components/ProductsContent";
 
 interface ProductsPageProps {
@@ -13,23 +18,11 @@ export async function generateMetadata({
   const params = await searchParams;
   const searchTerm =
     typeof params.q === "string" ? decodeURIComponent(params.q) : undefined;
-  const sortCol = typeof params.sort_col === "string";
-  const sortOrd = typeof params.sort_ord === "string";
-  const stockOnly = params.stock === "1";
-  const page =
-    typeof params.page === "string" ? Math.max(1, Number(params.page)) : 1;
-
-  // Contar quantos filtros estão ativos (exceto busca)
-  const filterCount = [sortCol, sortOrd, stockOnly].filter(Boolean).length;
-
-  // Estratégia de indexação:
-  // - Página base sem filtros: indexar normalmente
-  // - Página com busca (q=): noindex (thin content / canibalização)
-  // - Página com 2+ filtros: noindex (evitar thin content)
-  const shouldNoindex = !!searchTerm || filterCount >= 2;
+  const page = parseCatalogPage(params.page) ?? 1;
+  const shouldNoindex = hasCatalogVariant(params);
 
   // Canonical aponta para si mesma (cada página paginada é canônica)
-  const canonicalUrl = page > 1 ? `/products?page=${page}` : "/products";
+  const canonicalUrl = buildPaginatedCanonical("/products", page);
 
   // Título dinâmico baseado na busca
   const title = searchTerm

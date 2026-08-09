@@ -15,16 +15,17 @@ import {
   Truck,
   XCircle,
 } from "lucide-react";
-import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { envs } from "@/core/config/envs";
 import { getCurrentDatePtBr, getCurrentYear } from "@/lib/current-time";
+import { createPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: `Política de Entrega, Troca e Devolução - ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
   description: `Política completa de entrega, troca e devolução de produtos da ${envs.NEXT_PUBLIC_COMPANY_NAME}. Conheça prazos, condições e procedimentos para vendas no atacado e varejo B2B/B2C.`,
-};
+  path: "/return",
+});
 
 export default async function ReturnPage() {
   const [currentDate, currentYear] = await Promise.all([
@@ -675,7 +676,8 @@ export default async function ReturnPage() {
                   </strong>
                 </p>
                 <p className="text-muted-foreground text-xs">
-                  Copyright © 2011-{currentYear} | Todos os direitos reservados
+                  Copyright © {envs.NEXT_PUBLIC_COMPANY_YEAR_FOUNDATION}-
+                  {currentYear} | Todos os direitos reservados
                 </p>
                 <p className="text-muted-foreground mt-2 text-xs">
                   Última atualização: {currentDate}

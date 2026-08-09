@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { TrackedProductLink } from "@/components/analytics";
 import { AddToCartButton } from "@/components/product/actions/AddToCartButton";
 import { WishlistButton } from "@/components/product/actions/WishlistButton";
 import { envs } from "@/core/config";
@@ -22,6 +22,8 @@ interface ProductCardProps {
   };
   priority?: boolean;
   unoptimizedImage?: boolean;
+  trackingListId?: string;
+  trackingListName?: string;
 }
 
 /**
@@ -34,6 +36,8 @@ export function ProductCard({
   variant = "grid",
   priority = false,
   unoptimizedImage = false,
+  trackingListId = "products",
+  trackingListName = "Produtos",
 }: ProductCardProps & { variant?: "grid" | "list" }) {
   const productUrl = getProductPath(product.name, product.id);
   const maxInstallments = envs.NEXT_PUBLIC_PAY_IN_UP_TO;
@@ -120,6 +124,13 @@ export function ProductCard({
 
   // Stock logic
   const isOutOfStock = product.inStock === false;
+  const analyticsItem = {
+    item_id: product.id,
+    item_name: product.name,
+    item_brand: product.brand,
+    item_category: product.category,
+    price: finalPrice,
+  };
 
   if (variant === "list") {
     return (
@@ -139,8 +150,11 @@ export function ProductCard({
         </div>
 
         {/* Image */}
-        <Link
+        <TrackedProductLink
           href={productUrl}
+          item={analyticsItem}
+          listId={trackingListId}
+          listName={trackingListName}
           className="relative w-28 min-w-28 md:w-48 md:min-w-48 bg-white p-2 md:p-4 block shrink-0"
         >
           <div className="relative w-full h-full">
@@ -157,19 +171,22 @@ export function ProductCard({
               }`}
             />
           </div>
-        </Link>
+        </TrackedProductLink>
 
         {/* Content */}
         <div className="p-2 md:p-4 flex flex-col grow justify-between">
           <div>
             <div className="flex justify-between items-start mb-1">
-              <Link
+              <TrackedProductLink
                 href={productUrl}
+                item={analyticsItem}
+                listId={trackingListId}
+                listName={trackingListName}
                 className="font-medium text-foreground text-sm md:text-lg mb-1 block hover:text-primary transition-colors line-clamp-2 md:line-clamp-none"
                 title={toTitleCase(product.name)}
               >
                 {toTitleCase(product.name)}
-              </Link>
+              </TrackedProductLink>
               {/* Wishlist Button - Client Island */}
               <div className="z-10 opacity-0 group-hover:opacity-100 transition-opacity ml-2 shrink-0 hidden md:block">
                 <WishlistButton productId={product.id} />
@@ -254,8 +271,11 @@ export function ProductCard({
       </div>
 
       {/* Image */}
-      <Link
+      <TrackedProductLink
         href={productUrl}
+        item={analyticsItem}
+        listId={trackingListId}
+        listName={trackingListName}
         className="relative aspect-square overflow-hidden bg-white p-3 md:p-4 block"
       >
         <div className="relative w-full h-full">
@@ -272,18 +292,21 @@ export function ProductCard({
             }`}
           />
         </div>
-      </Link>
+      </TrackedProductLink>
 
       {/* Content */}
       <div className="p-3 md:p-4 flex flex-col grow">
         <div className="mb-2">
-          <Link
+          <TrackedProductLink
             href={productUrl}
+            item={analyticsItem}
+            listId={trackingListId}
+            listName={trackingListName}
             className="font-medium text-foreground line-clamp-2 hover:text-primary transition-colors text-xs md:text-sm mb-1"
             title={toTitleCase(product.name)}
           >
             {toTitleCase(product.name)}
-          </Link>
+          </TrackedProductLink>
 
           <div className="flex flex-col gap-0.5">
             {product.brand && !product.brand.toLowerCase().includes("none") && (

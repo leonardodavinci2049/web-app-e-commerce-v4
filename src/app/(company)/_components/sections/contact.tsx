@@ -1,4 +1,5 @@
 import { MapPin, MessageSquare, Phone } from "lucide-react";
+import { TrackedContactLink } from "@/components/analytics";
 import { Card, CardContent } from "@/components/ui/card";
 import { envs } from "@/core/config/envs";
 
@@ -58,14 +59,17 @@ export function ContactSection() {
                     {contact.title}
                   </h3>
                   {"href" in contact ? (
-                    <a
+                    <TrackedContactLink
                       href={contact.href}
+                      method="whatsapp"
+                      location="contact_section"
+                      lead
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-muted-foreground text-sm hover:underline sm:text-base"
                     >
                       {contact.info}
-                    </a>
+                    </TrackedContactLink>
                   ) : (
                     <p className="text-muted-foreground text-sm sm:text-base">
                       {contact.info}

@@ -1,10 +1,23 @@
 import { envs } from "@/core/config";
 import { SCHEMA_IDS } from "./json-ld";
 
-const HOURS_SEPARATOR = /\s*-\s*/;
+const HOURS_SEPARATOR = /\s*(?:-|às)\s*/i;
 const GEO_PATTERN = /@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/;
+const EMBED_GEO_PATTERN = /!2d(-?\d+(?:\.\d+)?).*?!3d(-?\d+(?:\.\d+)?)/;
 const POSTAL_CODE_PATTERN = /\b\d{5}-?\d{3}\b/;
-const REGION_PATTERN = /,\s*([A-Z]{2})\b/;
+const LOCATION_PATTERN = /^\s*\d{5}-?\d{3}\s*-\s*(.*?)\s*-\s*([A-Z]{2})\s*$/;
+const DISTRICT_PATTERN = /\s*-\s*(Bairro\s+.+?)\s+\d{5}-?\d{3}\b/i;
+
+function normalizeOpeningTime(value: string): string {
+  const normalized = value.trim().toLowerCase();
+  const match = normalized.match(/^(\d{1,2})(?:h(?:(\d{2}))?)?$/);
+
+  if (!match) {
+    return normalized;
+  }
+
+  return `${match[1].padStart(2, "0")}:${match[2] ?? "00"}`;
+}
 
 function splitOpeningHours(
   hours: string,
@@ -16,11 +29,20 @@ function splitOpeningHours(
     .map((value) => value.trim())
     .filter(Boolean);
 
-  return { opens, closes };
+  return {
+    opens: normalizeOpeningTime(opens),
+    closes: normalizeOpeningTime(closes),
+  };
 }
 
-function getRegionFromLocation() {
-  return envs.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION.match(REGION_PATTERN)?.[1];
+function getLocationParts() {
+  const match =
+    envs.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION.match(LOCATION_PATTERN);
+
+  return {
+    city: match?.[1]?.trim(),
+    region: match?.[2],
+  };
 }
 
 function getPostalCodeFromAddress() {
@@ -30,17 +52,43 @@ function getPostalCodeFromAddress() {
 }
 
 function getGeoFromMapsUrl() {
-  const match = envs.NEXT_PUBLIC_COMPANY_MAPS_URL.match(GEO_PATTERN);
+  const directMatch = envs.NEXT_PUBLIC_COMPANY_MAPS_URL.match(GEO_PATTERN);
+  const embedMatch = envs.NEXT_PUBLIC_COMPANY_MAPS_URL.match(EMBED_GEO_PATTERN);
 
-  if (!match) {
+  if (!directMatch && !embedMatch) {
+    return undefined;
+  }
+
+  const latitude = directMatch?.[1] ?? embedMatch?.[2];
+  const longitude = directMatch?.[2] ?? embedMatch?.[1];
+
+  if (!latitude || !longitude) {
     return undefined;
   }
 
   return {
     "@type": "GeoCoordinates",
-    latitude: Number(match[1]),
-    longitude: Number(match[2]),
+    latitude: Number(latitude),
+    longitude: Number(longitude),
   };
+}
+
+function getStreetAddress() {
+  const addressWithoutLocation = envs.NEXT_PUBLIC_COMPANY_ADDRESS.split(
+    POSTAL_CODE_PATTERN,
+  )[0]
+    ?.trim()
+    .replace(/\s*-\s*$/, "");
+  const district =
+    envs.NEXT_PUBLIC_COMPANY_ADDRESS.match(DISTRICT_PATTERN)?.[1];
+
+  if (!addressWithoutLocation) {
+    return envs.NEXT_PUBLIC_COMPANY_ADDRESS;
+  }
+
+  return district && !addressWithoutLocation.includes(district)
+    ? `${addressWithoutLocation} - ${district}`
+    : addressWithoutLocation;
 }
 
 export const COMPANY_LOGO_URL = `${envs.NEXT_PUBLIC_BASE_URL_APP}/images/logo/logo-horizontal-header1.png`;
@@ -56,9 +104,9 @@ export const COMPANY_SAME_AS = [
 
 export const COMPANY_POSTAL_ADDRESS = {
   "@type": "PostalAddress",
-  streetAddress: envs.NEXT_PUBLIC_COMPANY_ADDRESS,
-  addressLocality: envs.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION,
-  addressRegion: getRegionFromLocation(),
+  streetAddress: getStreetAddress(),
+  addressLocality: getLocationParts().city,
+  addressRegion: getLocationParts().region,
   postalCode: getPostalCodeFromAddress(),
   addressCountry: "BR",
 };

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import {
   HeroBannerSkeleton,
@@ -5,7 +6,6 @@ import {
   ProductGridSkeleton,
 } from "@/components/skeletons";
 import { envs } from "@/core/config/envs";
-import { PromoBanner } from "./_components/banner/PromoBanner";
 import { PromoBannersGrid } from "./_components/banner/PromoBannersGrid";
 
 import FooterHome from "./_components/footer/FooterHome";
@@ -29,6 +29,12 @@ import Advantages from "./_components/sections/advantages";
 import { LocationSectionV1 } from "./_components/sections/LocationSectionV1";
 import { MethodsSection } from "./_components/sections/MethodsSection";
 import { Testimonials } from "./_components/sections/Testimonials";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
+};
 /**
  * Home page with Suspense boundaries for async Server Components
  * Static page shell is cached, async components stream in
@@ -113,8 +119,6 @@ export default async function HomePage() {
         >
           <ProductSectionCat05 title={envs.HOME_SECTION_8_TITLE} />
         </Suspense>
-
-        <PromoBanner />
 
         {/* 6. Featured Products Section */}
         <Suspense

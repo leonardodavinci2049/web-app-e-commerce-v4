@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { fetchCategoriesAction } from "@/app/actions/product";
+import type { UICategory, UISubcategory } from "@/lib/transformers";
 
 // Mapeamento de ícones por slug da categoria
 const categoryIconMap: Record<string, LucideIcon> = {
@@ -63,8 +64,90 @@ function getCategoryIcon(slug: string): LucideIcon {
   return DefaultCategoryIcon;
 }
 
+function findSubcategoryHref(
+  subcategories: UISubcategory[] | undefined,
+  slugs: string[],
+): string | undefined {
+  for (const subcategory of subcategories ?? []) {
+    if (slugs.includes(subcategory.slug)) {
+      return subcategory.href;
+    }
+
+    const childHref = findSubcategoryHref(subcategory.children, slugs);
+    if (childHref) {
+      return childHref;
+    }
+  }
+
+  return undefined;
+}
+
+function findCategoryHref(
+  categories: UICategory[],
+  slugs: string[],
+): string | undefined {
+  for (const category of categories) {
+    if (slugs.includes(category.slug)) {
+      return category.href;
+    }
+
+    const subcategoryHref = findSubcategoryHref(category.subcategories, slugs);
+    if (subcategoryHref) {
+      return subcategoryHref;
+    }
+  }
+
+  return undefined;
+}
+
 export async function NavigationMenu() {
   const categories = await fetchCategoriesAction();
+  const highlightedLinks = [
+    { label: "Home", href: "/", icon: Home },
+    {
+      label: "Computador",
+      href: findCategoryHref(categories, ["computador-1764955925"]),
+      icon: Zap,
+    },
+    {
+      label: "Áudio e Vídeo",
+      href: findCategoryHref(categories, ["audio-e-video"]),
+      icon: Percent,
+    },
+    {
+      label: "Eletrônicos",
+      href: findCategoryHref(categories, [
+        "eletronicos",
+        "informatica-eletronico",
+      ]),
+      icon: Cpu,
+    },
+    {
+      label: "Celulares",
+      href: findCategoryHref(categories, [
+        "linha-celular",
+        "celular-1764953141",
+      ]),
+      icon: Smartphone,
+    },
+    {
+      label: "Perfumaria",
+      href: findCategoryHref(categories, [
+        "perfumes-importados",
+        "perfumaria-e-beleza",
+      ]),
+      icon: Sparkles,
+    },
+    {
+      label: "Rede e Wireless",
+      href: findCategoryHref(categories, ["rede-e-wireless"]),
+      icon: BookOpen,
+    },
+    { label: "Seja um Revendedor", href: "/reseller", icon: BookOpen },
+  ].filter(
+    (item): item is { label: string; href: string; icon: LucideIcon } =>
+      typeof item.href === "string",
+  );
 
   return (
     <nav className="bg-primary text-primary-foreground shadow-md hidden md:block">
@@ -143,50 +226,7 @@ export async function NavigationMenu() {
 
           {/* Horizontal Links */}
           <ul className="flex items-center ml-2">
-            {[
-              { label: "Home", href: "/", icon: Home },
-              {
-                label: "Computador",
-                href: "/category/computador-1764955925",
-                icon: Zap,
-              },
-              {
-                label: "Áudio e Vídeo",
-                href: "/category/audio-e-video",
-                icon: Percent,
-              },
-              {
-                label: "Eletrônicos",
-                href:
-                  categories.find((c) => c.slug === "eletronicos")?.href ||
-                  "/category/informatica-eletronico",
-                icon: Cpu,
-              },
-              {
-                label: "Celulares",
-                href:
-                  categories.find((c) => c.slug === "linha-celular")?.href ||
-                  "/category/celular-1764953141",
-                icon: Smartphone,
-              },
-              {
-                label: "Perfumaria",
-                href:
-                  categories.find((c) => c.slug === "perfumes-importados")
-                    ?.href || "/category/perfumaria-e-beleza",
-                icon: Sparkles,
-              },
-              {
-                label: "Rede e Wireless",
-                href: "/category/rede-e-wireless",
-                icon: BookOpen,
-              },
-              {
-                label: "Seja um Revendedor",
-                href: "/reseller",
-                icon: BookOpen,
-              },
-            ].map((item) => {
+            {highlightedLinks.map((item) => {
               const IconNav = item.icon;
               return (
                 <li key={item.label}>

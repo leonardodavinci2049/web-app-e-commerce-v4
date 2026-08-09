@@ -1,7 +1,8 @@
 import type { MetadataRoute } from "next";
 import { unstable_noStore } from "next/cache";
-import { fetchCategoriesAction } from "@/app/actions/product";
+import { fetchCategoriesStrictAction } from "@/app/actions/product";
 import { getSitemapBaseUrl } from "../base-url";
+import { sitemapServiceUnavailable } from "../sitemap-response";
 
 /**
  * Sitemap for categories — flat, canonical URLs only.
@@ -18,7 +19,7 @@ export async function GET(request: Request) {
   let categoryPages: MetadataRoute.Sitemap = [];
 
   try {
-    const categories = await fetchCategoriesAction();
+    const categories = await fetchCategoriesStrictAction();
 
     if (categories && categories.length > 0) {
       const seenSlugs = new Set<string>();
@@ -68,7 +69,7 @@ export async function GET(request: Request) {
       });
     }
   } catch {
-    // Silently handle API errors
+    return sitemapServiceUnavailable();
   }
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

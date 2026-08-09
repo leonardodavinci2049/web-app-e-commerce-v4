@@ -9,6 +9,9 @@
 
 import type {} from "./types";
 
+const CONSENT_STORAGE_KEY = "analytics_consent";
+export const ANALYTICS_CONSENT_GRANTED_EVENT = "analytics-consent-granted";
+
 /**
  * Product item for GA4 e-commerce events
  */
@@ -27,8 +30,20 @@ export interface GA4Item {
 /**
  * Check if gtag is available
  */
+export function hasAnalyticsConsent(): boolean {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  try {
+    return window.localStorage.getItem(CONSENT_STORAGE_KEY) === "granted";
+  } catch {
+    return false;
+  }
+}
+
 function isGtagAvailable(): boolean {
-  return typeof window !== "undefined" && typeof window.gtag === "function";
+  return typeof window.gtag === "function" && hasAnalyticsConsent();
 }
 
 /**
@@ -223,4 +238,26 @@ export function trackEvent(
   if (!isGtagAvailable()) return;
 
   window.gtag?.("event", eventName, params);
+}
+
+export type ContactMethod = "form" | "map" | "phone" | "whatsapp";
+
+export function trackContact(method: ContactMethod, location: string): void {
+  trackEvent("contact_click", {
+    contact_method: method,
+    link_location: location,
+  });
+}
+
+export function trackGenerateLead(
+  method: ContactMethod,
+  location: string,
+  params?: Record<string, unknown>,
+): void {
+  trackEvent("generate_lead", {
+    currency: "BRL",
+    contact_method: method,
+    link_location: location,
+    ...params,
+  });
 }

@@ -12,7 +12,6 @@ interface ProductJsonLdProps {
     inStock: boolean;
     brand?: string;
     sku?: string;
-    isNew?: boolean;
     category?: string;
     subcategory?: string;
     gtin?: string;
@@ -25,8 +24,18 @@ interface ProductJsonLdProps {
     value: number;
     count: number;
   };
-  /** Data de validade do preço (passada pelo server component) */
-  priceValidUntil?: string;
+}
+
+const SENTINEL_BRANDS = new Set(["NONE", "SEM MARCA", "N/A", "NA"]);
+
+function getValidBrand(brand: string | undefined): string | undefined {
+  const normalizedBrand = brand?.trim();
+
+  if (!normalizedBrand || SENTINEL_BRANDS.has(normalizedBrand.toUpperCase())) {
+    return undefined;
+  }
+
+  return normalizedBrand;
 }
 
 /**
@@ -40,26 +49,14 @@ export function ProductJsonLd({
   product,
   galleryImages,
   rating,
-  priceValidUntil,
 }: ProductJsonLdProps) {
   const baseUrl = envs.NEXT_PUBLIC_BASE_URL_APP;
   const productUrl = `${baseUrl}/product/${generateSlug(product.name, product.id)}`;
-
-  // Calcula priceValidUntil como +30 dias se não fornecido (Google exige para rich results)
-  const effectivePriceValidUntil =
-    priceValidUntil ||
-    new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
 
   // Schema.org availability values
   const availability = product.inStock
     ? "https://schema.org/InStock"
     : "https://schema.org/OutOfStock";
-
-  // Condição do produto (novo ou usado)
-  const itemCondition =
-    product.isNew !== false
-      ? "https://schema.org/NewCondition"
-      : "https://schema.org/UsedCondition";
 
   // Build image array: main image + gallery
   const images: string[] = [product.image];
@@ -69,40 +66,6 @@ export function ProductJsonLd({
         images.push(img);
       }
     }
-  }
-
-  // Build shipping details with free shipping threshold
-  const freeShippingOver = envs.NEXT_PUBLIC_FREE_SHIPPING_OVER;
-  const shippingDetails: Record<string, unknown>[] = [];
-
-  if (freeShippingOver > 0 && product.price >= freeShippingOver) {
-    shippingDetails.push({
-      "@type": "OfferShippingDetails",
-      shippingRate: {
-        "@type": "MonetaryAmount",
-        value: "0",
-        currency: "BRL",
-      },
-      shippingDestination: {
-        "@type": "DefinedRegion",
-        addressCountry: "BR",
-      },
-      deliveryTime: {
-        "@type": "ShippingDeliveryTime",
-        handlingTime: {
-          "@type": "QuantitativeValue",
-          minValue: 1,
-          maxValue: 3,
-          unitCode: "DAY",
-        },
-        transitTime: {
-          "@type": "QuantitativeValue",
-          minValue: 3,
-          maxValue: 10,
-          unitCode: "DAY",
-        },
-      },
-    });
   }
 
   // Construir objeto JSON-LD base
@@ -116,42 +79,28 @@ export function ProductJsonLd({
       `${product.name} disponível na ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
     url: productUrl,
 
-    // Offer com informações de preço e disponibilidade
-    offers: {
-      "@type": "Offer",
-      url: productUrl,
-      priceCurrency: "BRL",
-      price: product.price.toFixed(2),
-      priceValidUntil: effectivePriceValidUntil,
-      availability,
-      itemCondition,
-      seller: {
-        "@type": "Organization",
-        "@id": SCHEMA_IDS.organization,
-        name: envs.NEXT_PUBLIC_COMPANY_NAME,
+    ...(product.price > 0 && {
+      offers: {
+        "@type": "Offer",
+        url: productUrl,
+        priceCurrency: "BRL",
+        price: product.price.toFixed(2),
+        availability,
+        seller: {
+          "@type": "Organization",
+          "@id": SCHEMA_IDS.organization,
+          name: envs.NEXT_PUBLIC_COMPANY_NAME,
+        },
       },
-      hasMerchantReturnPolicy: {
-        "@type": "MerchantReturnPolicy",
-        applicableCountry: "BR",
-        returnPolicyCategory:
-          "https://schema.org/MerchantReturnFiniteReturnWindow",
-        merchantReturnDays: 7,
-        returnMethod: "https://schema.org/ReturnByMail",
-        returnFees: "https://schema.org/FreeReturn",
-        returnPolicySeasonalOverride: undefined,
-        itemCondition: "https://schema.org/NewCondition",
-      },
-      ...(shippingDetails.length > 0 && {
-        shippingDetails: shippingDetails,
-      }),
-    },
+    }),
   };
 
   // Adicionar marca se disponível
-  if (product.brand) {
+  const validBrand = getValidBrand(product.brand);
+  if (validBrand) {
     jsonLd.brand = {
       "@type": "Brand",
-      name: product.brand,
+      name: validBrand,
     };
   }
 

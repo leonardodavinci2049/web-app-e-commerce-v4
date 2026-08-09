@@ -1,4 +1,5 @@
 import { Clock, MapPin, Phone, Star } from "lucide-react";
+import { TrackedContactLink } from "@/components/analytics";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { envs } from "@/core/config";
@@ -116,14 +117,16 @@ export function LocationSectionV1({ className }: LocationSectionProps) {
                 size="lg"
                 className="flex h-12 min-h-[3rem] flex-1 items-center justify-center whitespace-nowrap cursor-pointer"
               >
-                <a
+                <TrackedContactLink
                   href={`https://www.google.com/maps/search/?api=1&query=${envs.NEXT_PUBLIC_COMPANY_ADDRESS} ${envs.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION}`}
+                  method="map"
+                  location="home_location"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <MapPin className="mr-2 h-4 w-4 md:h-5 md:w-5" />
                   Abrir no Google Maps
-                </a>
+                </TrackedContactLink>
               </Button>
               <Button
                 asChild
@@ -131,14 +134,17 @@ export function LocationSectionV1({ className }: LocationSectionProps) {
                 variant="outline"
                 className="flex h-12 min-h-[3rem] flex-1 items-center justify-center whitespace-nowrap cursor-pointer"
               >
-                <a
+                <TrackedContactLink
                   href={`https://api.whatsapp.com/send/?phone=55${envs.NEXT_PUBLIC_COMPANY_WHATSAPP.replace(/\D/g, "")}&text&type=phone_number&app_absent=0`}
+                  method="whatsapp"
+                  location="home_location"
+                  lead
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <Phone className="mr-2 h-4 w-4 md:h-5 md:w-5" />
                   Ligar Agora
-                </a>
+                </TrackedContactLink>
               </Button>
             </div>
 
@@ -164,13 +170,16 @@ export function LocationSectionV1({ className }: LocationSectionProps) {
                       variant="outline"
                       className="text-xs md:text-sm cursor-pointer"
                     >
-                      <a
+                      <TrackedContactLink
                         href={`https://api.whatsapp.com/send/?phone=55${envs.NEXT_PUBLIC_COMPANY_WHATSAPP.replace(/\D/g, "")}&text&type=phone_number&app_absent=0`}
+                        method="whatsapp"
+                        location="home_schedule_visit"
+                        lead
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         Agendar Visita
-                      </a>
+                      </TrackedContactLink>
                     </Button>
                   </div>
                 </div>

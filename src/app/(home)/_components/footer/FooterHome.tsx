@@ -15,6 +15,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { trackContact } from "@/components/analytics";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { envs } from "@/core/config";
@@ -210,6 +211,7 @@ export default function FooterHome() {
                 <Phone className="h-5 w-5 shrink-0 text-blue-400" />
                 <a
                   href={`tel:${process.env.NEXT_PUBLIC_COMPANY_PHONE}`}
+                  onClick={() => trackContact("phone", "home_footer")}
                   className="text-sm text-gray-400 transition-colors hover:text-white"
                 >
                   {process.env.NEXT_PUBLIC_COMPANY_PHONE}

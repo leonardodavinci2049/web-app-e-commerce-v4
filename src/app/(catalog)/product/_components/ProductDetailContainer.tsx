@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { ProductViewTracker } from "@/components/analytics";
 import { BreadcrumbJsonLd } from "@/components/seo";
 import { ProductGridSkeleton } from "@/components/skeletons";
 import { sanitizeApiHtml } from "@/lib/seo/sanitize-html";
@@ -153,6 +154,16 @@ export async function ProductDetailContainer({
 
   return (
     <div className="container mx-auto px-4 py-2 lg:py-8">
+      <ProductViewTracker
+        item={{
+          item_id: product.id,
+          item_name: product.name,
+          item_brand: product.brand,
+          item_category: productWithNames.category,
+          item_category2: productWithNames.subcategory,
+          price: product.price,
+        }}
+      />
       {/* JSON-LD Structured Data para SEO */}
       <ProductJsonLd
         product={{
@@ -164,7 +175,6 @@ export async function ProductDetailContainer({
           inStock: product.inStock,
           brand: product.brand,
           sku: product.sku,
-          isNew: product.isNew,
           category: productWithNames.category,
           subcategory: productWithNames.subcategory,
           gtin: product.ean || undefined,

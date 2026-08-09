@@ -1,4 +1,5 @@
 import { Building2, Factory, Users } from "lucide-react";
+import Link from "next/link";
 import { TESTIMONIALS } from "@/data/mock-data";
 import { cn } from "@/lib/utils";
 
@@ -35,12 +36,12 @@ export function Testimonials({ className }: TestimonialsProps) {
                   {item.title}
                 </h3>
                 <p className="text-muted-foreground mb-6">{item.description}</p>
-                <button
-                  type="button"
+                <Link
+                  href="/about"
                   className="mt-auto px-6 py-2 bg-primary text-primary-foreground rounded-full text-sm font-medium hover:bg-primary/90 transition-colors"
                 >
                   Saiba Mais
-                </button>
+                </Link>
               </div>
             );
           })}

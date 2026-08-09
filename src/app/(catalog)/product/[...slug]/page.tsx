@@ -14,6 +14,17 @@ interface ProductDetailPageProps {
   }>;
 }
 
+const CURATED_PRODUCT_METADATA: Record<
+  string,
+  { title: string; description: string }
+> = {
+  "56928": {
+    title: "Scooter Elétrica Foston X13 Max | Mundial Megastore",
+    description:
+      "Consulte preço, disponibilidade e informações da Scooter Elétrica Foston X13 Max na Mundial Megastore em Ribeirão Preto.",
+  },
+};
+
 /**
  * Trunca texto para um limite máximo de caracteres
  * Corta no último espaço antes do limite para não quebrar palavras
@@ -50,9 +61,11 @@ export async function generateMetadata({
 
   // Construir título otimizado para SEO
   const productName = toTitleCase(product.name);
+  const curatedMetadata = CURATED_PRODUCT_METADATA[product.id];
   const brandSuffix = product.brand ? ` ${product.brand}` : "";
   const fallbackTitle = `${productName}${brandSuffix} | Compre na ${envs.NEXT_PUBLIC_COMPANY_NAME}`;
-  const pageTitle = product.metaTitle?.trim() || fallbackTitle;
+  const pageTitle =
+    curatedMetadata?.title || product.metaTitle?.trim() || fallbackTitle;
 
   // Descrição otimizada (≤160 chars para melhor exibição no Google)
   const formattedPrice = new Intl.NumberFormat("pt-BR", {
@@ -60,7 +73,8 @@ export async function generateMetadata({
     currency: "BRL",
   }).format(product.price);
 
-  const apiMetaDescription = product.metaDescription?.trim();
+  const apiMetaDescription =
+    curatedMetadata?.description || product.metaDescription?.trim();
   const fallbackDescription =
     product.description ||
     `${productName} por ${formattedPrice}. Compre na ${envs.NEXT_PUBLIC_COMPANY_NAME}. Parcele em até ${envs.NEXT_PUBLIC_PAY_IN_UP_TO}x. Frete grátis acima de R$ ${envs.NEXT_PUBLIC_FREE_SHIPPING_OVER}.`;

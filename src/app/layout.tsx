@@ -39,9 +39,6 @@ export const metadata: Metadata = {
     "hardware",
     "software",
   ],
-  alternates: {
-    canonical: "/",
-  },
   openGraph: {
     type: "website",
     locale: "pt_BR",

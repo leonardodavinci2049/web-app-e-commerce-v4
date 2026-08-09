@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { trackGenerateLead } from "@/components/analytics";
 import { CategoryMenuAccordion } from "@/components/category-menu/CategoryMenuAccordion";
 import {
   Sheet,
@@ -38,6 +39,7 @@ export function MobileBottomMenu({ categories }: MobileBottomMenuProps) {
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
       message,
     )}`;
+    trackGenerateLead("whatsapp", "mobile_bottom_menu");
     window.open(whatsappUrl, "_blank", "noopener,noreferrer");
   };
 

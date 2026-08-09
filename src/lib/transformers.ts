@@ -280,6 +280,48 @@ function generateCategoryHref(slug: string, parentSlug?: string): string {
   return `/category/${slug}`;
 }
 
+function isOperationalCategoryName(name: string | undefined): boolean {
+  return name?.trim().toUpperCase() === "SEM CATEGORIA";
+}
+
+function filterNavigableMenu(
+  menu: TblTaxonomyWebMenu[],
+  seenSlugs = new Set<string>(),
+): TblTaxonomyWebMenu[] {
+  return menu.flatMap((item) => {
+    const name = item.TAXONOMIA?.trim();
+    const slug = generateSlug(item).trim().toLowerCase();
+
+    if (
+      !name ||
+      !slug ||
+      slug === "0" ||
+      isOperationalCategoryName(name) ||
+      seenSlugs.has(slug)
+    ) {
+      return [];
+    }
+
+    seenSlugs.add(slug);
+    const children = filterNavigableMenu(item.children ?? [], seenSlugs);
+    const hasKnownProducts =
+      item.QT_RECORDS === null ||
+      item.QT_RECORDS === undefined ||
+      item.QT_RECORDS > 0;
+
+    if (!hasKnownProducts && children.length === 0) {
+      return [];
+    }
+
+    return [
+      {
+        ...item,
+        children: children.length > 0 ? children : undefined,
+      },
+    ];
+  });
+}
+
 /**
  * Transforms a single TblTaxonomyWebMenu to UICategory
  * Recursively transforms children to subcategories (groups and subgroups)
@@ -336,7 +378,7 @@ function transformToCategory(item: TblTaxonomyWebMenu): UICategory {
 export function transformCategoryMenu(
   menu: TblTaxonomyWebMenu[],
 ): UICategory[] {
-  return menu.map((item) => transformToCategory(item));
+  return filterNavigableMenu(menu).map((item) => transformToCategory(item));
 }
 
 /**

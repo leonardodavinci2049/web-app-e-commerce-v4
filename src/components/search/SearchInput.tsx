@@ -3,6 +3,7 @@
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { type FormEvent, type KeyboardEvent, useState } from "react";
+import { trackSearch } from "@/components/analytics";
 
 interface SearchInputProps {
   placeholder?: string;
@@ -39,6 +40,7 @@ export function SearchInput({
     if (!isValidSearchTerm(trimmedTerm)) {
       return;
     }
+    trackSearch(trimmedTerm);
     const encodedTerm = encodeURIComponent(trimmedTerm);
     router.push(`/products?q=${encodedTerm}`);
   };

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { TrackedProductLink } from "@/components/analytics";
 import { AddToCartButton } from "@/components/product/actions/AddToCartButton";
 import { WishlistButton } from "@/components/product/actions/WishlistButton";
 import { envs } from "@/core/config";
@@ -39,6 +39,13 @@ export function ProductCardHome({ product }: ProductCardProps) {
 
   // Stock logic
   const isOutOfStock = product.inStock === false;
+  const analyticsItem = {
+    item_id: product.id,
+    item_name: product.name,
+    item_brand: product.brand,
+    item_category: product.category || undefined,
+    price: finalPrice,
+  };
 
   return (
     <div className="group relative bg-card border border-border rounded-lg overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full">
@@ -62,8 +69,11 @@ export function ProductCardHome({ product }: ProductCardProps) {
       </div>
 
       {/* Image */}
-      <Link
+      <TrackedProductLink
         href={productUrl}
+        item={analyticsItem}
+        listId="home"
+        listName="Home"
         className="relative aspect-square overflow-hidden bg-white p-4 block"
       >
         <div className="relative w-full h-full">
@@ -77,18 +87,21 @@ export function ProductCardHome({ product }: ProductCardProps) {
             }`}
           />
         </div>
-      </Link>
+      </TrackedProductLink>
 
       {/* Content */}
       <div className="p-4 flex flex-col grow">
         <div className="mb-2">
-          <Link
+          <TrackedProductLink
             href={productUrl}
+            item={analyticsItem}
+            listId="home"
+            listName="Home"
             className="font-medium text-foreground line-clamp-2 hover:text-primary transition-colors text-sm mb-1"
             title={toTitleCase(product.name)}
           >
             {toTitleCase(product.name)}
-          </Link>
+          </TrackedProductLink>
 
           {/* Brand and SKU below name */}
           <div className="flex flex-col gap-0.5">

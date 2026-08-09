@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { LoadMoreProducts } from "@/app/(catalog)/category/_components/products/components/LoadMoreProducts";
 import { ProductCard } from "@/app/(catalog)/category/_components/products/components/ProductCard";
+import { ProductListViewTracker } from "@/components/analytics";
 import type { UIProduct } from "@/lib/transformers";
 
 interface ProductGridProps {
@@ -62,6 +63,17 @@ export function ProductGrid({
 
   return (
     <div className="space-y-8">
+      <ProductListViewTracker
+        listId={`category:${categoryId}`}
+        listName={`Categoria ${categoryId}`}
+        items={allProducts.map((product) => ({
+          item_id: product.id,
+          item_name: product.name,
+          item_brand: product.brand,
+          item_category: product.category,
+          price: product.price,
+        }))}
+      />
       <div
         className={
           viewMode === "grid"
@@ -76,6 +88,8 @@ export function ProductGrid({
           >
             <ProductCard
               product={product}
+              trackingListId={`category:${categoryId}`}
+              trackingListName={`Categoria ${categoryId}`}
               variant={viewMode}
               priority={index < 4}
             />

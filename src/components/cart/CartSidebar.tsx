@@ -1,6 +1,8 @@
 "use client";
 
 import { ShoppingCart } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { trackViewCart } from "@/components/analytics";
 import {
   Sheet,
   SheetContent,
@@ -26,6 +28,24 @@ export function CartSidebar() {
   } = useCart();
 
   const isEmpty = items.length === 0;
+  const wasOpen = useRef(false);
+
+  useEffect(() => {
+    if (isOpen && !wasOpen.current && items.length > 0) {
+      trackViewCart(
+        items.map((item) => ({
+          item_id: item.productId,
+          item_name: item.name,
+          item_category: item.category || undefined,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+        items.reduce((total, item) => total + item.price * item.quantity, 0),
+      );
+    }
+
+    wasOpen.current = isOpen;
+  }, [isOpen, items]);
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && closeCart()}>

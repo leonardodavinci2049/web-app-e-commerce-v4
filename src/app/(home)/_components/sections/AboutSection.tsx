@@ -1,20 +1,27 @@
 import { CheckCircle2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
+import { envs } from "@/core/config/envs";
+import { getCurrentYear } from "@/lib/current-time";
 import { cn } from "@/lib/utils";
 
 interface AboutSectionProps {
   className?: string;
 }
 
-export function AboutSection({ className }: AboutSectionProps) {
+export async function AboutSection({ className }: AboutSectionProps) {
+  const currentYear = await getCurrentYear();
+  const foundingYear = Number(envs.NEXT_PUBLIC_COMPANY_YEAR_FOUNDATION);
+  const yearsInMarket = Math.max(0, currentYear - foundingYear);
+
   return (
     <section className={cn("py-16 bg-background", className)}>
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <h2 className="text-3xl font-bold text-foreground">
-              15 anos de tradição
+              {yearsInMarket} anos de tradição
             </h2>
             <p className="text-muted-foreground leading-relaxed">
               A MUNDIAL MEGASTORE é referência no mercado de eletrônicos e
@@ -40,12 +47,12 @@ export function AboutSection({ className }: AboutSectionProps) {
               ))}
             </ul>
 
-            <button
-              type="button"
+            <Link
+              href="/about"
               className="text-primary font-bold hover:underline"
             >
               Conheça nossa história &rarr;
-            </button>
+            </Link>
           </div>
 
           <div className="relative">
@@ -62,7 +69,7 @@ export function AboutSection({ className }: AboutSectionProps) {
               <div className="flex items-center gap-4">
                 <div className="text-center">
                   <span className="block text-3xl font-bold text-primary">
-                    15+
+                    {yearsInMarket}+
                   </span>
                   <span className="text-xs text-muted-foreground">Anos</span>
                 </div>

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ProductCardHome } from "../product/components/ProductCardHome";
 
@@ -31,7 +32,10 @@ export function SpecificCategory({
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Sidebar Banner */}
-          <div className="hidden lg:block lg:col-span-1 relative rounded-xl overflow-hidden group">
+          <Link
+            href="/products"
+            className="hidden lg:block lg:col-span-1 relative rounded-xl overflow-hidden group"
+          >
             <Image
               src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=500"
               alt="Mundo Gamer - Setup completo para jogos com periféricos e acessórios gamers"
@@ -45,14 +49,11 @@ export function SpecificCategory({
               <p className="mb-4 text-gray-200">
                 Setup completo para sua vitória
               </p>
-              <button
-                type="button"
-                className="text-accent font-bold hover:underline"
-              >
+              <span className="text-accent font-bold group-hover:underline">
                 Ver tudo &rarr;
-              </button>
+              </span>
             </div>
-          </div>
+          </Link>
 
           {/* Products Grid */}
           <div className="col-span-1 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">

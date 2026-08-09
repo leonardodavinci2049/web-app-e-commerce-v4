@@ -1,6 +1,7 @@
 "use client";
 
 import { MessageCircle } from "lucide-react";
+import { trackBeginCheckout } from "@/components/analytics";
 import { useCart } from "@/hooks/useCart";
 import { formatWhatsAppMessage, getWhatsAppLink } from "@/lib/whatsapp";
 
@@ -12,6 +13,17 @@ export function WhatsAppCheckoutButton() {
 
     const message = formatWhatsAppMessage(items, totalPrice, paymentMethod);
     const link = getWhatsAppLink(message);
+
+    trackBeginCheckout(
+      items.map((item) => ({
+        item_id: item.productId,
+        item_name: item.name,
+        item_category: item.category || undefined,
+        price: item.price,
+        quantity: item.quantity,
+      })),
+      totalPrice,
+    );
 
     window.open(link, "_blank");
 

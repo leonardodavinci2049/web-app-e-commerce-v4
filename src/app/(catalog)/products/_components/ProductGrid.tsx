@@ -4,9 +4,16 @@ import { ProductCard } from "../../category/_components/products/components/Prod
 interface ProductGridProps {
   products: TransformedProduct[];
   viewMode?: "grid" | "list";
+  trackingListId?: string;
+  trackingListName?: string;
 }
 
-export function ProductGrid({ products, viewMode = "grid" }: ProductGridProps) {
+export function ProductGrid({
+  products,
+  viewMode = "grid",
+  trackingListId,
+  trackingListName,
+}: ProductGridProps) {
   return (
     <div
       className={
@@ -32,6 +39,8 @@ export function ProductGrid({ products, viewMode = "grid" }: ProductGridProps) {
           }}
           variant={viewMode}
           priority={index < 4}
+          trackingListId={trackingListId}
+          trackingListName={trackingListName}
         />
       ))}
     </div>

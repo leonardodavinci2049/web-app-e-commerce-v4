@@ -1,7 +1,12 @@
+import type { MetadataRoute } from "next";
 import { unstable_noStore } from "next/cache";
 import { notFound } from "next/navigation";
 import { getSitemapBaseUrl } from "../../base-url";
-import { getProductSitemapPages } from "../../product-sitemap";
+import {
+  getProductSitemapPages,
+  MAX_PRODUCT_SITEMAPS,
+} from "../../product-sitemap";
+import { sitemapServiceUnavailable } from "../../sitemap-response";
 
 interface RouteContext {
   params: Promise<{
@@ -13,15 +18,25 @@ export async function GET(request: Request, { params }: RouteContext) {
   unstable_noStore();
 
   const { id } = await params;
-  const sitemapIndex = Number.parseInt(id, 10);
+  const sitemapIndex = /^\d+$/.test(id) ? Number(id) : Number.NaN;
 
-  if (Number.isNaN(sitemapIndex) || sitemapIndex < 0) {
+  if (
+    Number.isNaN(sitemapIndex) ||
+    sitemapIndex < 0 ||
+    sitemapIndex >= MAX_PRODUCT_SITEMAPS
+  ) {
     notFound();
   }
 
   const baseUrl = getSitemapBaseUrl(request);
 
-  const productPages = await getProductSitemapPages(sitemapIndex, baseUrl);
+  let productPages: MetadataRoute.Sitemap;
+
+  try {
+    productPages = await getProductSitemapPages(sitemapIndex, baseUrl);
+  } catch {
+    return sitemapServiceUnavailable();
+  }
 
   if (productPages.length === 0) {
     notFound();

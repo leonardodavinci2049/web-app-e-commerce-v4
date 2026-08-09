@@ -1,15 +1,18 @@
 "use client";
 
 import { MessageCircle } from "lucide-react";
+import { trackGenerateLead } from "@/components/analytics";
 import { formatSingleProductMessage, getWhatsAppLink } from "@/lib/whatsapp";
 
 interface WhatsAppProductButtonProps {
+  productId: string;
   productName: string;
   price: number;
   inStock: boolean;
 }
 
 export function WhatsAppProductButton({
+  productId,
   productName,
   price,
   inStock,
@@ -21,6 +24,18 @@ export function WhatsAppProductButton({
 
     const message = formatSingleProductMessage(productName, price, quantity);
     const link = getWhatsAppLink(message);
+
+    trackGenerateLead("whatsapp", "product_detail", {
+      value: price * quantity,
+      items: [
+        {
+          item_id: productId,
+          item_name: productName,
+          price,
+          quantity,
+        },
+      ],
+    });
 
     window.open(link, "_blank");
   };
