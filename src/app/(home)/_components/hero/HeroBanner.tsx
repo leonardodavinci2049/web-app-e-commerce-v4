@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { BannerCarousel } from "@/components/banner/BannerCarousel";
 
 // Static slide data - could be fetched from CMS/API in the future
@@ -8,6 +9,7 @@ const slides = [
     title: "Compre online e retire na loja!",
     subtitle: "Mais comodidade para o seu dia a dia",
     cta: "Conheça a promoção",
+    href: "/products",
     image: "/slides/image1.png",
     bg: "bg-gradient-to-r from-primary to-blue-600",
   },
@@ -16,6 +18,7 @@ const slides = [
     title: "Ofertas de Hardware",
     subtitle: "Os melhores componentes para o seu PC",
     cta: "Ver Ofertas",
+    href: "/products",
     image: "/slides/image2a.png",
     bg: "bg-gradient-to-r from-slate-800 to-slate-900",
   },
@@ -43,12 +46,12 @@ export function HeroBanner() {
                 <p className="text-xl md:text-2xl text-white/90">
                   {slide.subtitle}
                 </p>
-                <button
-                  type="button"
+                <Link
+                  href={slide.href}
                   className="rounded-full border border-white/30 bg-white/92 px-8 py-3 font-bold text-slate-950 shadow-lg transition-transform hover:scale-105 hover:bg-white dark:bg-white/12 dark:text-white dark:hover:bg-white/18"
                 >
                   {slide.cta}
-                </button>
+                </Link>
               </div>
               <div className="relative hidden h-100 md:block">
                 <div className="relative w-full h-full">

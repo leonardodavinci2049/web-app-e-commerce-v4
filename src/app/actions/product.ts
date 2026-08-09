@@ -3,6 +3,7 @@
 import { createLogger } from "@/core/logger";
 import {
   getCategories,
+  getCategoriesStrict,
   getCategoryBySlug,
 } from "@/services/api-main/category/category-web-cached-service";
 import {
@@ -11,6 +12,8 @@ import {
   getProductsByCategory,
   getProductsBySlug,
   getProductsByTaxonomy,
+  getProductsByTaxonomyForListing,
+  getProductsForListing,
   getProductWithRelated,
   getRelatedProducts,
   type ProductWithRelated,
@@ -18,6 +21,10 @@ import {
 import type { GalleryImage } from "@/types/api-assets";
 
 const logger = createLogger("ProductActions");
+
+export async function fetchCategoriesStrictAction() {
+  return getCategoriesStrict();
+}
 
 /**
  * Check if error is a connection error (expected during build when API is unavailable)
@@ -33,6 +40,12 @@ function isConnectionError(error: unknown): boolean {
     );
   }
   return false;
+}
+
+export async function fetchProductsForListingAction(
+  params: Parameters<typeof getProductsForListing>[0] = {},
+) {
+  return getProductsForListing(params);
 }
 
 /**
@@ -205,6 +218,12 @@ export async function fetchProductsByTaxonomyAction(
     }
     return [];
   }
+}
+
+export async function fetchProductsByTaxonomyForListingAction(
+  ...params: Parameters<typeof getProductsByTaxonomyForListing>
+) {
+  return getProductsByTaxonomyForListing(...params);
 }
 
 /**

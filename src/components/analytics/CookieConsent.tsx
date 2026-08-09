@@ -4,6 +4,7 @@ import { Cookie } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { ANALYTICS_CONSENT_GRANTED_EVENT } from "./events";
 import type { GoogleConsentSettings, GoogleConsentState } from "./types";
 
 const CONSENT_STORAGE_KEY = "analytics_consent";
@@ -50,6 +51,9 @@ export function CookieConsent() {
   const handleConsent = (value: GoogleConsentState): void => {
     persistConsent(value);
     updateGoogleConsent(value);
+    if (value === "granted") {
+      window.dispatchEvent(new Event(ANALYTICS_CONSENT_GRANTED_EVENT));
+    }
     setConsent(value);
     setIsOpen(false);
   };

@@ -15,6 +15,7 @@ import type {
   TblTaxonomyFindById,
   TblTaxonomyRelated,
 } from "./types/category-types";
+import { CategoryNotFoundError } from "./types/category-types";
 
 const logger = createLogger("CategoryWebCachedService");
 
@@ -72,24 +73,28 @@ function findTaxonomyIdBySlug(
 /**
  * Busca o menu hierárquico de categorias com cache.
  */
-export async function getCategories(): Promise<UICategory[]> {
+export async function getCategoriesStrict(): Promise<UICategory[]> {
   "use cache";
   cacheLife("quarter");
   cacheTag(CACHE_TAGS.categories, CACHE_TAGS.navigation);
 
+  const response = await CategoryServiceApi.findMenu({
+    pe_id_tipo: CATEGORY_MENU_TYPE_ID,
+    pe_parent_id: CATEGORY_PARENT_ID,
+  });
+
+  return transformCategoryMenu(CategoryServiceApi.extractCategories(response));
+}
+
+export async function getCategories(): Promise<UICategory[]> {
   try {
-    const response = await CategoryServiceApi.findMenu({
-      pe_id_tipo: CATEGORY_MENU_TYPE_ID,
-      pe_parent_id: CATEGORY_PARENT_ID,
-    });
+    const categories = await getCategoriesStrict();
 
-    const menu = CategoryServiceApi.extractCategories(response);
-
-    if (menu.length === 0) {
+    if (categories.length === 0) {
       logger.warn("No categories found in menu response");
     }
 
-    return transformCategoryMenu(menu);
+    return categories;
   } catch (error) {
     logger.error("Failed to fetch categories:", error);
     return [];
@@ -150,14 +155,18 @@ export async function getCategoryDetailsWithRelatedById(
       relatedCategories: CategoryServiceApi.extractRelatedCategories(response),
     };
   } catch (error) {
+    if (error instanceof CategoryNotFoundError) {
+      return {
+        detail: null,
+        relatedCategories: [],
+      };
+    }
+
     logger.error(
       `Failed to fetch category details by ID ${normalizedId}:`,
       error,
     );
-    return {
-      detail: null,
-      relatedCategories: [],
-    };
+    throw error;
   }
 }
 
@@ -193,7 +202,7 @@ export async function getCategoryDetailsWithRelatedBySlug(
   cacheTag(CACHE_TAGS.categories, CACHE_TAGS.category(normalizedSlug));
 
   try {
-    const categories = await getCategories();
+    const categories = await getCategoriesStrict();
     const taxonomyId = findTaxonomyIdBySlug(categories, normalizedSlug);
 
     if (!taxonomyId) {
@@ -210,10 +219,7 @@ export async function getCategoryDetailsWithRelatedBySlug(
       `Failed to fetch category details by slug ${normalizedSlug}:`,
       error,
     );
-    return {
-      detail: null,
-      relatedCategories: [],
-    };
+    throw error;
   }
 }
 

@@ -1,6 +1,7 @@
+import { notFound } from "next/navigation";
 import {
   fetchCategoriesAction,
-  fetchProductsAction,
+  fetchProductsForListingAction,
 } from "@/app/actions/product";
 import { PaginationNav } from "@/components/product/PaginationNav";
 import { BreadcrumbJsonLd, ItemListJsonLd } from "@/components/seo";
@@ -26,7 +27,7 @@ export async function ProductListingContainer({
   page = 1,
 }: ProductListingContainerProps) {
   const [productsRaw, categories] = await Promise.all([
-    fetchProductsAction({
+    fetchProductsForListingAction({
       searchTerm,
       sortCol,
       sortOrd,
@@ -41,6 +42,10 @@ export async function ProductListingContainer({
   const products = hasNextPage
     ? productsRaw.slice(0, PRODUCTS_PER_PAGE)
     : productsRaw;
+
+  if (page > 1 && products.length === 0) {
+    notFound();
+  }
 
   // Build params to preserve in pagination URLs
   const paginationParams: Record<string, string | undefined> = {};

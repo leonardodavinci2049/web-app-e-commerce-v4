@@ -117,6 +117,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
 
         {/* WhatsApp - Client Island */}
         <WhatsAppProductButton
+          productId={product.id}
           productName={product.name}
           price={product.price}
           inStock={product.inStock}

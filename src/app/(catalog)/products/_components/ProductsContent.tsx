@@ -1,6 +1,8 @@
+import { notFound } from "next/navigation";
 import { CategorySidebar } from "@/app/(catalog)/category/_components/category-sidebar/category-sidebar";
 import { MobileCategoryNav } from "@/app/(catalog)/category/_components/mobile-category/mobile-category-nav";
 import { fetchCategoriesAction } from "@/app/actions/product";
+import { parseCatalogPage } from "@/lib/seo/catalog-params";
 import { ProductListingContainer } from "./ProductListingContainer";
 
 interface ProductsContentProps {
@@ -16,8 +18,11 @@ export async function ProductsContent({ searchParams }: ProductsContentProps) {
   const sortOrd =
     typeof params.sort_ord === "string" ? Number(params.sort_ord) : undefined;
   const stockOnly = params.stock === "1";
-  const page =
-    typeof params.page === "string" ? Math.max(1, Number(params.page)) : 1;
+  const page = parseCatalogPage(params.page);
+
+  if (page === null) {
+    notFound();
+  }
 
   // Fetch categories for sidebar
   const categories = await fetchCategoriesAction();

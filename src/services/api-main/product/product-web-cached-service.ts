@@ -171,6 +171,40 @@ export async function getProducts(
 }
 
 /**
+ * Fetches a product listing without converting API failures into an empty list.
+ * Empty successful responses remain valid; transport/API errors are propagated.
+ */
+export async function getProductsForListing(
+  params: {
+    taxonomyId?: number;
+    limit?: number;
+    page?: number;
+    searchTerm?: string;
+    sortCol?: number;
+    sortOrd?: number;
+    stockOnly?: boolean;
+  } = {},
+): Promise<UIProduct[]> {
+  "use cache";
+  cacheLife("frequent");
+  cacheTag(CACHE_TAGS.products);
+
+  const response = await ProductWebServiceApi.findProducts({
+    pe_id_taxonomy: params.taxonomyId ?? 0,
+    pe_qt_registros: params.limit ?? 30,
+    pe_pagina_id: Math.max(0, (params.page ?? 1) - 1),
+    pe_produto: params.searchTerm ?? "",
+    pe_coluna_id: params.sortCol ?? 1,
+    pe_ordem_id: params.sortOrd ?? 1,
+    pe_flag_estoque: params.stockOnly ? 1 : 0,
+  });
+
+  return transformProductList(
+    ProductWebServiceApi.extractProductList(response),
+  );
+}
+
+/**
  * Fetch a product by ID with cache
  * Uses ProductWebServiceApi.findProductById
  */
@@ -461,4 +495,40 @@ export async function getProductsByTaxonomy(
     logger.error(`Failed to fetch products by taxonomy:`, error);
     return [];
   }
+}
+
+/**
+ * Taxonomy listing variant that propagates API failures so a temporary outage
+ * cannot be rendered or cached as a valid empty category.
+ */
+export async function getProductsByTaxonomyForListing(
+  slugOrId: string,
+  taxonomyId?: number,
+  limit = 30,
+  page = 1,
+  sortCol = 1,
+  sortOrd = 1,
+  stockOnly?: boolean,
+): Promise<UIProduct[]> {
+  "use cache";
+  cacheLife("frequent");
+
+  const resolvedCategoryTag =
+    taxonomyId && taxonomyId > 0 ? String(taxonomyId) : slugOrId;
+  cacheTag(CACHE_TAGS.products, CACHE_TAGS.category(resolvedCategoryTag));
+
+  const hasValidTaxonomyId = taxonomyId !== undefined && taxonomyId > 0;
+  const response = await ProductWebServiceApi.findProducts({
+    pe_id_taxonomy: hasValidTaxonomyId ? taxonomyId : 0,
+    pe_slug_taxonomy: hasValidTaxonomyId ? "" : slugOrId,
+    pe_qt_registros: limit,
+    pe_pagina_id: Math.max(0, page - 1),
+    pe_coluna_id: sortCol,
+    pe_ordem_id: sortOrd,
+    pe_flag_estoque: stockOnly ? 1 : 0,
+  });
+
+  return transformProductList(
+    ProductWebServiceApi.extractProductList(response),
+  );
 }

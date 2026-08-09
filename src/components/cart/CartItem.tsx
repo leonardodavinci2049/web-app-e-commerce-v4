@@ -3,6 +3,7 @@
 import { Minus, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { memo } from "react";
+import { trackAddToCart, trackRemoveFromCart } from "@/components/analytics";
 import { useCart } from "@/hooks/useCart";
 import type { CartItem as CartItemType } from "@/types/cart";
 
@@ -21,6 +22,14 @@ function CartItemComponent({ item }: CartItemProps) {
   const { updateQuantity, removeItem } = useCart();
 
   const handleDecrement = () => {
+    trackRemoveFromCart({
+      item_id: item.productId,
+      item_name: item.name,
+      item_category: item.category || undefined,
+      price: item.price,
+      quantity: 1,
+    });
+
     if (item.quantity === 1) {
       removeItem(item.productId);
     } else {
@@ -30,6 +39,24 @@ function CartItemComponent({ item }: CartItemProps) {
 
   const handleIncrement = () => {
     updateQuantity(item.productId, item.quantity + 1);
+    trackAddToCart({
+      item_id: item.productId,
+      item_name: item.name,
+      item_category: item.category || undefined,
+      price: item.price,
+      quantity: 1,
+    });
+  };
+
+  const handleRemove = () => {
+    trackRemoveFromCart({
+      item_id: item.productId,
+      item_name: item.name,
+      item_category: item.category || undefined,
+      price: item.price,
+      quantity: item.quantity,
+    });
+    removeItem(item.productId);
   };
 
   const subtotal = item.price * item.quantity;
@@ -59,7 +86,7 @@ function CartItemComponent({ item }: CartItemProps) {
       <div className="flex flex-col items-end justify-between">
         <button
           type="button"
-          onClick={() => removeItem(item.productId)}
+          onClick={handleRemove}
           className="p-1 text-muted-foreground hover:text-destructive transition-colors"
           aria-label="Remover item"
         >

@@ -37,7 +37,8 @@ function getImagePath(pathImagem: string | null): string {
  * Determines category name from TIPO field
  */
 function getCategoryName(tipo: string | null): string {
-  return tipo || "Sem Categoria";
+  const category = tipo?.trim();
+  return category?.toUpperCase() === "SEM CATEGORIA" ? "" : (category ?? "");
 }
 
 /**

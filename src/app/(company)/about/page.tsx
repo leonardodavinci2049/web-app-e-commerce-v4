@@ -13,21 +13,22 @@ import {
   Users,
   Zap,
 } from "lucide-react";
-import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { envs } from "@/core/config/envs";
 import { getCurrentYear } from "@/lib/current-time";
+import { createPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: `Quem Somos - ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
-  description: `Conheça a história da ${envs.NEXT_PUBLIC_COMPANY_NAME}, empresa atacadista e varejista B2B/B2C com mais de 30 anos de experiência no mercado. Excelência em atendimento e os melhores preços para sua empresa.`,
-};
+  description: `Conheça a história da ${envs.NEXT_PUBLIC_COMPANY_NAME}, empresa atacadista e varejista B2B/B2C fundada em ${envs.NEXT_PUBLIC_COMPANY_YEAR_FOUNDATION}. Excelência em atendimento e os melhores preços para sua empresa.`,
+  path: "/about",
+});
 
 export default async function AboutPage() {
   const currentYear = await getCurrentYear();
-  const foundingYear = 1994;
-  const yearsInMarket = currentYear - foundingYear;
+  const foundingYear = Number(envs.NEXT_PUBLIC_COMPANY_YEAR_FOUNDATION);
+  const yearsInMarket = Math.max(0, currentYear - foundingYear);
 
   return (
     <main className="mx-auto max-w-7xl px-6 py-12">
@@ -93,7 +94,7 @@ export default async function AboutPage() {
                   </strong>
                   A busca por essa resposta foi o que motivou o empresário{" "}
                   <strong>Wellington de Freitas</strong> a criar a Mundial
-                  Distribuidora em <strong>1994</strong>.
+                  Distribuidora em <strong>{foundingYear}</strong>.
                 </p>
                 <p className="text-muted-foreground mb-4 leading-relaxed">
                   Vendo uma oportunidade significativa na emergente indústria de
@@ -162,7 +163,7 @@ export default async function AboutPage() {
           <div className="space-y-12">
             {[
               {
-                year: "1994",
+                year: String(foundingYear),
                 title: `Nasce a ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
                 description:
                   "Início das atividades comercializando produtos de informática e eletrônicos, atuando no setor atacadista em Ribeirão Preto e região.",
@@ -217,43 +218,45 @@ export default async function AboutPage() {
                 icon: <Star className="h-6 w-6" />,
                 position: "left",
               },
-            ].map((item) => (
-              <div
-                key={item.year}
-                className={`flex items-center ${item.position === "left" ? "lg:flex-row" : "lg:flex-row-reverse"}`}
-              >
+            ]
+              .filter((item) => Number(item.year) >= foundingYear)
+              .map((item) => (
                 <div
-                  className={`lg:w-1/2 ${item.position === "left" ? "lg:pr-8" : "lg:pl-8"}`}
+                  key={item.year}
+                  className={`flex items-center ${item.position === "left" ? "lg:flex-row" : "lg:flex-row-reverse"}`}
                 >
-                  <Card className="transition-shadow hover:shadow-lg">
-                    <CardContent className="pt-6">
-                      <div className="mb-3 flex items-center gap-3">
-                        <div className="bg-primary/10 text-primary rounded-full p-2">
-                          {item.icon}
+                  <div
+                    className={`lg:w-1/2 ${item.position === "left" ? "lg:pr-8" : "lg:pl-8"}`}
+                  >
+                    <Card className="transition-shadow hover:shadow-lg">
+                      <CardContent className="pt-6">
+                        <div className="mb-3 flex items-center gap-3">
+                          <div className="bg-primary/10 text-primary rounded-full p-2">
+                            {item.icon}
+                          </div>
+                          <Badge
+                            variant="outline"
+                            className="text-base font-bold"
+                          >
+                            {item.year}
+                          </Badge>
                         </div>
-                        <Badge
-                          variant="outline"
-                          className="text-base font-bold"
-                        >
-                          {item.year}
-                        </Badge>
-                      </div>
-                      <h3 className="mb-2 text-lg font-semibold">
-                        {item.title}
-                      </h3>
-                      <p className="text-muted-foreground text-sm leading-relaxed">
-                        {item.description}
-                      </p>
-                    </CardContent>
-                  </Card>
+                        <h3 className="mb-2 text-lg font-semibold">
+                          {item.title}
+                        </h3>
+                        <p className="text-muted-foreground text-sm leading-relaxed">
+                          {item.description}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* Círculo na linha do tempo */}
+                  <div className="bg-primary relative z-10 flex h-4 w-4 items-center justify-center rounded-full border-4 border-white shadow-lg"></div>
+
+                  <div className="lg:w-1/2"></div>
                 </div>
-
-                {/* Círculo na linha do tempo */}
-                <div className="bg-primary relative z-10 flex h-4 w-4 items-center justify-center rounded-full border-4 border-white shadow-lg"></div>
-
-                <div className="lg:w-1/2"></div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </section>

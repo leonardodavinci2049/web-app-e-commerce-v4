@@ -1,6 +1,7 @@
 import { unstable_noStore } from "next/cache";
 import { getSitemapBaseUrl } from "../base-url";
 import { getProductSitemapLocations } from "../product-sitemap";
+import { sitemapServiceUnavailable } from "../sitemap-response";
 
 /**
  * Sitemap Index - Main sitemap that references all other sitemaps
@@ -11,7 +12,13 @@ export async function GET(request: Request) {
 
   const baseUrl = getSitemapBaseUrl(request);
 
-  const productSitemaps = await getProductSitemapLocations(baseUrl);
+  let productSitemaps: string[];
+
+  try {
+    productSitemaps = await getProductSitemapLocations(baseUrl);
+  } catch {
+    return sitemapServiceUnavailable();
+  }
 
   const sitemaps = [
     `${baseUrl}/sitemap-static.xml`,

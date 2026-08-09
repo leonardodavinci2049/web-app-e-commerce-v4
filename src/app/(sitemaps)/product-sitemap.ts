@@ -1,22 +1,21 @@
 import type { MetadataRoute } from "next";
-import { fetchProductsAction } from "@/app/actions/product";
+import { fetchProductsForListingAction } from "@/app/actions/product";
 import { getProductPath } from "@/lib/slug";
 
 export const PRODUCTS_PER_SITEMAP = 500;
+export const MAX_PRODUCT_SITEMAPS = 100;
 
-type ProductSitemapBatch = Awaited<ReturnType<typeof fetchProductsAction>>;
+type ProductSitemapBatch = Awaited<
+  ReturnType<typeof fetchProductsForListingAction>
+>;
 
 export async function fetchProductSitemapBatch(
   sitemapIndex: number,
 ): Promise<ProductSitemapBatch> {
-  try {
-    return await fetchProductsAction({
-      limit: PRODUCTS_PER_SITEMAP,
-      page: sitemapIndex + 1,
-    });
-  } catch {
-    return [];
-  }
+  return fetchProductsForListingAction({
+    limit: PRODUCTS_PER_SITEMAP,
+    page: sitemapIndex + 1,
+  });
 }
 
 export function mapProductsToSitemap(
@@ -50,18 +49,33 @@ export async function getProductSitemapLocations(
   baseUrl: string,
 ): Promise<string[]> {
   const sitemaps: string[] = [];
+  const seenBatchSignatures = new Set<string>();
 
-  for (let sitemapIndex = 0; ; sitemapIndex += 1) {
+  for (
+    let sitemapIndex = 0;
+    sitemapIndex < MAX_PRODUCT_SITEMAPS;
+    sitemapIndex += 1
+  ) {
     const products = await fetchProductSitemapBatch(sitemapIndex);
 
     if (products.length === 0) {
       break;
     }
 
+    const batchSignature = products.map((product) => product.id).join(",");
+    if (seenBatchSignatures.has(batchSignature)) {
+      throw new Error("A API repetiu um lote durante a geração do sitemap.");
+    }
+    seenBatchSignatures.add(batchSignature);
+
     sitemaps.push(`${baseUrl}/sitemap-products-${sitemapIndex}.xml`);
 
     if (products.length < PRODUCTS_PER_SITEMAP) {
       break;
+    }
+
+    if (sitemapIndex === MAX_PRODUCT_SITEMAPS - 1) {
+      throw new Error("O sitemap excedeu o limite seguro de lotes.");
     }
   }
 

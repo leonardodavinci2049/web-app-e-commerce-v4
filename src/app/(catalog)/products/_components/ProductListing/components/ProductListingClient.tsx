@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ProductListViewTracker } from "@/components/analytics";
 import type { TransformedProduct } from "@/types/product";
 import { LoadMoreButton } from "../../LoadMoreButton";
 import { ProductGrid } from "../../ProductGrid";
@@ -77,6 +78,18 @@ export function ProductListingClient({
 
   return (
     <>
+      <ProductListViewTracker
+        listId={searchTerm ? "search_results" : "products"}
+        listName={searchTerm ? `Busca: ${searchTerm}` : "Todos os produtos"}
+        items={displayedProducts.map((product) => ({
+          item_id: product.id,
+          item_name: product.name,
+          item_brand: product.brand,
+          item_category: product.category,
+          item_category2: product.subcategory,
+          price: product.price,
+        }))}
+      />
       {/* Filtros */}
       {/*       <ProductFilters
         categories={categories}
@@ -106,7 +119,14 @@ export function ProductListingClient({
       <section className="py-8 bg-background">
         {displayedProducts.length > 0 ? (
           <>
-            <ProductGrid products={displayedProducts} viewMode={viewMode} />
+            <ProductGrid
+              products={displayedProducts}
+              viewMode={viewMode}
+              trackingListId={searchTerm ? "search_results" : "products"}
+              trackingListName={
+                searchTerm ? `Busca: ${searchTerm}` : "Todos os produtos"
+              }
+            />
             <LoadMoreButton
               onClick={loadMore}
               loading={loading}

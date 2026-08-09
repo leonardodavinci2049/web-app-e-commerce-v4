@@ -10,16 +10,17 @@ import {
   Shield,
   UserCheck,
 } from "lucide-react";
-import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { envs } from "@/core/config/envs";
 import { getCurrentDatePtBr, getCurrentYear } from "@/lib/current-time";
+import { createPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: `Política de Privacidade - ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
   description: `Política de privacidade e proteção de dados da ${envs.NEXT_PUBLIC_COMPANY_NAME}. Saiba como coletamos, utilizamos e protegemos suas informações pessoais e empresariais.`,
-};
+  path: "/privacy",
+});
 
 export default async function PrivacyPage() {
   const [currentDate, currentYear] = await Promise.all([
@@ -840,7 +841,8 @@ export default async function PrivacyPage() {
                   <strong>Política de Privacidade - {companyName}</strong>
                 </p>
                 <p className="text-muted-foreground text-xs">
-                  Copyright © 2011-{currentYear} | Todos os direitos reservados
+                  Copyright © {envs.NEXT_PUBLIC_COMPANY_YEAR_FOUNDATION}-
+                  {currentYear} | Todos os direitos reservados
                 </p>
                 <p className="text-muted-foreground mt-2 text-xs">
                   Criado: 06 de Maio de 2018 | Última atualização: {currentDate}

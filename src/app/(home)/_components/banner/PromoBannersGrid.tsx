@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 interface PromoBannersGridProps {
@@ -14,6 +15,7 @@ export function PromoBannersGrid({ className }: PromoBannersGridProps) {
       image:
         "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=500",
       bg: "bg-blue-900",
+      href: "/products",
     },
     {
       id: 2,
@@ -22,6 +24,7 @@ export function PromoBannersGrid({ className }: PromoBannersGridProps) {
       image:
         "https://images.unsplash.com/photo-1587202372775-e229f172b9d7?auto=format&fit=crop&q=80&w=500",
       bg: "bg-purple-900",
+      href: "/products",
     },
     {
       id: 3,
@@ -30,6 +33,7 @@ export function PromoBannersGrid({ className }: PromoBannersGridProps) {
       image:
         "https://images.unsplash.com/photo-1659343796661-984a0d8246a0?auto=format&fit=crop&q=80&w=500",
       bg: "bg-rose-900",
+      href: "/products",
     },
   ];
 
@@ -38,8 +42,9 @@ export function PromoBannersGrid({ className }: PromoBannersGridProps) {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {banners.map((banner) => (
-            <div
+            <Link
               key={banner.id}
+              href={banner.href}
               className={`relative h-48 rounded-xl overflow-hidden group cursor-pointer ${banner.bg}`}
             >
               <Image
@@ -54,7 +59,7 @@ export function PromoBannersGrid({ className }: PromoBannersGridProps) {
                 <h3 className="text-xl font-bold mb-1">{banner.title}</h3>
                 <p className="text-sm opacity-90">{banner.subtitle}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

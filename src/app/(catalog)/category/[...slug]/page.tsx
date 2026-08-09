@@ -4,12 +4,17 @@ import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 import {
   fetchCategoriesAction,
-  fetchProductsByTaxonomyAction,
+  fetchProductsByTaxonomyForListingAction,
 } from "@/app/actions/product";
 import { PaginationNav } from "@/components/product/PaginationNav";
 import { BreadcrumbJsonLd, ItemListJsonLd } from "@/components/seo";
 import { ProductGridSkeleton } from "@/components/skeletons";
 import { envs } from "@/core/config";
+import {
+  buildPaginatedCanonical,
+  hasCatalogVariant,
+  parseCatalogPage,
+} from "@/lib/seo/catalog-params";
 import { sanitizeApiHtml } from "@/lib/seo/sanitize-html";
 import { getProductPath } from "@/lib/slug";
 import { toTitleCase } from "@/lib/text-utils";
@@ -30,6 +35,37 @@ interface CategoryPageProps {
   }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
+
+const CURATED_CATEGORY_METADATA: Record<
+  string,
+  { title: string; description: string }
+> = {
+  "perfumaria-e-beleza": {
+    title: "Perfumaria e Beleza | Mundial Megastore",
+    description:
+      "Encontre perfumes, cosméticos e itens de beleza na Mundial Megastore. Consulte preços, estoque e atendimento em Ribeirão Preto.",
+  },
+  "informatica-eletronico": {
+    title: "Informática e Eletrônicos | Mundial Megastore",
+    description:
+      "Encontre informática, computadores, periféricos e eletrônicos na Mundial Megastore. Consulte preços e atendimento em Ribeirão Preto.",
+  },
+  "celular-1764953141": {
+    title: "Celulares e Acessórios | Mundial Megastore",
+    description:
+      "Confira celulares e acessórios na Mundial Megastore. Consulte modelos, preços, estoque e atendimento em Ribeirão Preto.",
+  },
+  promoes: {
+    title: "Promoções | Mundial Megastore",
+    description:
+      "Confira os produtos em promoção na Mundial Megastore e consulte preços, estoque e condições disponíveis.",
+  },
+  "perfumes-arabes": {
+    title: "Perfumes Árabes | Mundial Megastore",
+    description:
+      "Encontre perfumes árabes na Mundial Megastore. Consulte fragrâncias, preços, estoque e atendimento em Ribeirão Preto.",
+  },
+};
 
 /**
  * Formata a slug para fallback visual quando a API não retorna nome.
@@ -171,28 +207,26 @@ export async function generateMetadata({
     categoryData?.categoryName ?? formatCategoryNameFromSlug(taxonomySlug);
   const title = toTitleCase(categoryName);
 
-  // Verificar se há filtros ativos
-  const sortCol = typeof resolvedSearchParams.sort_col === "string";
-  const sortOrd = typeof resolvedSearchParams.sort_ord === "string";
-  const stockOnly = resolvedSearchParams.stock === "1";
+  const page = parseCatalogPage(resolvedSearchParams.page) ?? 1;
+  const shouldNoindex = hasCatalogVariant(resolvedSearchParams);
 
-  // Contar filtros ativos
-  const filterCount = [sortCol, sortOrd, stockOnly].filter(Boolean).length;
-
-  // Estratégia: noindex se houver 2 ou mais filtros (evitar thin content)
-  const shouldNoindex = filterCount >= 2;
-
-  // Canonical always points to the canonical slug (from API), without ?page=N.
-  // This consolidates PageRank on the main category URL.
+  // Paginações válidas são autorreferentes; filtros apontam para a mesma
+  // página sem a variação de filtro.
   const canonicalSlug =
     categoryData?.taxonomySlug ?? slugParts[slugParts.length - 1];
-  const canonicalUrl = `/category/${canonicalSlug}`;
+  const curatedMetadata = CURATED_CATEGORY_METADATA[canonicalSlug];
+  const canonicalUrl = buildPaginatedCanonical(
+    `/category/${canonicalSlug}`,
+    page,
+  );
   const fullUrl = `${envs.NEXT_PUBLIC_BASE_URL_APP}${canonicalUrl}`;
 
   const pageTitle =
+    curatedMetadata?.title ??
     categoryData?.metaTitle ??
     `${title} | Compre na ${envs.NEXT_PUBLIC_COMPANY_NAME}`;
   const pageDescription =
+    curatedMetadata?.description ??
     categoryData?.metaDescription ??
     `Encontre os melhores ${title} na ${envs.NEXT_PUBLIC_COMPANY_NAME}. Preços imbatíveis, parcele em até ${envs.NEXT_PUBLIC_PAY_IN_UP_TO}x sem juros. Entrega para todo o Brasil!`;
 
@@ -256,10 +290,11 @@ async function CategoryContent({
       ? Number(resolvedSearchParams.sort_ord)
       : undefined;
   const stockOnly = resolvedSearchParams.stock === "1";
-  const page =
-    typeof resolvedSearchParams.page === "string"
-      ? Math.max(1, Number(resolvedSearchParams.page))
-      : 1;
+  const page = parseCatalogPage(resolvedSearchParams.page);
+
+  if (page === null) {
+    notFound();
+  }
 
   const ITEMS_PER_PAGE = 30;
   const slugParts = resolvedParams.slug;
@@ -290,7 +325,7 @@ async function CategoryContent({
   }
 
   // Buscar produtos por slug ou ID (com paginação)
-  const productsRaw = await fetchProductsByTaxonomyAction(
+  const productsRaw = await fetchProductsByTaxonomyForListingAction(
     effectiveSlug,
     taxonomyId,
     ITEMS_PER_PAGE + 1, // limit: +1 para detectar se há próxima página
@@ -307,6 +342,13 @@ async function CategoryContent({
   const totalRecords = Math.max(0, categoryData.detail.QT_RECORDS ?? 0);
   const totalPages =
     totalRecords > 0 ? Math.ceil(totalRecords / ITEMS_PER_PAGE) : undefined;
+
+  if (
+    page > 1 &&
+    ((totalPages !== undefined && page > totalPages) || products.length === 0)
+  ) {
+    notFound();
+  }
   const canGoNext = totalPages ? page < totalPages : hasNextPage;
 
   const pageTitle = categoryData.categoryName;

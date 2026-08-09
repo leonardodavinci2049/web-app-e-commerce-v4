@@ -9,7 +9,9 @@ export {
   type GA4Item,
   trackAddToCart,
   trackBeginCheckout,
+  trackContact,
   trackEvent,
+  trackGenerateLead,
   trackPurchase,
   trackRemoveFromCart,
   trackSearch,
@@ -19,3 +21,7 @@ export {
   trackViewItemList,
 } from "./events";
 export { GoogleAnalytics } from "./GoogleAnalytics";
+export { ProductListViewTracker } from "./ProductListViewTracker";
+export { ProductViewTracker } from "./ProductViewTracker";
+export { TrackedContactLink } from "./TrackedContactLink";
+export { TrackedProductLink } from "./TrackedProductLink";

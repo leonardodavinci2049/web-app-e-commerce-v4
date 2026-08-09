@@ -3,6 +3,7 @@
 import { ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { trackAddToCart } from "@/components/analytics";
 import { useCart } from "@/hooks/useCart";
 
 interface AddToCartButtonProps {
@@ -40,6 +41,14 @@ export function AddToCartButton({
       price,
       image,
       category,
+    });
+
+    trackAddToCart({
+      item_id: productId,
+      item_name: productName,
+      item_category: category || undefined,
+      price,
+      quantity: 1,
     });
 
     toast.success(`${productName} adicionado ao carrinho!`, {

@@ -1,4 +1,5 @@
 import { Clock, MapPin, Phone, Star } from "lucide-react";
+import { TrackedContactLink } from "@/components/analytics";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { envs } from "@/core/config/envs";
@@ -119,14 +120,16 @@ export function LocationSection({ className }: LocationSectionProps) {
                 size="lg"
                 className="flex h-12 min-h-12 flex-1 items-center justify-center whitespace-nowrap cursor-pointer"
               >
-                <a
+                <TrackedContactLink
                   href="https://www.google.com/maps/search/?api=1&query=Av.+Caramuru,+1008+-+Jardim+Sumaré+Ribeirão+Preto+-+SP"
+                  method="map"
+                  location="reseller_location"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <MapPin className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
                   Abrir no Google Maps
-                </a>
+                </TrackedContactLink>
               </Button>
               <Button
                 asChild
@@ -134,14 +137,17 @@ export function LocationSection({ className }: LocationSectionProps) {
                 variant="outline"
                 className="flex h-12 min-h-12 flex-1 items-center justify-center bg-transparent whitespace-nowrap cursor-pointer"
               >
-                <a
+                <TrackedContactLink
                   href="https://api.whatsapp.com/send/?phone=5516997275438&text&type=phone_number&app_absent=0"
+                  method="whatsapp"
+                  location="reseller_location"
+                  lead
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <Phone className="mr-2 h-4 w-4 sm:h-5 sm:w-5 " />
                   Falar no WhatsApp
-                </a>
+                </TrackedContactLink>
               </Button>
             </div>
 

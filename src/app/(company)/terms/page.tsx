@@ -1,14 +1,15 @@
 import { AlertCircle, Building2, FileText, Scale, Shield } from "lucide-react";
-import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { envs } from "@/core/config/envs";
 import { getCurrentDatePtBr, getCurrentYear } from "@/lib/current-time";
+import { createPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
+export const metadata = createPageMetadata({
   title: `Termos e Condições - ${envs.NEXT_PUBLIC_COMPANY_NAME}`,
   description: `Termos de uso e condições para vendas no atacado e varejo B2B/B2C da ${envs.NEXT_PUBLIC_COMPANY_NAME}. Conheça as regras e políticas que regem nossa plataforma de e-commerce atacadista e varejista.`,
-};
+  path: "/terms",
+});
 
 export default async function TermsPage() {
   const [currentDate, currentYear] = await Promise.all([
@@ -474,8 +475,8 @@ export default async function TermsPage() {
               <div className="text-center">
                 <p className="text-muted-foreground mb-2 text-sm">
                   <strong>
-                    Copyright © 2011-{currentYear} |{" "}
-                    {envs.NEXT_PUBLIC_COMPANY_NAME}
+                    Copyright © {envs.NEXT_PUBLIC_COMPANY_YEAR_FOUNDATION}-
+                    {currentYear} | {envs.NEXT_PUBLIC_COMPANY_NAME}
                   </strong>
                 </p>
                 <p className="text-muted-foreground text-xs">

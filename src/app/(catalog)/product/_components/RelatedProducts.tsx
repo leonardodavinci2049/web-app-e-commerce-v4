@@ -20,6 +20,17 @@ export function RelatedProducts({ products }: RelatedProductsProps) {
 
   return (
     <section className="py-12 bg-background">
+      <ProductListViewTracker
+        listId="related_products"
+        listName="Produtos relacionados"
+        items={displayProducts.map((product) => ({
+          item_id: product.id,
+          item_name: product.name,
+          item_brand: product.brand,
+          item_category: product.category,
+          price: product.price,
+        }))}
+      />
       <div className="container mx-auto px-4">
         <h2 className="text-2xl font-bold text-foreground mb-2">
           Produtos Relacionados
@@ -44,6 +55,8 @@ export function RelatedProducts({ products }: RelatedProductsProps) {
                 brand: product.brand,
                 inStock: product.inStock,
               }}
+              trackingListId="related_products"
+              trackingListName="Produtos relacionados"
             />
           ))}
         </div>
@@ -51,3 +64,5 @@ export function RelatedProducts({ products }: RelatedProductsProps) {
     </section>
   );
 }
+
+import { ProductListViewTracker } from "@/components/analytics";

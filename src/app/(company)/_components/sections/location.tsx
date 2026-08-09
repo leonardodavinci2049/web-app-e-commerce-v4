@@ -1,4 +1,5 @@
 import { Clock, MapPin, Phone, Star } from "lucide-react";
+import { TrackedContactLink } from "@/components/analytics";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { envs } from "@/core/config/envs";
@@ -109,19 +110,35 @@ export function LocationSection() {
 
             <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
               <Button
+                asChild
                 size="lg"
                 className="flex h-12 min-h-[3rem] flex-1 items-center justify-center whitespace-nowrap cursor-pointer"
               >
-                <MapPin className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                Abrir no Google Maps
+                <TrackedContactLink
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${envs.NEXT_PUBLIC_COMPANY_ADDRESS} ${envs.NEXT_PUBLIC_COMPANY_ADDRESS_LOCATION}`)}`}
+                  method="map"
+                  location="contact_location"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <MapPin className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
+                  Abrir no Google Maps
+                </TrackedContactLink>
               </Button>
               <Button
+                asChild
                 size="lg"
                 variant="outline"
                 className="flex h-12 min-h-[3rem] flex-1 items-center justify-center bg-transparent whitespace-nowrap cursor-pointer"
               >
-                <Phone className="mr-2 h-4 w-4 sm:h-5 sm:w-5 " />
-                Ligar Agora
+                <TrackedContactLink
+                  href={`tel:${envs.NEXT_PUBLIC_COMPANY_PHONE.replace(/\D/g, "")}`}
+                  method="phone"
+                  location="contact_location"
+                >
+                  <Phone className="mr-2 h-4 w-4 sm:h-5 sm:w-5 " />
+                  Ligar Agora
+                </TrackedContactLink>
               </Button>
             </div>
 
