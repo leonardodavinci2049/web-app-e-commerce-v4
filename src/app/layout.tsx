@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
-import { CookieConsent, GoogleAnalytics } from "@/components/analytics";
+import { GoogleAnalytics } from "@/components/analytics";
 import { CartSidebar } from "@/components/cart/CartSidebar";
 
 import {
@@ -92,7 +92,8 @@ export default function RootLayout({
             <CartSidebar />
           </CartProvider>
 
-          {envs.NEXT_PUBLIC_GA_MEASUREMENT_ID ? <CookieConsent /> : null}
+          {/* Temporariamente desativado até a apresentação e aprovação do cliente. */}
+          {/* {envs.NEXT_PUBLIC_GA_MEASUREMENT_ID ? <CookieConsent /> : null} */}
           <Toaster />
         </ThemeProvider>
       </body>
