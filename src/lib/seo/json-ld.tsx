@@ -14,6 +14,7 @@ export const SCHEMA_IDS = {
   organization: `${baseUrl}/#organization`,
   localBusiness: `${baseUrl}/#localbusiness`,
   website: `${baseUrl}/#website`,
+  merchantReturnPolicy: `${baseUrl}/return#merchant-return-policy`,
 } as const;
 
 // ============================================================================

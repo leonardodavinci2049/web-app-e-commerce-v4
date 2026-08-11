@@ -27,6 +27,20 @@ interface ProductJsonLdProps {
 }
 
 const SENTINEL_BRANDS = new Set(["NONE", "SEM MARCA", "N/A", "NA"]);
+const GTIN_PROPERTY_BY_LENGTH = {
+  8: "gtin8",
+  12: "gtin12",
+  13: "gtin13",
+  14: "gtin14",
+} as const;
+
+type GtinProperty =
+  (typeof GTIN_PROPERTY_BY_LENGTH)[keyof typeof GTIN_PROPERTY_BY_LENGTH];
+
+interface ValidGtin {
+  property: GtinProperty;
+  value: string;
+}
 
 function getValidBrand(brand: string | undefined): string | undefined {
   const normalizedBrand = brand?.trim();
@@ -36,6 +50,53 @@ function getValidBrand(brand: string | undefined): string | undefined {
   }
 
   return normalizedBrand;
+}
+
+function isRestrictedGtin(gtin: string): boolean {
+  return (
+    gtin.startsWith("2") ||
+    gtin.startsWith("02") ||
+    gtin.startsWith("04") ||
+    gtin.startsWith("05") ||
+    gtin.startsWith("98") ||
+    gtin.startsWith("99")
+  );
+}
+
+function hasValidGtinCheckDigit(gtin: string): boolean {
+  const checkDigit = Number(gtin.at(-1));
+  let sum = 0;
+
+  for (let index = gtin.length - 2; index >= 0; index -= 1) {
+    const digit = Number(gtin[index]);
+    const distanceFromCheckDigit = gtin.length - 1 - index;
+    sum += digit * (distanceFromCheckDigit % 2 === 1 ? 3 : 1);
+  }
+
+  return (10 - (sum % 10)) % 10 === checkDigit;
+}
+
+function getValidGtin(gtin: string | undefined): ValidGtin | undefined {
+  const normalizedGtin = gtin?.trim().replace(/[\s-]/g, "");
+
+  if (!normalizedGtin || !/^\d+$/.test(normalizedGtin)) {
+    return undefined;
+  }
+
+  const property =
+    GTIN_PROPERTY_BY_LENGTH[
+      normalizedGtin.length as keyof typeof GTIN_PROPERTY_BY_LENGTH
+    ];
+
+  if (
+    !property ||
+    isRestrictedGtin(normalizedGtin) ||
+    !hasValidGtinCheckDigit(normalizedGtin)
+  ) {
+    return undefined;
+  }
+
+  return { property, value: normalizedGtin };
 }
 
 /**
@@ -91,6 +152,9 @@ export function ProductJsonLd({
           "@id": SCHEMA_IDS.organization,
           name: envs.NEXT_PUBLIC_COMPANY_NAME,
         },
+        hasMerchantReturnPolicy: {
+          "@id": SCHEMA_IDS.merchantReturnPolicy,
+        },
       },
     }),
   };
@@ -109,9 +173,10 @@ export function ProductJsonLd({
     jsonLd.sku = product.sku;
   }
 
-  // Adicionar GTIN (EAN) se disponível — melhora elegibilidade para Google Shopping
-  if (product.gtin) {
-    jsonLd.gtin = product.gtin;
+  // Publicar somente GTINs com formato e dígito verificador válidos.
+  const validGtin = getValidGtin(product.gtin);
+  if (validGtin) {
+    jsonLd[validGtin.property] = validGtin.value;
   }
 
   // Adicionar MPN (código do fabricante) se disponível
