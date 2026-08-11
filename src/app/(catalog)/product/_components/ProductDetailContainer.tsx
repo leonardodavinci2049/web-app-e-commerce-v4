@@ -174,6 +174,7 @@ export async function ProductDetailContainer({
           image: product.image,
           inStock: product.inStock,
           brand: product.brand,
+          model: product.model,
           sku: product.sku,
           category: productWithNames.category,
           subcategory: productWithNames.subcategory,
