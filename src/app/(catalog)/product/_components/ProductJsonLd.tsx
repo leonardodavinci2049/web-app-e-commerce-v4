@@ -11,6 +11,7 @@ interface ProductJsonLdProps {
     image: string;
     inStock: boolean;
     brand?: string;
+    model?: string;
     sku?: string;
     category?: string;
     subcategory?: string;
@@ -166,6 +167,10 @@ export function ProductJsonLd({
       "@type": "Brand",
       name: validBrand,
     };
+  }
+
+  if (product.model) {
+    jsonLd.model = product.model;
   }
 
   // Adicionar SKU se disponível

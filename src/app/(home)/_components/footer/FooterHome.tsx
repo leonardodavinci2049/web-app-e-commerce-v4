@@ -188,6 +188,15 @@ export default function FooterHome() {
                   Termos e Condições
                 </Link>
               </li>
+
+              <li>
+                <Link
+                  href="https://mundialrevenda.com.br/"
+                  className="text-sm text-gray-400 transition-colors hover:text-white cursor-pointer"
+                >
+                  Seja um Revendedor
+                </Link>
+              </li>
             </ul>
           </div>
 
