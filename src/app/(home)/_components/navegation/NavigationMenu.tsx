@@ -143,7 +143,6 @@ export async function NavigationMenu() {
       href: findCategoryHref(categories, ["rede-e-wireless"]),
       icon: BookOpen,
     },
-    { label: "Seja um Revendedor", href: "/reseller", icon: BookOpen },
   ].filter(
     (item): item is { label: string; href: string; icon: LucideIcon } =>
       typeof item.href === "string",

@@ -173,6 +173,11 @@ export function getOrganizationSchema() {
     contactPoint: COMPANY_CONTACT_POINTS,
     address: COMPANY_POSTAL_ADDRESS,
     foundingDate: envs.NEXT_PUBLIC_COMPANY_YEAR_FOUNDATION,
+    hasMerchantReturnPolicy: {
+      "@type": "MerchantReturnPolicy",
+      "@id": SCHEMA_IDS.merchantReturnPolicy,
+      merchantReturnLink: `${envs.NEXT_PUBLIC_BASE_URL_APP}/return`,
+    },
   };
 }
 

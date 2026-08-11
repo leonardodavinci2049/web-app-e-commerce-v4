@@ -45,6 +45,7 @@ export interface UIProduct {
   inStock: boolean;
   stock: number;
   brand?: string;
+  model?: string;
   isNew?: boolean;
   discount?: number;
   ean?: string;
@@ -168,6 +169,7 @@ export function transformProductDetail(detail: ProductWebDetail): UIProduct {
     inStock: detail.ESTOQUE_LOJA > 0,
     stock: detail.ESTOQUE_LOJA,
     brand: detail.MARCA ?? undefined,
+    model: detail.MODELO?.trim() || undefined,
     isNew: detail.LANCAMENTO === 1,
     discount: detail.PROMOCAO === 1 ? undefined : undefined, // Calculate from price difference if needed
     ean: detail.EAN ? String(detail.EAN) : undefined,
