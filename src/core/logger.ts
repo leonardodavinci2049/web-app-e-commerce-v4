@@ -52,7 +52,8 @@ class Logger {
    * Método interno de logging
    */
   private log(level: LogLevel, message: string, data?: unknown): void {
-    const timestamp = new Date().toISOString();
+    const currentTime = performance.timeOrigin + performance.now();
+    const timestamp = new Date(currentTime).toISOString();
     const prefix = `[${timestamp}] [${level.toUpperCase()}] [${this.context}]`;
 
     switch (level) {
