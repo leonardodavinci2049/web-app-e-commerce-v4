@@ -59,7 +59,7 @@ public/favicon.ico
 
 
 # agent files
-.agents/
+.agents
 .codex/
 AGENTS.md
 
